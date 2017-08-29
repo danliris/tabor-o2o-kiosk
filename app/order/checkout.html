@@ -1,0 +1,106 @@
+﻿<div class="container">
+    <div class="col-sm-12">
+        <h3 class="section-title">
+            CHECKOUT
+        </h3>
+    </div>
+    <div class="col-sm-12">
+        <div ng-if="vm.order.items.length == 0">
+            No data
+        </div>
+
+        <table class="table" ng-if="vm.order.items.length > 0">
+            <thead>
+                <tr>
+                    <th class="col-sm-2">&nbsp;</th>
+                    <th class="col-sm-2">Nama Produk</th>
+                    <th class="col-sm-2">Deskripsi</th>
+                    <th class="col-sm-2">Harga</th>
+                    <th class="col-sm-1">Jumlah</th>
+                    <th class="col-sm-2">Total Harga</th>
+                    <th class="col-sm-1"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in vm.order.items">
+                    <td class="text-center">
+                        <img style="width: 90px;" src="{{ item.ImageUrl || 'statics/images/phone-placeholder.png' }}"
+                             alt="{{ item.Name }}"
+                             title="{{ item.Name }}" />
+                    </td>
+                    <td>
+                        {{ item.Name }}
+                    </td>
+                    <td>
+                        {{ item.Description }}
+                    </td>
+                    <td>
+                        {{ item.Price | currency: 'Rp. ' }}
+                    </td>
+                    <td>
+                        <input type="text" ng-model="item.Quantity" class="form-control" />
+                    </td>
+                    <td>
+                        <span class="price">{{ item.Price * item.Quantity | currency: 'Rp. ' }}</span>
+                    </td>
+                    <td>
+                        <a href="javascript:;" ng-click="vm.removeOrderItem(item)">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="container">
+    <div class="col-sm-5">
+        <h5 class="section-title">TOTAL BELANJA</h5>
+        <div class="row">
+            <div class="col-sm-6">
+                Total Harga
+            </div>
+            <div class="col-sm-6 text-right">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                Biaya Pengiriman
+            </div>
+            <div class="col-sm-6 text-right">
+                -
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <b>Total Belanja</b>
+            </div>
+            <div class="col-sm-6 text-right">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-sm-12">
+    <a class="btn btn-primary"
+       ui-sref="checkout">
+        LANJUT
+    </a>
+</div>
+
+<section class="bg-grey">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5">
+                <h4>ALAMAT PENGIRIMAN</h4>
+            </div>
+            <div class="col-sm-2"></div>
+            <div class="col-sm-5">
+                <h4>TOTAL BELANJA</h4>
+            </div>
+        </div>
+    </div>
+</section>
