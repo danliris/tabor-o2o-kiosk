@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="app">
+
+<head>
+    <!--<base href="/tabor-o2o-kiosk/" />-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>Home | Tabor Kiosk</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="node_modules/bootstrap/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="node_modules/bootstrap/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="node_modules/bootstrap/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link href="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css" rel="stylesheet" />
+    <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="statics/css/theme.css" rel="stylesheet" />
+    <link href="statics/css/style.sm.css" rel="stylesheet" />
+
+</head>
+
+<body>
+    <div data-ng-include="'app/layout/header.html'" ng-controller="HeaderController as vm"></div>
+
+    <section style="padding-top: 145px;">
+        <div ui-view=""></div>
+    </section>
+
+    <div data-ng-include="'app/layout/footer.html'" ng-controller="FooterController as vm"></div>
+
+    <div ng-spinner-bar>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        window.jQuery || document.write('<script src="node_modules/bootstrap/assets/js/vendor/jquery.min.js"><\/script>')
+    </script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="node_modules/bootstrap/assets/js/ie10-viewport-bug-workaround.js"></script>
+
+    <script src="node_modules/angular/angular.js"></script>
+    <script src="node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+    <script src="node_modules/ngstorage/ngStorage.min.js"></script>
+
+    <script src="app/app.module.js"></script>
+    <script src="app/app.constants.js"></script>
+    <script src="app/app.directives.js"></script>
+    <script src="app/app.routes.js"></script>
+
+    <script src="app/order/factory.js"></script>
+    <script src="app/brand/service.js"></script>
+
+
+    <script src="app/layout/header.controller.js"></script>
+    <script src="app/layout/footer.controller.js"></script>
+
+    <script src="app/home/service.js"></script>
+    <script src="app/home/index.controller.js"></script>
+
+    <script src="app/product/service.js"></script>
+    <script src="app/product/index.controller.js"></script>
+
+    <script src="app/order/service.js"></script>
+    <script src="app/order/checkout.controller.js"></script>
+    <script src="app/order/payment.controller.js"></script>
+</body>
+
+</html>

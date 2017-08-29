@@ -1,0 +1,11 @@
+{
+  "name": "tabor-o2o-kiosk",
+  "version": "1.0.0",
+  "description": "customer's online catalog",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "moonlay",
+  "license": "ISC"
+}
