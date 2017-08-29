@@ -1,0 +1,103 @@
+﻿@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+    html *, body * {
+        transition: all ease-in-out .2s;
+    }
+
+body {
+    background-color: #fff;
+    color: #000;
+    font-family: 'Roboto', 'Calibri', sans-serif;
+    font-size: 14px;
+}
+
+.section-title {
+    color: #666;
+    font-weight: 700;
+}
+
+a {
+    color: #666;
+}
+
+    a:focus,
+    a:active,
+    a:hover {
+        color: #000;
+        text-decoration: none;
+    }
+
+.form-control {
+    border-radius: 0px;
+    /*-webkit-box-shadow: inset 2px 2px 4px rgba(0,0,0,.075);
+    box-shadow: inset 2px 2px 4px px rgba(0,0,0,.075);*/
+
+    box-shadow: none;
+}
+
+    .form-control:focus {
+        border-color: #ccc;
+        -webkit-box-shadow: inset 2px 2px 4px rgba(0,0,0,.075);
+        box-shadow: inset 2px 2px 4px px rgba(0,0,0,.075);
+    }
+
+.input-group-btn:last-child > .btn, .input-group-btn:last-child > .btn-group {
+    margin-left: 10px;
+}
+
+.btn {
+    border-radius: 0;
+}
+
+    .btn:focus, .btn:active:focus, .btn.active:focus {
+        outline: 0 none;
+    }
+
+.btn-primary {
+    color: #ffffff;
+    background: #05D0A1;
+    border-color: #05D0A1;
+}
+
+    .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+        background: #00b188;
+        border-color: #00b188;
+    }
+
+    .btn-primary:active, .btn-primary.active {
+        background: #009c78;
+        border-color: #009c78;
+        box-shadow: none;
+    }
+
+        .btn-primary:active:focus, .btn-primary:active:hover {
+            background: #00a57f;
+            border-color: #00a57f;
+        }
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.btn-circle {
+    border-radius: 50%;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.flex-2 {
+    flex: 2;
+}
+
+.flex-3 {
+    flex: 3;
+}
