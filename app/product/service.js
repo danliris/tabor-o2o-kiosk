@@ -6,10 +6,12 @@ ProductService.$inject = ['$http', 'Urls'];
 
 function ProductService($http, Urls) {
     return {
-        getAll: getAll
+        getAll: getAll,
+        getByCode: getByCode,
+        countAll: countAll,
     };
 
-    function getAll(query) {
+    function getAll(query, kioskCode) {
         var asc = query.orderBy.indexOf('+') > -1;
         var orderByColumn = query.orderBy.substring(1);
 
@@ -19,22 +21,48 @@ function ProductService($http, Urls) {
             skip: (query.page - 1) * query.limit,
             where: {
                 'Name': {
-                    like: '%' + query.keyword + '%'
-                }
+                    like: '%' + (query.keyword || '') + '%'
+                },
+                'BrandCode': query.brandCode,
+                'ProductCategoryCode': query.categoryCode,
+                'KioskCode': kioskCode,
             }
         };
 
-        return $http.get(Urls.BASE_API + '/products', { params: { filter: JSON.stringify(q) } })
-            .then(handleSuccess, handleError('Error getting all products'));
+        return $http.get(Urls.BASE_API + '/vmappedproducts', { params: { filter: JSON.stringify(q) } })
+            .then(handleSuccess);
+    }
+
+    function countAll(query, kioskCode) {
+        var q = {
+            where: {
+                'Name': {
+                    like: '%' + (query.keyword || '') + '%'
+                },
+                'BrandCode': query.brandCode,
+                'ProductCategoryCode': query.categoryCode,
+                'KioskCode': kioskCode
+            }
+        };
+        //return $http.get(Urls.BASE_API + '/vmappedproducts/count?' + $.param(q))
+        //    .then(handleSuccess);
+
+        return $http.get(Urls.BASE_API + '/vmappedproducts/count', { params: { filter: JSON.stringify(q) } })
+           .then(handleSuccess);
+    }
+
+    function getByCode(code) {
+        var q = {
+            where: {
+                'Code': code
+            }
+        };
+
+        return $http.get(Urls.BASE_API + '/vmappedproducts', { params: { filter: JSON.stringify(q) } })
+            .then(handleSuccess);
     }
 
     function handleSuccess(response) {
         return response.data;
-    }
-
-    function handleError(error) {
-        return function () {
-            return { success: false, message: error };
-        };
     }
 }

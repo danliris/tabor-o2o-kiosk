@@ -9,50 +9,52 @@ function LoginController(AuthenticationService, AuthenticationState, $localStora
     var vm = this;
 
     vm.user = {
-        email: '',
-        password: ''
+        email: 'ben.hardi@moonlay.com',
+        password: '12345'
     };
 
     vm.login = login;
-    
-    function login(user) {
-        // belum ada login
-        AuthenticationState.SetUser({
-            username: 'adythia',
-            initial: 'ADY'
-        });
-        $state.go('main.dashboard');
-        // belum ada login
-        
 
+    function login(user) {
         vm.loading = true;
         vm.message = '';
+        var authenticatedUser = {};
 
-        AuthenticationService.SignIn(user)
+        AuthenticationService.signIn(user)
             .then(function (response) {
-                if (response.status === 'fail' || response.status === 'error') {
-                    vm.message = response.message;
-                    return;
-                }
+                AuthenticationState.setToken(response);
 
-                AuthenticationState.SetToken(response.data.token);
-
-                return AuthenticationService.GetAuthenticatedUser();
+                return AuthenticationService.getAuthenticatedUser(response.userId);
             })
             .then(function (response) {
-                if (response.status === 'fail' || response.status === 'error') {
-                    vm.message = response.message;
-                    return;
-                }
+                authenticatedUser.id = response.id;
+                authenticatedUser.email = response.email;
+                authenticatedUser.username = response.username;
 
-                var result = response.data;
-
-                AuthenticationState.SetUser(result.user);
-
-                $state.go('main.dashboard');
+                return AuthenticationService.getKioskUser(authenticatedUser.id);
             })
-            .catch(function (response) {
+            .then(function (response) {
+                if (response.length == 0) {
+                    throw 'User ini tidak berada di kiosk manapun.';
+                }
                 
+                var kiosk = response[0].Kiosk;
+                authenticatedUser.kiosk = {
+                    code: kiosk.Code,
+                    name: kiosk.Name,
+                    address: kiosk.Address,
+                    phone: kiosk.PhoneNumber,
+                    branchCode: kiosk.BranchCode,
+                    branchName: kiosk.BranchName,
+                };
+
+                AuthenticationState.setUser(authenticatedUser);
+
+                $state.go('app.home');
+            })
+            .catch(function (err) {
+                console.log(err);
+                vm.message = err;
             })
             .finally(function () {
                 vm.loading = false;

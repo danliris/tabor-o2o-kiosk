@@ -1,9 +1,166 @@
-﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title></title>
-</head>
-<body>
+﻿<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="m-t-10">
+                <a href="javascript:;" class="btn-link" back-button>
+                    &larr; Kembali
+                </a>
+            </div>
+        </div>
 
-</body>
-</html>
+        <div class="col-sm-12">
+            <h3 class="section-title">
+                PEMBAYARAN
+            </h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-5">
+            <loading-indicator ng-if="vm.loadingGetOrderByCode"></loading-indicator>
+
+            <div class="row" ng-if="!vm.loadingGetOrderByCode && vm.order">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        Metode Pembayaran
+                        <div class="pull-right">
+
+                            <label style="margin-right: .5em;">
+                                <input type="radio" name="paymentType"
+                                       ng-model="vm.orderPayment.PaymentType"
+                                       value="FULL PAYMENT"
+                                       ng-disabled="vm.orderToBePrinted"
+                                       ng-change="vm.changePaymentType(vm.orderPayment.PaymentType)" /> Full Payment
+                            </label>
+                            <label>
+                                <input type="radio" name="paymentType"
+                                       ng-disabled="!vm.order.SelfPickUp || vm.orderToBePrinted"
+                                       ng-model="vm.orderPayment.PaymentType"
+                                       value="DOWN PAYMENT"
+                                       ng-change="vm.changePaymentType(vm.orderPayment.PaymentType)" /> Down Payment
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="panel panel-default no-margin">
+                        <div class="panel-heading" ng-click="vm.openOrderDetail = !vm.openOrderDetail">
+                            <h4 class="panel-title">
+                                TOTAL HARGA
+
+                                <!--<span class="fa pull-right"
+                                      style="line-height: 2em;"
+                                      ng-class="{ 'fa-angle-down': !vm.openOrderDetail, 'fa-angle-up': vm.openOrderDetail }">
+                                </span>-->
+
+                                <span class="price pull-right" ng-if="vm.orderPayment.PaymentType == 'FULL PAYMENT'">{{ vm.order.TotalPrice + vm.order.TotalShippingFee | currency: 'Rp. ': 0 }}</span>
+                                <span class="price pull-right" ng-if="vm.orderPayment.PaymentType == 'DOWN PAYMENT'">{{ vm.order.DP + vm.order.TotalShippingFee | currency: 'Rp. ': 0 }}</span>
+
+                            </h4>
+                        </div>
+                        <!--<div class="panel-body" ng-show="vm.openOrderDetail">-->
+                        <div class="panel-body">
+                            <table class="table no-margin">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th class="text-right">Nominal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in vm.order.OrderDetails">
+                                        <td>
+                                            {{ item.Product.Name }} <label class="label label-info" ng-if="vm.orderPayment.PaymentType == 'DOWN PAYMENT'">{{ item.Product.DP }} %</label>
+                                            <br />
+                                            <p class="text-muted">
+                                                {{ item.Quantity }} pcs x {{ item.Price | currency: 'Rp. ': 0 }}
+                                            </p>
+                                        </td>
+                                        <td class="text-right">
+                                            <span ng-if="vm.orderPayment.PaymentType == 'FULL PAYMENT'">{{ item.Price * item.Quantity | currency: 'Rp. ': 0 }}</span>
+                                            <span ng-if="vm.orderPayment.PaymentType == 'DOWN PAYMENT'">{{ item.DPNominal * item.Quantity | currency: 'Rp. ': 0 }}</span>
+                                        </td>
+                                    </tr>
+                                    <tr ng-if="vm.orderPayment.PaymentType == 'DOWN PAYMENT'">
+                                        <td>
+                                            <label>Total DP</label>
+                                        </td>
+                                        <td class="text-right">
+                                            {{ vm.order.DP | currency: 'Rp. ' : 0 }}
+                                        </td>
+                                    </tr>
+                                    <tr ng-if="vm.orderPayment.PaymentType == 'FULL PAYMENT'">
+                                        <td>
+                                            <label>Total</label>
+                                        </td>
+                                        <td class="text-right">
+                                            {{ vm.order.TotalPrice | currency: 'Rp. ' : 0 }}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <label>Biaya Pengiriman</label>
+                                        </td>
+                                        <td class="text-right">
+                                            {{ vm.order.TotalShippingFee | currency: 'Rp. ' : 0 }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div style="display: flex; align-items: center;">
+                                        <span class="flex-1">Input Pembayaran</span>
+
+                                        <span class="m-r-10">Rp. </span>
+
+                                        <div class="flex-1">
+                                            <input type="text" class="form-control text-right"
+                                                   fcsa-number="{ preventInvalidInput: true }"
+                                                   ng-model="vm.orderPayment.PaidAmount"
+                                                   ng-disabled="vm.orderToBePrinted" />
+                                        </div>
+                                    </div>
+
+                                    <!--<hr />
+
+                                    <div style="display: flex; align-items: center;">
+                                        <span class="flex-1">Kembali</span>
+                                        <span class="flex-1 text-right">
+                                            Rp. 0
+                                        </span>
+                                    </div>-->
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-12">
+                    <button class="btn btn-primary btn-lg btn-block m-t-10"
+                            ng-disabled="vm.loadingPay"
+                            ng-if="!vm.orderToBePrinted"
+                            ng-click="vm.pay(vm.orderPayment)">
+                        BAYAR <i class="fa fa-spin fa-circle-o-notch pull-right" ng-if="vm.loadingPay"></i>
+                    </button>
+
+                    <button class="btn btn-info btn-lg btn-block m-t-10"
+                            ng-if="vm.orderToBePrinted"
+                            ng-click="vm.goToPrint()">
+                        CETAK
+                    </button>
+                </div>
+
+                <div class="col-sm-12 text-center" ng-if="vm.orderToBePrinted">
+                    <span class="text-info">Your order has been submitted successfully!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

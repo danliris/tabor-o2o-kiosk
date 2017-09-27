@@ -3,8 +3,11 @@
     'ui.bootstrap',
     //'ngSanitize',
     'ngStorage',
+    'fcsa-number',
+    //'ngAnimate',
+    'toastr',
 
-    //'app.authentication' // bukan library
+    'app.authentication' // bukan library
 ]);
 
 angular.module('app')
@@ -13,7 +16,6 @@ angular.module('app')
 httpInterceptor.$inject = [
     '$q',
     '$rootScope',
-    //'$localStorage',
     '$location'
 ];
 
@@ -21,7 +23,8 @@ function httpInterceptor($q, $rootScope, $localStorage, $location) {
     return {
         request: function (config) {
             config.headers = config.headers || {};
-
+            //config.params = [];
+            
             if ($localStorage.token) {
                 config.headers.Authorization = 'Bearer ' + $localStorage.token;
             }
@@ -30,11 +33,18 @@ function httpInterceptor($q, $rootScope, $localStorage, $location) {
         },
 
         responseError: function (rejection) {
-            if (rejection.data.error === 'token_not_provided' || rejection.data.error === 'token_expired') {
-                $location.path('/login');
+            //if (rejection.data.error === 'token_not_provided' || rejection.data.error === 'token_expired') {
+            //    $location.path('/login');
+            //}
+            console.log(rejection);
+
+            if (rejection.data) {
+                if (rejection.data.error) {
+                    return $q.reject(rejection.data.error.statusCode + ' - ' + rejection.data.error.message);
+                }
             }
 
-            return $q.reject(rejection);
+            return $q.reject(rejection.status + ' - ' + rejection.statusText);
         }
     };
 }
@@ -46,32 +56,32 @@ angular
         $httpProvider.interceptors.push('httpInterceptor');
     }]);
 
-//// RUN BLOCK. GLOBAL INJECTION
-//angular
-//    .module('app')
-//    .run(runBlock);
+angular
+    .module('app')
+    .config(['$qProvider', function ($qProvider) {
+        $qProvider.errorOnUnhandledRejections(false);
+    }]);
 
-//runBlock.$inject = [
-//    '$rootScope',
-//    '$state',
-//    'AuthenticationState'
-//];
+angular
+    .module('app')
+    .factory('settings', settings);
 
-//function runBlock($rootScope, $state, AuthenticationState) {
-//    //$rootScope.$on('$stateChangeStart', function (e, toState, toParams, fromState, fromParams) {
+settings.$inject = [
+    '$rootScope'
+];
 
-//    //    if (toState.name === 'authentication.login')
-//    //        return;
+function settings($rootScope) {
+    var settings = {
+        cartOpen: false,
+        toggleCartOpen: toggleCartOpen
+    };
 
-//    //    if (AuthenticationState.IsLoggedIn())
-//    //        return;
+    function toggleCartOpen() {
+        this.cartOpen = !this.cartOpen;
+    }
 
-//    //    e.preventDefault();
-//    //    $state.go('authentication.login', {}, { notify: true });
-//    //});
-
-
-//}
+    return settings;
+}
 
 angular
     .module('app')
@@ -79,9 +89,20 @@ angular
 
 runBlock.$inject = [
     '$rootScope',
-    '$state'
+    '$state',
+    '$transitions',
+    'settings',
+    'AuthenticationState'
 ];
 
-function runBlock($rootScope, $state) {
+function runBlock($rootScope, $state, $transitions, settings, AuthenticationState) {
+    $rootScope.$settings = settings;
 
+    $transitions.onStart({}, function (trans) {
+        if (!AuthenticationState.isLoggedIn()) {
+            $state.go('authentication.login');
+        }
+
+        $rootScope.$settings.cartOpen = false;
+    });
 }

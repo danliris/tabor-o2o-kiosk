@@ -2,75 +2,51 @@ angular.module('app.authentication').service('AuthenticationService', Authentica
 
 AuthenticationService.$inject = [
     '$http',
-    '$localStorage',
     'Urls'
 ];
-function AuthenticationService($http, $localStorage, Urls) {
+function AuthenticationService($http, Urls) {
     var currentUser;
-    var tokenClaims = GetClaimsFromToken();
 
     return {
-        SignIn: SignIn,
-        SignUp: SignUp,
-        SignOut: SignOut,
-        GetClaimsFromToken: GetClaimsFromToken,
-        GetAuthenticatedUser: GetAuthenticatedUser
+        signIn: signIn,
+        signOut: signOut,
+        getAuthenticatedUser: getAuthenticatedUser,
+        getKioskUser: getKioskUser
     };
 
-    function SignIn(user) {
-        return $http.post(Urls.BASE_API + '/authenticate', user)
-            .then(handleSuccess, handleError('Error signing in'));
+    function signIn(user) {
+        return $http.post(Urls.BASE_API + '/users/login', user)
+            .then(handleSuccess);
     }
 
-    function SignUp() {
-        // body...
+    function signOut() {
+        return $http.post(Urls.BASE_API + '/users/logout')
+            .then(handleSuccess);
     }
 
-    function SignOut() {
-        tokenClaims = {};
+    function getAuthenticatedUser(id) {
+        return $http.get(Urls.BASE_API + '/users/' + id)
+            .then(handleSuccess);
     }
 
-    function GetClaimsFromToken() {
-        var token = $localStorage.token;
-        var user = {};
-        if (typeof token !== 'undefined') {
-            var encoded = token.split('.')[1];
-            user = JSON.parse(urlBase64Decode(encoded));
+    function getKioskUser(id) {
+        var q = {
+            filter: {
+                where: {
+                    'UserId': id
+                },
+                include: [
+                    'Kiosk'
+                ]
+            }
         }
-        return user;
-    }
 
-    function GetAuthenticatedUser() {
-        return $http.get(Urls.BASE_API + '/authenticate/user')
-            .then(handleSuccess, handleError('Error getting authenticated user'));
+        return $http.get(Urls.BASE_API + '/kioskusers?' + $.param(q))
+            .then(handleSuccess);
     }
-
-    function urlBase64Decode(str) {
-        var output = str.replace('-', '+').replace('_', '/');
-        switch (output.length % 4) {
-            case 0:
-                break;
-            case 2:
-                output += '==';
-                break;
-            case 3:
-                output += '=';
-                break;
-            default:
-                throw 'Illegal base64url string!';
-        }
-        return window.atob(output);
-    }
-
 
     function handleSuccess(res) {
         return res.data;
-    }
-
-    function handleError(error) {
-        return function () {
-            return { success: false, message: error };
-        };
     }
 
 }
