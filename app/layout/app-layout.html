@@ -1,0 +1,9 @@
+﻿<div data-ng-include="'app/layout/app-header.html'" ng-controller="HeaderController as vm"></div>
+
+<section ui-view=""></section>
+
+<div data-ng-include="'app/layout/app-footer.html'" ng-controller="FooterController as vm"></div>
+
+<script type="text/javascript">
+    $('body').removeClass('auth-page');
+</script>

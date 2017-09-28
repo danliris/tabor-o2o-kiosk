@@ -1,44 +1,81 @@
 ﻿angular.module('app')
     .controller('ProductController', ProductController);
 
-ProductController.$inject = ['$stateParams', '$sessionStorage', 'HomeService', 'ProductService', 'Order'];
-function ProductController($stateParams, $sessionStorage, HomeService, ProductService, Order) {
+ProductController.$inject = ['$rootScope', '$stateParams', '$uibModal', 'toastr', 'ProductService', 'Order', 'AuthenticationState'];
+function ProductController($rootScope, $stateParams, $uibModal, toastr, ProductService, Order, AuthenticationState) {
     var vm = this;
+
+    vm.currentUser = AuthenticationState.getUser();
 
     vm.products = [];
     vm.productQuery = {};
 
-    vm.openDetail = openDetail;
+    vm.openDetailItem = openDetailItem;
     vm.addOrderItem = addOrderItem;
-
-    vm.searchProducts = searchProducts;
     vm.nextPage = nextPage;
 
-    (function () {
-        vm.products = [];
-        vm.productQuery = initQuery();
+    function openDetailItem(product) {
+        var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'app/product/detail.modal.html',
+            controller: 'ProductDetailModalController',
+            controllerAs: 'vm',
+            size: 'lg',
+            resolve: {
+                code: function () {
+                    return product.Code;
+                }
+            }
+        });
 
-        getProducts(vm.products, vm.productQuery);
-    })();
-
-    function openDetail(product) {
-        console.log(product);
+        modalInstance.result.then(function (product) {
+            addOrderItem(product);
+        });
     }
 
     function addOrderItem(product) {
-        Order.addOrderItem(product);
+        Order.addOrderItem({
+            code: product.Code,
+            sku: product.SKU,
+            name: product.Name,
+            description: product.Description,
+            specification: product.Specification,
+            image: product.Image,
+            brandCode: product.BrandCode,
+            dp: product.DP,
+            price: product.Price,
+            dealerCode: product.DealerCode
+        });
+
+        toastr.success('Item has been added to the shopping bag.', 'Message');
     }
 
     function getProducts(products, query) {
         vm.loadingProducts = true;
-        return ProductService.getAll(query)
+        ProductService.getAll(query, vm.currentUser.kiosk.code)
             .then(function (response) {
                 for (var i = 0, l = response.length; i < l; i++) {
+                    try {
+                        response[i].ArrayedSpecification = JSON.parse(response[i].Specification);
+                    } catch (e) {
+
+                    }
                     products.push(response[i]);
                 }
             })
-            .catch(function () {
+            .catch(function (res) {
+                toastr.error(res);
+            })
+            .finally(function () {
+                vm.loadingProducts = false;
+            });
 
+        ProductService.countAll(query, vm.currentUser.kiosk.code)
+            .then(function (res) {
+                vm.productQuery.count = res.count;
+            })
+            .catch(function (res) {
+                toastr.error(res);
             })
             .finally(function () {
                 vm.loadingProducts = false;
@@ -66,4 +103,14 @@ function ProductController($stateParams, $sessionStorage, HomeService, ProductSe
 
         getProducts(vm.products, query);
     }
+
+    (function () {
+        vm.products = [];
+        vm.productQuery = initQuery();
+        vm.productQuery.keyword = $stateParams.keyword;
+        vm.productQuery.brandCode = $stateParams.brand;
+        vm.productQuery.categoryCode = $stateParams.category;
+
+        getProducts(vm.products, vm.productQuery);
+    })();
 }

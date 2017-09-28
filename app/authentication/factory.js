@@ -5,39 +5,39 @@ AuthenticationState.$inject = [
 ];
 function AuthenticationState($http, $localStorage) {
     return {
-        SetToken: SetToken,
-        GeToken: GetToken,
-        SetUser: SetUser,
-        GetUser: GetUser,
-        IsLoggedIn: IsLoggedIn,
-
-        Remove: Remove
+        setToken: setToken,
+        getToken: getToken,
+        setUser: setUser,
+        getUser: getUser,
+        isLoggedIn: isLoggedIn,
+        remove: remove
     }
 
-    function SetUser(user) {
-        $localStorage.user = user;
+    function setToken(token) {
+        $localStorage.token = token.id;
+        $localStorage.tokenExpiredAt = new Date(new Date(token.created) + token.ttl);
+        $http.defaults.headers.common.Authorization = token.id;
     }
 
-    function GetUser() {
-        return $localStorage.user;
-    }
-
-    function SetToken(token) {
-        $localStorage.token = token;
-        $http.defaults.headers.common.Authorization = 'Bearer ' + token;
-    }
-
-    function GetToken() {
+    function getToken() {
         return $localStorage.token;
     }
 
-    function IsLoggedIn() {
+    function isLoggedIn() {
         return $localStorage.user ? true : false;
     }
 
-    function Remove() {
+    function remove() {
         delete $localStorage.token;
         delete $localStorage.user;
         delete $http.defaults.headers.common.Authorization;
+    }
+
+    function setUser(user) {
+        $localStorage.user = user;
+    }
+
+    function getUser() {
+        return $localStorage.user;
     }
 }

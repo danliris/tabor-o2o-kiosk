@@ -1,0 +1,245 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="section-title">
+                RINCIAN PEMESANAN <span ng-if="!vm.loadingGetOrderByCode && vm.order">({{ vm.order.Code }})</span>
+            </h3>
+        </div>
+    </div>
+
+    <loading-indicator ng-if="vm.loadingGetOrderByCode"></loading-indicator>
+
+    <no-data ng-if="!vm.loadingGetOrderByCode && !vm.order"></no-data>
+
+    <div class="row" ng-if="!vm.loadingGetOrderByCode && vm.order">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-2">&nbsp;</th>
+                                <th class="col-sm-5">Nama Produk</th>
+                                <th class="col-sm-2">Harga</th>
+                                <th class="col-sm-1 text-center">Jumlah</th>
+                                <th class="col-sm-2 text-right">Total Harga</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="detail in vm.order.OrderDetails">
+                                <td class="text-center">
+                                    <img style="width: 90px;" src="{{ detail.Product.Image || 'statics/images/phone-placeholder.png' }}"
+                                         alt="{{ detail.Product.Name }}"
+                                         title="{{ detail.Product.Name }}" />
+                                </td>
+                                <td>
+                                    {{ detail.Product.Name }}
+                                    <p class="text-muted small">
+                                        {{ detail.Product.Description }}
+                                    </p>
+                                </td>
+                                <td>
+                                    {{ detail.Price | currency: 'Rp. ' : 0 }}
+                                    <div ng-if="vm.order.SelfPickUp && detail.DPNominal > 0">
+                                        <span class="label label-info">DP {{ detail.DPNominal / detail.Price * 100 }} %</span>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <input type="number"
+                                           class="form-control"
+                                           ng-model="detail.Quantity"
+                                           min="0"
+                                           ng-change="vm.updateDetail(detail)" />
+                                </td>
+                                <td class="text-right">
+                                    <span class="price">{{ detail.Price * detail.Quantity | currency: 'Rp. ' : 0 }}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control"
+                                       ng-model="vm.order.Name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Phone</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control"
+                                       ng-model="vm.order.Phone" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Email <i class="text-muted small">(opsional)</i></label>
+                            <div class="col-sm-8">
+                                <input type="email" class="form-control"
+                                       ng-model="vm.order.Email" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">No. Identitas <small class="text-muted">(KTP/SIM)</small></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control"
+                                       ng-model="vm.order.IdCard" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Alamat</label>
+                            <div class="col-sm-8">
+                                <label style="margin-right: 2em;">
+                                    <input type="radio" name="selfPickUp"
+                                           ng-model="vm.order.SelfPickUp"
+                                           ng-value="true"
+                                           ng-click="vm.toggleSelfPickUp(vm.order.SelfPickUp)" /> Outlet {{ vm.order.KioskCode }}
+                                </label>
+
+                                <br />
+                                <label>
+                                    <input type="radio" name="selfPickUp"
+                                           ng-model="vm.order.SelfPickUp"
+                                           ng-value="false"
+                                           ng-click="vm.toggleSelfPickUp(vm.order.SelfPickUp)" /> Alamat Customer
+                                </label>
+                                <textarea class="form-control"
+                                          ng-if="!vm.order.SelfPickUp"
+                                          style="height: 6em"
+                                          ng-model="vm.order.Address"></textarea>
+                            </div>
+                        </div>
+
+                        <div ng-if="!vm.order.ShippingDestination">
+                            <div class="form-group" ng-if="!vm.order.SelfPickUp">
+                                <label class="control-label col-sm-4">Kota</label>
+                                <div class="col-sm-8">
+                                    <input class="form-control"
+                                           ng-model="vm.destination"
+                                           uib-typeahead="location as location.display for location in vm.getLocations($viewValue)"
+                                           typeahead-loading="loadingLocations"
+                                           typeahead-no-results="noResults"
+                                           typeahead-wait-ms="500"
+                                           typeahead-min-length="3"
+                                           typeahead-editable="false" />
+                                    <div ng-show="noResults">
+                                        <i class="fa fa-times"></i> Lokasi tidak ditemukan
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" ng-if="vm.destination">
+                                <label class="control-label col-sm-4"></label>
+                                <div class="col-sm-8">
+                                    <table class="table table-hover">
+                                        <tr>
+                                            <th class="text-center">Produk</th>
+                                            <th class="text-center">Harga</th>
+                                            <th class="text-center">Estimasi</th>
+                                            <th style="width: 30px;"></th>
+                                        </tr>
+                                        <tr ng-repeat="option in vm.destination.pricingOptions | orderBy: 'calculationResult'"
+                                            ng-click="vm.selectPricingOption(option)"
+                                            class="cursor-pointer">
+                                            <td class="text-center">
+                                                {{ option.productCode }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ option.calculationResult | currency: 'Rp. ': 0 }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ option.dueDay }}
+                                            </td>
+                                            <td class="text-center">
+                                                <i class="fa"
+                                                   ng-class="{ 'fa-check text-success': vm.pricingOption == option }">
+                                                </i>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-if="vm.order.ShippingDestination">
+                            <label class="control-label col-sm-4">Pengiriman</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                           disabled
+                                           ng-value="vm.order.ShippingProductCode + ' - ' + vm.order.ShippingDestination">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-danger" type="button"
+                                                title="Hapus"
+                                                ng-click="vm.removeCurrentShippingInformation()">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table no-margin">
+                        <tr>
+                            <td>Total Harga</td>
+                            <td class="text-right">
+                                {{ vm.order.TotalPrice | currency: 'Rp. ': 0 }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Biaya Pengiriman</td>
+                            <td class="text-right">
+                                <b class="price" ng-if="vm.order.SelfPickUp">GRATIS</b>
+
+                                <span ng-if="!vm.order.SelfPickUp">
+                                    {{ vm.order.TotalShippingFee | currency: 'Rp ': 0 }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Total Belanja</b></td>
+                            <td class="text-right">
+                                <span class="price">
+                                    {{ vm.order.TotalPrice + vm.order.TotalShippingFee | currency: 'Rp. ' : 0 }}
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary btn-block"
+                    ng-disabled="vm.loadingUpdateDraft"
+                    ng-click="vm.updateDraft(vm.order)">
+                LANJUT
+                <i class="fa fa-angle-right pull-right" ng-if="!vm.loadingUpdateDraft"></i>
+                <i class="fa fa-circle-o-notch pull-right" ng-if="vm.loadingUpdateDraft"></i>
+            </button>
+
+
+            <button type="button" class="btn btn-danger btn-block"
+                    ng-disabled="vm.loadingVoidDraft"
+                    ng-click="vm.voidDraft(vm.order.Code)">
+                BATAL
+                <i class="fa fa-times pull-right" ng-if="!vm.loadingVoidDraft"></i>
+                <i class="fa fa-circle-o-notch pull-right" ng-if="vm.loadingVoidDraft"></i>
+            </button>
+        </div>
+    </div>
+</div>
