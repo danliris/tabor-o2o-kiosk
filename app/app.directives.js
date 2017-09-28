@@ -12,47 +12,67 @@ angular
             }
         }
     });
-    
 angular
     .module('app')
-    .directive('ngSpinnerBar', ['$rootScope', function ($rootScope) {
+    .directive('backButton', ['$window', function ($window) {
+        return {
+            restrict: 'A',
+            link: function (scope, elem, attrs) {
+                elem.bind('click', function () {
+                    $window.history.back();
+                });
+            }
+        };
+    }]);
+
+angular
+    .module('app')
+    .directive('ngSpinnerBar', ['$rootScope', '$transitions', function ($rootScope, $transitions) {
         return {
             link: function (scope, element, attributes) {
                 // by default hide the spinner bar
                 element.addClass('hide');
 
-                $rootScope.$on('$stateChangeStart', function () {
+                $transitions.onStart({}, function () {
                     element.removeClass('hide');
-                    console.log('on state change start');
                 });
 
-                // hide the spinner bar on rounte change success(after the content loaded)
-                $rootScope.$on('$stateChangeSuccess', function () {
-                    element.addClass('hide'); // hide spinner bar
-                    //$('body').removeClass('page-on-load'); // remove page loading indicator
-                    //Layout.setSidebarMenuActiveLink('match'); // activate selected link in the sidebar menu
-
-                    console.log('on state change success');
-
-                    // auto scorll to page top
-                    // setTimeout(function () {
-                    //     App.scrollTop(); // scroll to the top on content load
-                    // }, $rootScope.settings.layout.pageAutoScrollOnLoad);     
+                $transitions.onSuccess({}, function () {
+                    element.addClass('hide');
                 });
 
-                // handle errors
-                $rootScope.$on('$stateNotFound', function () {
-                    console.log('on state change not found');
+                //$transitions.$on('$stateChangeStart', function () {
+                //    element.removeClass('hide');
+                //    console.log('on state change start');
+                //});
 
-                    element.addClass('hide'); // hide spinner bar
-                });
+                //// hide the spinner bar on rounte change success(after the content loaded)
+                //$transitions.$on('$stateChangeSuccess', function () {
+                //    element.addClass('hide'); // hide spinner bar
+                //    //$('body').removeClass('page-on-load'); // remove page loading indicator
+                //    //Layout.setSidebarMenuActiveLink('match'); // activate selected link in the sidebar menu
 
-                // handle errors
-                $rootScope.$on('$stateChangeError', function () {
-                    console.log('on state change error');
+                //    console.log('on state change success');
 
-                    element.addClass('hide'); // hide spinner bar
-                });
+                //    // auto scorll to page top
+                //    // setTimeout(function () {
+                //    //     App.scrollTop(); // scroll to the top on content load
+                //    // }, $rootScope.settings.layout.pageAutoScrollOnLoad);     
+                //});
+
+                //// handle errors
+                //$transitions.$on('$stateNotFound', function () {
+                //    console.log('on state change not found');
+
+                //    element.addClass('hide'); // hide spinner bar
+                //});
+
+                //// handle errors
+                //$transitions.$on('$stateChangeError', function () {
+                //    console.log('on state change error');
+
+                //    element.addClass('hide'); // hide spinner bar
+                //});
 
             }
         }

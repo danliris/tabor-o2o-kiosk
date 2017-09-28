@@ -1,106 +1,188 @@
 ﻿<div class="container">
-    <div class="col-sm-12">
-        <h3 class="section-title">
-            CHECKOUT
-        </h3>
-    </div>
-    <div class="col-sm-12">
-        <div ng-if="vm.order.items.length == 0">
-            No data
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="m-t-10">
+                <a href="javascript:;" class="btn-link" back-button>
+                    &larr; Kembali
+                </a>
+            </div>
         </div>
-
-        <table class="table" ng-if="vm.order.items.length > 0">
-            <thead>
-                <tr>
-                    <th class="col-sm-2">&nbsp;</th>
-                    <th class="col-sm-2">Nama Produk</th>
-                    <th class="col-sm-2">Deskripsi</th>
-                    <th class="col-sm-2">Harga</th>
-                    <th class="col-sm-1">Jumlah</th>
-                    <th class="col-sm-2">Total Harga</th>
-                    <th class="col-sm-1"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="item in vm.order.items">
-                    <td class="text-center">
-                        <img style="width: 90px;" src="{{ item.ImageUrl || 'statics/images/phone-placeholder.png' }}"
-                             alt="{{ item.Name }}"
-                             title="{{ item.Name }}" />
-                    </td>
-                    <td>
-                        {{ item.Name }}
-                    </td>
-                    <td>
-                        {{ item.Description }}
-                    </td>
-                    <td>
-                        {{ item.Price | currency: 'Rp. ' }}
-                    </td>
-                    <td>
-                        <input type="text" ng-model="item.Quantity" class="form-control" />
-                    </td>
-                    <td>
-                        <span class="price">{{ item.Price * item.Quantity | currency: 'Rp. ' }}</span>
-                    </td>
-                    <td>
-                        <a href="javascript:;" ng-click="vm.removeOrderItem(item)">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="col-sm-12">
+            <h3 class="section-title">
+                CHECKOUT
+            </h3>
+        </div>
     </div>
 </div>
 
 <div class="container">
-    <div class="col-sm-5">
-        <h5 class="section-title">TOTAL BELANJA</h5>
-        <div class="row">
-            <div class="col-sm-6">
-                Total Harga
-            </div>
-            <div class="col-sm-6 text-right">
+    <div class="row">
+        <div class="col-sm-12">
+            <p ng-if="vm.order.items.length == 0">
+                Tidak ada item di tas belanja Anda.
+            </p>
 
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                Biaya Pengiriman
-            </div>
-            <div class="col-sm-6 text-right">
-                -
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <b>Total Belanja</b>
-            </div>
-            <div class="col-sm-6 text-right">
-
-            </div>
+            <table class="table" ng-if="vm.order.items.length > 0">
+                <thead>
+                    <tr>
+                        <th class="col-sm-2">&nbsp;</th>
+                        <th class="col-sm-3">Nama Produk</th>
+                        <th class="col-sm-2">Harga</th>
+                        <th class="col-sm-1">Jumlah</th>
+                        <th class="col-sm-2 text-right">Total Harga</th>
+                        <th class="col-sm-1"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in vm.order.items">
+                        <td class="text-center">
+                            <img style="width: 90px;" src="{{ item.image || 'statics/images/phone-placeholder.png' }}"
+                                 alt="{{ item.name }}"
+                                 title="{{ item.name }}" />
+                        </td>
+                        <td>
+                            {{ item.name }}
+                            <p class="text-muted small">
+                                {{ item.description }}
+                            </p>
+                        </td>
+                        <td>
+                            {{ item.price | currency: 'Rp. ' : 0 }}
+                            <div ng-if="vm.shippingAddress.toKiosk && item.dp > 0">
+                                <span class="label label-info">DP {{ item.dp }} %</span>
+                            </div>
+                        </td>
+                        <td>
+                            <input type="number" ng-model="item.quantity" class="form-control" min="1" />
+                        </td>
+                        <td class="text-right">
+                            <span class="price">{{ item.price * item.quantity | currency: 'Rp. ' : 0 }}</span>
+                        </td>
+                        <td class="text-right">
+                            <a href="javascript:;" ng-click="vm.removeOrderItem(item)">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
-<div class="col-sm-12">
-    <a class="btn btn-primary"
-       ui-sref="checkout">
-        LANJUT
-    </a>
-</div>
-
-<section class="bg-grey">
+<section class="p-y-15 bg-grey">
     <div class="container">
         <div class="row">
-            <div class="col-sm-5">
-                <h4>ALAMAT PENGIRIMAN</h4>
-            </div>
-            <div class="col-sm-2"></div>
-            <div class="col-sm-5">
-                <h4>TOTAL BELANJA</h4>
-            </div>
+            <div class="col-sm-6">
+                <form name="formAddress" ng-submit="vm.updateAddress(vm.shippingAddress)">
+                    <h4 class="section-title">ALAMAT PENGIRIMAN</h4>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label style="margin-right: 2em;">
+                                <input type="radio" name="kiosk"
+                                       ng-model="vm.shippingAddress.toKiosk"
+                                       ng-value="true"
+                                       ng-click="vm.toggleToKiosk(vm.shippingAddress.toKiosk)" /> Outlet
+                            </label>
+                            <label>
+                                <input type="radio" name="kiosk"
+                                       ng-model="vm.shippingAddress.toKiosk"
+                                       ng-value="false"
+                                       ng-click="vm.toggleToKiosk(vm.shippingAddress.toKiosk)" /> Alamat Customer
+                            </label>
+                        </div>
+                    </div>
+                    <hr />
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">
+                                    Nama
+                                </label>
+                                <input type="text" name="name" class="form-control" required
+                                       ng-model="vm.shippingAddress.name" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">
+                                    Nomor Telepon
+                                </label>
+                                <input type="text" name="phone" class="form-control" required
+                                       ng-model="vm.shippingAddress.phone" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">
+                                    Email <i class="text-muted small">(opsional)</i>
+                                </label>
+                                <input type="email" name="email" class="form-control"
+                                       ng-model="vm.shippingAddress.email" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">
+                                    No. Identitas <small class="text-muted">(KTP/SIM)</small>
+                                </label>
+                                <input type="text" class="form-control" required
+                                       ng-model="vm.shippingAddress.idCard" />
+                            </div>
+                        </div>
+                        <div class="col-sm-12" ng-if="!vm.shippingAddress.toKiosk">
+                            <div class="form-group">
+                                <label class="control-label">
+                                    Alamat
+                                </label>
+                                <textarea name="address" class="form-control"
+                                          style="height: 6em;"
+                                          required
+                                          ng-model="vm.shippingAddress.address"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div><!-- alamat pengiriman -->
+            <div class="col-sm-5 col-sm-offset-1">
+                <h4 class="section-title">TOTAL BELANJA</h4>
+
+                <table class="table">
+                    <tr>
+                        <td>Total Harga</td>
+                        <td class="text-right">
+                            {{ vm.order.items | totalPrice | currency: 'Rp. ' : 0 }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Biaya Pengiriman</td>
+                        <td class="text-right">
+                            <b class="price" ng-if="vm.shippingAddress.toKiosk">GRATIS</b>
+                            <span class="text-muted" ng-if="!vm.shippingAddress.toKiosk">Tanya staff</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><b>Total Belanja</b></td>
+                        <td class="text-right">
+                            <span class="price">{{ vm.order.items | totalPrice | currency: 'Rp. ' : 0 }}</span>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button type="button"
+                                ng-click="vm.updateAddress(vm.shippingAddress)"
+                                ng-disabled="!formAddress.$valid"
+                                class="btn btn-primary btn-block">
+                            LANJUT
+                        </button>
+                    </div>
+                </div>
+            </div><!-- total belanja -->
         </div>
     </div>
 </section>

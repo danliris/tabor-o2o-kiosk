@@ -1,26 +1,39 @@
-﻿<section class="bg-grey">
-
+﻿<section class="p-y-15 bg-grey">
     <form ng-submit="vm.searchProducts(vm.productQuery)">
         <div class="container">
             <div class="row">
-                <div class="col-sm-2">
-                    <select class="form-control"
-                            ng-model="vm.productQuery.orderBy"
-                            ng-change="vm.getProducts(vm.productQuery)">
-                        <option value="+Price">Price Asc</option>
-                        <option value="-Price">Price Desc</option>
-                    </select>
+                <div class="col-sm-4">
+                    <div class="form-horizontal">
+                        <label class="control-label col-sm-4">
+                            Urutkan:
+                        </label>
+                        <div class="col-sm-8">
+                            <select class="form-control"
+                                    ng-model="vm.productQuery.orderBy">
+                                <option value="+Name">Nama: A-Z</option>
+                                <option value="-Name">Nama: Z-A</option>
+                                <option value="+Price">Harga: Rendah ke Tinggi</option>
+                                <option value="-Price">Harga: Tinggi ke Rendah</option>
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="col-sm-3">
-                    <select class="form-control"
-                            ng-model="vm.productQuery.orderBy"
-                            ng-change="vm.getProducts(vm.productQuery)">
-                        <option value="+Price">Price Asc</option>
-                        <option value="-Price">Price Desc</option>
-                    </select>
-                </div>
-                <div class="col-sm-4 pull-right">
-                    <input class="form-control" type="text" placeholder="Search in this category" ng-model="vm.productQuery.keyword" />
+                <div class="col-sm-8">
+                    <div class="form-horizontal">
+                        <label class="control-label col-sm-4">
+                            Filter:
+                        </label>
+                        <div class="col-sm-8">
+                            <select class="form-control"
+                                    ng-model="vm.productQuery.priceRange"
+                                    ng-change="vm.getProducts(vm.productQuery)">
+                                <option value="< 1000000">0 sampai Rp. 1.000.000,-</option>
+                                <option value="1000000 - 2500000">Rp. 1.000.000 sampai Rp. 2.500.000</option>
+                                <option value="> 2500000">&gt; Rp. 2.500.000</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -28,76 +41,38 @@
 </section>
 
 <div class="container">
-    <h3 class="section-title text-center">APA YA</h3>
-
+    <br />
     <div class="row">
         <div class="col-sm-12">
             <div class="row">
-                <div class="col-sm-12" ng-if="vm.products.length == 0 && !vm.loadingProducts">
-                    No results.
-                </div>
-
-                <div class="col-xs-6 col-sm-4"
-                     ng-repeat="product in vm.products"
-                     ng-click="product.detailOpened = !product.detailOpened">
-
-                    <div class="product-card"
-                         ng-class="{ 'open': product.detailOpened }">
-
-                        <div class="flex-1">
-                            <div class="img-placeholder">
-                                <img ng-src="{{ product.ImageUrl || 'statics/images/phone-placeholder.png' }}"
-                                     alt="{{ product.Name }}"
-                                     title="{{ product.Name }}" />
-                            </div>
-                        </div>
-                        <div class="flex-1">
-                            <div class="description-block">
-                                <div class="flex-1">
-                                    <div class="name-block">
-                                        <span class="name">
-                                            {{ product.Name }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="price-block">
-                                        <span class="original-price">
-                                            Rp. 3.500.000
-                                        </span>
-                                        <span class="price">
-                                            {{ product.Price | currency: 'Rp. ': 0 }}
-                                        </span>
-                                    </div>
-                                    <!--<div class="specification-block">
-                                        {{ product.Specification | json }}
-                                    </div>-->
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="overlay">
-                        </div>
-
-                        <div class="actions">
-                            <button class="btn btn-default btn-circle"
-                                    ng-click="vm.openDetail(product); $event.stopPropagation()">
-                                <i class="fa fa-search"></i>
-                            </button>
-                            <button class="btn btn-primary btn-circle"
-                                    ng-click="vm.addOrderItem(product);">
-                                <i class="fa fa-shopping-cart"></i>
-                            </button>
+                <!--<div class="col-sm-12 text-center" ng-if="vm.products.length == 0 && !vm.loadingProducts">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <i class="fa fa-info-circle fa-4x text-warning"></i>
+                            <h4>Kami tidak menemukan hasil pencarian untuk "safdafadfasdf"</h4>
+                            <p class="small">Tolong periksa pengejaan kata, atau hubungi staff kami untuk informasi lebih lanjut.</p>
                         </div>
                     </div>
+                </div>-->
+
+                <div class="col-xs-6 col-sm-4"
+                     ng-repeat="product in vm.products | orderBy: vm.productQuery.orderBy">
+
+                    <product-item-card product="product"
+                                       add-order-item="vm.addOrderItem(product)"
+                                       open-detail-item="vm.openDetailItem(product)">
+                    </product-item-card>
+
                 </div>
 
-                <div class="col-sm-12 text-center" ng-if="vm.loadingProducts">
-                    <i class="fa fa-spinner fa-spin fa-2x"></i>
-                </div>
+                <loading-indicator ng-if="vm.loadingProducts"></loading-indicator>
 
-                <div class="col-sm-12 text-center">
-                    <button ng-click="vm.nextPage(vm.productQuery)">Next</button>
+                <div class="col-sm-12 text-center"
+                     ng-if="vm.productQuery.count > vm.productQuery.page * vm.productQuery.limit">
+                    <button class="btn btn-default"
+                            ng-click="vm.nextPage(vm.productQuery)">
+                        selanjutnya <i class="fa fa-circle-o-notch fa-spin" ng-if="vm.loadingProducts"></i>
+                    </button>
                 </div>
             </div>
 

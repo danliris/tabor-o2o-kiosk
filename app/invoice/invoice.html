@@ -1,0 +1,55 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div id="print-wrapper">
+                <section class="invoice">
+                    <div class="row">
+                        <div class="col-xs-2">
+                            LOGO
+                        </div>
+                        <div class="col-xs-10 text-right">
+                            <b>{{ vm.currentUser.kiosk.name }}</b> - {{ vm.currentUser.kiosk.address }}
+                            <br />
+                            <i class="fa fa-phone"></i> {{ vm.currentUser.kiosk.phone }} | www.shopname.com | lorem@ipsum.com
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <hr />
+                            <h4>NOTA</h4>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <b>Kode #{{ vm.order.Code }}</b><br />
+                            <b>TANGGAL: </b> {{ vm.order.RequestDate | date: 'dd MMM yyyy' }}
+                        </div>
+                        <div class="col-xs-6">
+                            <label>KEPADA</label>
+                            <address>
+                                <b>{{ vm.order.Name }}</b>
+                                <br /><b ng-if="vm.order.SelfPickUp">{{ vm.order.KioskCode }}<br /></b>
+                                {{ vm.order.Address }}
+                                <br />
+                                Telepon: {{ vm.order.Phone }}
+                            </address>
+                        </div>
+                    </div>
+
+                    <invoice-down-payment order="vm.order" order-payment="vm.orderPayment" ng-if="vm.orderPayment.PaymentType == 'DOWN PAYMENT'"></invoice-down-payment>
+                    <invoice-full-payment order="vm.order" order-payment="vm.orderPayment" ng-if="vm.orderPayment.PaymentType == 'FULL PAYMENT'"></invoice-full-payment>
+                    <invoice-fulfillment order="vm.order" order-payment="vm.orderPayment" ng-if="vm.orderPayment.PaymentType == 'FULFILLMENT'"></invoice-fulfillment>
+
+                </section>
+            </div>
+        </div>
+
+        <div class="col-xs-12 hidden-print">
+            <button class="btn btn-default m-t-15" ng-click="vm.close()">Tutup</button>
+            <button class="btn btn-success m-t-15 pull-right" ng-click="vm.print()">Print</button>
+        </div>
+    </div>
+</div>

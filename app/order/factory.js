@@ -2,39 +2,38 @@
     .factory('Order', Order);
 
 Order.$inject = [
-    '$sessionStorage'
+    '$sessionStorage',
+    '$filter'
 ];
 
-function Order($sessionStorage) {
+function Order($sessionStorage, $filter) {
     return {
-        getTotalItems: getTotalItems,
         getCurrentOrder: getCurrentOrder,
         addOrderItem: addOrderItem,
-        removeOrderItem: removeOrderItem
-    }
-
-    function getTotalItems() {
-        initiateOrder();
-
-        return $sessionStorage.order.items.length;
+        removeOrderItem: removeOrderItem,
+        initiateOrder: initiateOrder
     }
 
     function getCurrentOrder() {
-        initiateOrder();
+        if (!$sessionStorage.order) {
+            initiateOrder();
+        }
 
         return $sessionStorage.order;
     }
 
     function addOrderItem(item) {
-        initiateOrder();
+        if (!$sessionStorage.order) {
+            initiateOrder();
+        }
 
-        var existingDataIndex = $sessionStorage.order.items.indexOf(item);
+        var existingData = $filter('filter')($sessionStorage.order.items, { 'sku': item.sku })[0];
 
-        if (existingDataIndex > -1) {
-            $sessionStorage.order.items[existingDataIndex].Quantity++;
+        if (existingData) {
+            existingData.quantity++;
         }
         else {
-            item.Quantity = 1;
+            item.quantity = 1;
             $sessionStorage.order.items.push(item);
         }
     }
@@ -45,9 +44,7 @@ function Order($sessionStorage) {
     }
 
     function initiateOrder() {
-        if (!$sessionStorage.order) {
-            $sessionStorage.order = {};
-            $sessionStorage.order.items = [];
-        }
+        $sessionStorage.order = {};
+        $sessionStorage.order.items = [];
     }
 }
