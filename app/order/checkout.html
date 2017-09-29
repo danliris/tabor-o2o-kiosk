@@ -18,54 +18,58 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <p ng-if="vm.order.items.length == 0">
-                Tidak ada item di tas belanja Anda.
-            </p>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <p ng-if="vm.order.items.length == 0">
+                        Tidak ada item di tas belanja Anda.
+                    </p>
 
-            <table class="table" ng-if="vm.order.items.length > 0">
-                <thead>
-                    <tr>
-                        <th class="col-sm-2">&nbsp;</th>
-                        <th class="col-sm-3">Nama Produk</th>
-                        <th class="col-sm-2">Harga</th>
-                        <th class="col-sm-1">Jumlah</th>
-                        <th class="col-sm-2 text-right">Total Harga</th>
-                        <th class="col-sm-1"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="item in vm.order.items">
-                        <td class="text-center">
-                            <img style="width: 90px;" src="{{ item.image || 'statics/images/phone-placeholder.png' }}"
-                                 alt="{{ item.name }}"
-                                 title="{{ item.name }}" />
-                        </td>
-                        <td>
-                            {{ item.name }}
-                            <p class="text-muted small">
-                                {{ item.description }}
-                            </p>
-                        </td>
-                        <td>
-                            {{ item.price | currency: 'Rp. ' : 0 }}
-                            <div ng-if="vm.shippingAddress.toKiosk && item.dp > 0">
-                                <span class="label label-info">DP {{ item.dp }} %</span>
-                            </div>
-                        </td>
-                        <td>
-                            <input type="number" ng-model="item.quantity" class="form-control" min="1" />
-                        </td>
-                        <td class="text-right">
-                            <span class="price">{{ item.price * item.quantity | currency: 'Rp. ' : 0 }}</span>
-                        </td>
-                        <td class="text-right">
-                            <a href="javascript:;" ng-click="vm.removeOrderItem(item)">
-                                <i class="fa fa-trash"></i>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                    <table class="table" ng-if="vm.order.items.length > 0">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-2">&nbsp;</th>
+                                <th class="col-sm-3">Nama Produk</th>
+                                <th class="col-sm-2">Harga</th>
+                                <th class="col-sm-1">Jumlah</th>
+                                <th class="col-sm-2 text-right">Total Harga</th>
+                                <th class="col-sm-1"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in vm.order.items">
+                                <td class="text-center">
+                                    <img style="width: 90px;" src="{{ item.image || 'statics/images/phone-placeholder.png' }}"
+                                         alt="{{ item.name }}"
+                                         title="{{ item.name }}" />
+                                </td>
+                                <td>
+                                    {{ item.name }}
+                                    <p class="text-muted small">
+                                        {{ item.description }}
+                                    </p>
+                                </td>
+                                <td>
+                                    {{ item.price | currency: 'Rp. ' : 0 }}
+                                    <div ng-if="vm.shippingAddress.toKiosk && item.dp > 0">
+                                        <span class="label label-info">DP {{ item.dp }} %</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="number" ng-model="item.quantity" class="form-control" min="1" />
+                                </td>
+                                <td class="text-right">
+                                    <span class="price">{{ item.price * item.quantity | currency: 'Rp. ' : 0 }}</span>
+                                </td>
+                                <td class="text-center">
+                                    <a href="javascript:;" ng-click="vm.removeOrderItem(item)">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

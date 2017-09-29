@@ -14,7 +14,7 @@
                     <th class="text-right">Harga</th>
                     <th class="text-right">Subtotal</th>
                 </tr>
-                <tr ng-repeat="detail in order.OrderDetails">
+                <tr ng-repeat="detail in order.OrderDetails" ng-if="detail.Quantity > 0">
                     <td class="text-center">{{ detail.Quantity }}</td>
                     <td>{{ detail.Product.Name }}</td>
                     <td class="text-right">{{ detail.Price | currency: 'Rp. ' }}</td>
@@ -38,9 +38,12 @@
                 </tr>
                 <tr>
                     <td class="text-right" colspan="3">Kembali</td>
-                    <td class="text-right"> {{ orderPayment.PaidAmount - (order.DP + order.TotalShippingFee) | currency: 'Rp. ': 0 }}</td>
+                    <td class="text-right">{{ orderPayment.PaidAmount - ((order.TotalPrice + order.TotalShippingFee) - (order.DP + order.TotalShippingFee))  | currency: 'Rp. ': 0 }}</td>
                 </tr>
             </table>
+
+            
+           
         </div>
     </div>
     <div class="row" style="margin-top: 3cm;">

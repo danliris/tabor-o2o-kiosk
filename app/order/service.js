@@ -19,7 +19,8 @@ function OrderService($http, Urls) {
         voidDraft: voidDraft,
         pay: pay,
         updatePaymentStatus: updatePaymentStatus,
-        complete: complete
+        complete: complete,
+        arrive: arrive
     };
 
     function getAll(query, kioskCode) {
@@ -213,6 +214,11 @@ function OrderService($http, Urls) {
 
     function complete(code) {
         return $http.post(Urls.BASE_API + '/orders/complete', { code: code })
+            .then(handleSuccess);
+    }
+
+    function arrive(code) {
+        return $http.post(Urls.BASE_API + '/orders/arrive', { code: code })
             .then(handleSuccess);
     }
 

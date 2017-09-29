@@ -11,7 +11,8 @@ function AuthenticationService($http, Urls) {
         signIn: signIn,
         signOut: signOut,
         getAuthenticatedUser: getAuthenticatedUser,
-        getKioskUser: getKioskUser
+        getKioskUser: getKioskUser,
+        getRole: getRole
     };
 
     function signIn(user) {
@@ -42,6 +43,23 @@ function AuthenticationService($http, Urls) {
         }
 
         return $http.get(Urls.BASE_API + '/kioskusers?' + $.param(q))
+            .then(handleSuccess);
+    }
+
+    function getRole(id) {
+        var q = {
+            filter: {
+                where: {
+                    principalType: 'USER',
+                    principalId: id
+                },
+                include: {
+                    relation: 'role'
+                }
+            }
+        }
+
+        return $http.get(Urls.BASE_API + '/rolemappings?' + $.param(q))
             .then(handleSuccess);
     }
 

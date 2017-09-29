@@ -74,12 +74,12 @@
                                             {{ item.Product.Name }} <label class="label label-info" ng-if="vm.orderPayment.PaymentType == 'DOWN PAYMENT'">{{ item.Product.DP }} %</label>
                                             <br />
                                             <p class="text-muted">
-                                                {{ item.Quantity }} pcs x {{ item.Price | currency: 'Rp. ': 0 }}
+                                                {{ item.Quantity }} pcs x {{ item.Product.Price | currency: 'Rp. ': 0 }}
                                             </p>
                                         </td>
                                         <td class="text-right">
-                                            <span ng-if="vm.orderPayment.PaymentType == 'FULL PAYMENT'">{{ item.Price * item.Quantity | currency: 'Rp. ': 0 }}</span>
-                                            <span ng-if="vm.orderPayment.PaymentType == 'DOWN PAYMENT'">{{ item.DPNominal * item.Quantity | currency: 'Rp. ': 0 }}</span>
+                                            <span ng-if="vm.orderPayment.PaymentType == 'FULL PAYMENT'">{{ item.Price | currency: 'Rp. ': 0 }}</span>
+                                            <span ng-if="vm.orderPayment.PaymentType == 'DOWN PAYMENT'">{{ item.DPNominal | currency: 'Rp. ': 0 }}</span>
                                         </td>
                                     </tr>
                                     <tr ng-if="vm.orderPayment.PaymentType == 'DOWN PAYMENT'">

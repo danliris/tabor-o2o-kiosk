@@ -39,9 +39,9 @@
                                     </p>
                                 </td>
                                 <td>
-                                    {{ detail.Price | currency: 'Rp. ' : 0 }}
+                                    {{ detail.Product.Price | currency: 'Rp. ' : 0 }}
                                     <div ng-if="vm.order.SelfPickUp && detail.DPNominal > 0">
-                                        <span class="label label-info">DP {{ detail.DPNominal / detail.Price * 100 }} %</span>
+                                        <span class="label label-info">DP {{ detail.Product.DP }} %</span>
                                     </div>
                                 </td>
                                 <td class="text-center">
@@ -52,7 +52,7 @@
                                            ng-change="vm.updateDetail(detail)" />
                                 </td>
                                 <td class="text-right">
-                                    <span class="price">{{ detail.Price * detail.Quantity | currency: 'Rp. ' : 0 }}</span>
+                                    <span class="price">{{ detail.Product.Price * detail.Quantity | currency: 'Rp. ' : 0 }}</span>
                                 </td>
                             </tr>
                         </tbody>

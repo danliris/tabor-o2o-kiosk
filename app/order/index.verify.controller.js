@@ -54,11 +54,12 @@ function OrderVerifyController(OrderService, toastr, $filter, $timeout, $state, 
 
         OrderService.pay(orderPayment)
             .then(function (res) {
-                return OrderService.updatePaymentStatus(res.result.Code);
-            })
-            .then(function (res) {
+                //return OrderService.updatePaymentStatus(res.result.Code);
                 vm.order = res.result;
             })
+            //.then(function (res) {
+            //    vm.order = res.result;
+            //})
             .catch(function (err, error) {
                 toastr.error(err);
             })
