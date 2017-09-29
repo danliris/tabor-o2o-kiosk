@@ -115,6 +115,13 @@ function routeConfig($stateProvider, $urlRouterProvider, $locationProvider) {
                     controller: 'OrderDraftController',
                     controllerAs: 'vm'
                 })
+                .state('app.order.checkin', {
+                    url: '/check-in',
+                    templateUrl: 'app/order/index.checkin.html',
+                    data: { pageTitle: 'Check In' },
+                    controller: 'OrderCheckInController',
+                    controllerAs: 'vm'
+                })
 
                 .state('app.order.detail', {
                     url: '/{code}',

@@ -65,14 +65,14 @@
                             </h5>
                         </div>
 
-                        <div class="panel-body" style="max-height: 350px; overflow: auto;">
-                            <p class="no-margin" ng-if="vm.order.OrderPayments.length <= 0">
+                        <div class="panel-body" style="max-height: 300px; overflow: auto; ">
+                            <p class="m-15" ng-if="vm.order.OrderPayments.length <= 0">
                                 <i class="fa fa-exclamation-triangle"></i> Belum ada transaksi pembayaran
                             </p>
 
                             <table class="table table-striped no-margin">
                                 <tr ng-repeat="payment in vm.order.OrderPayments | orderBy: '-TransactionDate'">
-                                    <td>
+                                    <td class="p-15">
                                         <a class="close"
                                            title="Print"
                                            ui-sref="blank.invoice({ code: vm.order.Code, paymentId: payment.id })"
@@ -119,7 +119,7 @@
                                         <th class="col-sm-3 text-right">Total Harga</th>
                                     </tr>
                                 </thead>
-                                <tbody ng-repeat="detail in vm.order.OrderDetails">
+                                <tbody ng-repeat="detail in vm.order.OrderDetails" ng-if="detail.Quantity > 0">
                                     <tr>
                                         <td class="text-center">
                                             <img style="width: 90px;" src="{{ detail.Product.Image || 'statics/images/phone-placeholder.png' }}"
@@ -169,7 +169,7 @@
                                     </tr>
                                     <tr>
                                         <th colspan="3" class="text-right">
-                                            Total Belanja
+                                            <p>Total Belanja</p>
                                         </th>
                                         <td class="text-right">
                                             <span class="price">{{ vm.order.TotalPrice + vm.order.TotalShippingFee | currency: 'Rp. ': 0 }}</span>
@@ -183,6 +183,11 @@
                 </div>
 
             </div>
+        </div>
+        <div class="modal-footer">
+            <button ng-click="vm.close()" class="btn btn-default">
+                Tutup
+            </button>
         </div>
     </div>
 </div>

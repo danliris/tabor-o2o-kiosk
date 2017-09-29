@@ -1,6 +1,6 @@
 ﻿
 <div>
-    <div class="product-card" ng-class="{ 'unavailable': product.Quantity == 0 }">
+    <div class="product-card" ng-class="{ 'unavailable': product.Quantity <= 0 }">
         <div class="flex-1">
             <div class="img-placeholder">
                 <img ng-src="{{ product.Image || 'statics/images/phone-placeholder.png' }}"

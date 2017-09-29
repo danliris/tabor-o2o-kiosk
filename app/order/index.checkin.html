@@ -1,0 +1,32 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <h3 class="section-title">
+                CHECK IN ORDER
+            </h3>
+
+            <div class="form-group">
+                <form ng-submit="vm.getOrder(vm.code)">
+                    <div class="form-group">
+                        <label class="control-label">Kode Pesanan</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control"
+                                   ng-model="vm.code">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="submit">CARI</button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <div class="col-sm-12">
+            <pre>{{ vm.order | json }}</pre>
+        </div>
+        <div class="col-sm-12">
+            <button ng-click="vm.arriveOrder(vm.order)">Check In</button>
+        </div>
+    </div>
+</div>
