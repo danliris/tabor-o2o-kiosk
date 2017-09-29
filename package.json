@@ -1,0 +1,24 @@
+{
+  "name": "tabor-o2o-kiosk",
+  "version": "1.0.0",
+  "description": "customer's online catalog",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "moonlay",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.6.4",
+    "angular-animate": "^1.6.5",
+    "angular-fcsa-number": "^1.5.7",
+    "angular-toastr": "^2.1.1",
+    "angular-ui-bootstrap": "^2.5.0",
+    "angular-ui-router": "^1.0.3",
+    "bootstrap": "^3.3.7",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.2.1",
+    "ngstorage": "^0.3.11"
+  },
+  "devDependencies": {}
+}
