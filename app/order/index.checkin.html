@@ -19,14 +19,22 @@
                     </div>
                 </form>
             </div>
-
         </div>
+    </div>
 
+    <loading-indicator ng-if="vm.loadingGetOrder"></loading-indicator>
+
+    <order-detail order="vm.order" ng-if="vm.order"></order-detail>
+
+    <div class="row" ng-if="vm.order">
         <div class="col-sm-12">
-            <pre>{{ vm.order | json }}</pre>
-        </div>
-        <div class="col-sm-12">
-            <button ng-click="vm.arriveOrder(vm.order)">Check In</button>
+            <button ng-click="vm.arriveOrder(vm.order)"
+                    class="btn btn-primary">
+
+                <i class="fa"
+                   ng-class="{ 'fa-circle-o-notch': vm.loadingArriveOrder, 'fa-download': !vm.loadingArriveOrder }"></i>
+                &nbsp;Check In
+            </button>
         </div>
     </div>
 </div>

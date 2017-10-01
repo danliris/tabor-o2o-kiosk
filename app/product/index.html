@@ -41,19 +41,19 @@
 </section>
 
 <div class="container">
-    <br />
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-12 m-t-15">
             <div class="row">
-                <!--<div class="col-sm-12 text-center" ng-if="vm.products.length == 0 && !vm.loadingProducts">
+                <div class="col-sm-12 text-center"
+                     ng-if="vm.products.length == 0 && !vm.loadingProducts">
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <i class="fa fa-info-circle fa-4x text-warning"></i>
-                            <h4>Kami tidak menemukan hasil pencarian untuk "safdafadfasdf"</h4>
+                            <h4>Kami tidak menemukan hasil pencarian untuk "<i>{{ vm.productQuery.keyword }}</i>" dalam kategori ini.</h4>
                             <p class="small">Tolong periksa pengejaan kata, atau hubungi staff kami untuk informasi lebih lanjut.</p>
                         </div>
                     </div>
-                </div>-->
+                </div>
 
                 <div class="col-xs-6 col-sm-4"
                      ng-repeat="product in vm.products | orderBy: vm.productQuery.orderBy">
@@ -71,7 +71,10 @@
                      ng-if="vm.productQuery.count > vm.productQuery.page * vm.productQuery.limit">
                     <button class="btn btn-default"
                             ng-click="vm.nextPage(vm.productQuery)">
-                        selanjutnya <i class="fa fa-circle-o-notch fa-spin" ng-if="vm.loadingProducts"></i>
+                        selanjutnya
+                        <i class="fa fa-circle-o-notch fa-spin"
+                           ng-if="vm.loadingProducts">
+                        </i>
                     </button>
                 </div>
             </div>
