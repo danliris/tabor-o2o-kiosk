@@ -134,12 +134,19 @@ label {
     text-transform: uppercase;
 }
 
-.panel.panel-default .panel-title {
-    color: #aaa;
+.panel.panel-default {
+    border: none;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
 }
 
+    .panel.panel-default .panel-title {
+        color: #5c5c5c;
+    }
+
 .btn {
-    border-radius: 0;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
+    border: none;
+    border-radius: 2px;
 }
 
     .btn:focus, .btn:active:focus, .btn.active:focus {
@@ -207,9 +214,9 @@ label {
         color: #fff;
     }
 
-    .btn .fa.pull-right {
-        line-height: inherit;
-    }
+.btn .fa.pull-right {
+    line-height: inherit;
+}
 
 .pagination > .active > a,
 .pagination > .active > a:focus,
@@ -248,6 +255,10 @@ hr {
     margin-top: .5em;
     margin-bottom: .5em;
     border-color: #cdcdcd;
+}
+
+.m-15 {
+    margin: 15px;
 }
 
 .m-t-10 {
@@ -292,6 +303,15 @@ hr {
     margin-bottom: 15px;
 }
 
+.p-15 {
+    padding: 15px !important;
+}
+
+.p-x-15 {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
 .p-y-15 {
     padding-top: 15px;
     padding-bottom: 15px;
@@ -309,6 +329,10 @@ hr {
 
 .no-margin {
     margin: 0;
+}
+
+.no-padding {
+    padding: 0;
 }
 
 .cursor-pointer {
@@ -329,3 +353,31 @@ hr {
     background-color: rgb(5, 208, 161);
     border-radius: 5px;
 }
+
+.table {
+    /*box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);*/
+}
+
+    .table > thead > tr > th {
+        color: #5c5c5c;
+        font-size: 12px;
+        line-height: 28px;
+        background: rgba(0,0,0,0.04);
+        border-bottom: 1px solid rgba(0,0,0, 0.08);
+        text-transform: uppercase;
+    }
+
+
+ul.pagination {
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
+}
+
+    ul.pagination > li > a {
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    ul.pagination > li.disabled > a,
+    ul.pagination > li.disabled > a:focus,
+    ul.pagination > li.disabled > a:hover {
+        border: 1px solid rgba(0,0,0,0.03);
+    }

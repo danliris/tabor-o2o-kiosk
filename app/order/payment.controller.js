@@ -52,7 +52,9 @@ function OrderPaymentController($rootScope, $filter, $stateParams, $state, $time
         vm.loadingPay = true;
         OrderService.pay(orderPayment)
             .then(function (res) {
-                updatePaymentStatus(res.result.Code);
+                //updatePaymentStatus(res.result.Code);
+                vm.orderToBePrinted = res.result;
+                vm.message = 'Your order has been submitted successfully!';
             })
             .catch(function (res) {
                 toastr.error(res);
@@ -62,20 +64,20 @@ function OrderPaymentController($rootScope, $filter, $stateParams, $state, $time
             });
     }
 
-    function updatePaymentStatus(code) {
-        vm.loadingUpdatePaymentStatus = true;
-        OrderService.updatePaymentStatus(code)
-            .then(function (res) {
-                vm.orderToBePrinted = res.result;
-                vm.message = 'Your order has been submitted successfully!';
-            })
-            .catch(function (res) {
-                toastr.error(res);
-            })
-            .finally(function () {
-                vm.loadingUpdatePaymentStatus = false;
-            });
-    }
+    //function updatePaymentStatus(code) {
+    //    vm.loadingUpdatePaymentStatus = true;   
+    //    OrderService.updatePaymentStatus(code)
+    //        .then(function (res) {
+    //            vm.orderToBePrinted = res.result;
+    //            vm.message = 'Your order has been submitted successfully!';
+    //        })
+    //        .catch(function (res) {
+    //            toastr.error(res);
+    //        })
+    //        .finally(function () {
+    //            vm.loadingUpdatePaymentStatus = false;
+    //        });
+    //}
 
 
     function changePaymentType(val) {

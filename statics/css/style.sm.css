@@ -3,7 +3,7 @@ header {
     background: #fff;
     z-index: 999;
     width: 100%;
-    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
     /*border-bottom: 2px solid #ddd;*/
     /*height: 145px;*/
 }
@@ -25,7 +25,7 @@ header {
         background: #05d0a1;
         padding: .5em 0em;
         font-size: 1em;
-        box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
     }
 
         header .top-bar ul > li {
@@ -53,6 +53,7 @@ header {
                 text-decoration: underline;
             }
 
+
     header .content {
         padding: 2em 0em;
         line-height: 3em;
@@ -66,6 +67,11 @@ header {
         header .content .btn {
             padding-left: 1.5em;
             padding-right: 1.5em;
+        }
+
+        header .content .form-control {
+            box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
+            border: none;
         }
 
     header .icon-wrapper {
@@ -196,6 +202,7 @@ header {
         }
 
 .price {
+    font-size: 1.2em;
     color: #fd2e5c;
     font-weight: 700;
 }

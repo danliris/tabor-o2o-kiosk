@@ -18,8 +18,8 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
 
     function toggleSelfPickUp(val) {
         if (val) {
-            vm.order.Address = 'Alamat default kiosk'; // generated from user login
-            
+            vm.order.Address = vm.currentUser.kiosk.address;
+
             removeCurrentShippingInformation();
 
             delete vm.destination;
@@ -34,7 +34,7 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
         vm.loadingGetOrderByCode = true;
         OrderService.getByCode(code)
             .then(function (res) {
-                if (res.Status == 'REQUESTED') {
+                if (res.Status != 'DRAFTED') {
                     $state.go('app.order.draft');
                 }
 
