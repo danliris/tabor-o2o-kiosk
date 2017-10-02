@@ -1,24 +1,28 @@
 ﻿<div class="container">
-    <h3 class="section-title">
-        LACAK PEMESANAN
-    </h3>
     <div class="row">
-        <form ng-submit="vm.getOrder(vm.code)">
-            <div class="col-sm-5">
-                <div class="form-group">
-                    <label class="control-label">Kode Pesanan</label>
-                    <input type="text" class="form-control"
-                           ng-model="vm.code">
-                </div>
+        <div class="col-sm-6">
+            <h3 class="section-title">
+                LACAK PEMESANAN
+            </h3>
+
+            <div class="form-group">
+                <form ng-submit="vm.getOrder(vm.code)">
+                    <div class="form-group">
+                        <label class="control-label">Kode Pesanan</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control"
+                                   ng-model="vm.code">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="submit">CARI</button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="col-sm-2">
-                <label class="control-label">&nbsp;</label>
-                <button class="btn btn-primary form-control" type="submit">
-                    <i class="fa fa-circle-o-notch fa-spin" ng-if="vm.loadingGetOrder"></i> CARI
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
+
+    <loading-indicator ng-if="vm.loadingGetOrder"></loading-indicator>
 
     <order-detail order="vm.order" ng-if="vm.order"></order-detail>
 
