@@ -1,8 +1,8 @@
 ﻿angular.module('app')
     .controller('ProductController', ProductController);
 
-ProductController.$inject = ['$rootScope', '$stateParams', '$uibModal', 'toastr', 'ProductService', 'Order', 'AuthenticationState'];
-function ProductController($rootScope, $stateParams, $uibModal, toastr, ProductService, Order, AuthenticationState) {
+ProductController.$inject = ['$q', '$rootScope', '$stateParams', '$uibModal', 'toastr', 'ProductService', 'Order', 'AuthenticationState'];
+function ProductController($q, $rootScope, $stateParams, $uibModal, toastr, ProductService, Order, AuthenticationState) {
     var vm = this;
 
     vm.currentUser = AuthenticationState.getUser();
@@ -52,8 +52,18 @@ function ProductController($rootScope, $stateParams, $uibModal, toastr, ProductS
 
     function getProducts(products, query) {
         vm.loadingProducts = true;
-        ProductService.getAll(query, vm.currentUser.kiosk.code)
-            .then(function (response) {
+        var promises = [];
+        promises.push(
+            ProductService.getAll(query, vm.currentUser.kiosk.code)
+        );
+
+        promises.push(
+            ProductService.countAll(query, vm.currentUser.kiosk.code)
+        )
+
+        $q.all(promises)
+            .then((responses) => {
+                var response = responses[0];
                 for (var i = 0, l = response.length; i < l; i++) {
                     try {
                         response[i].ArrayedSpecification = JSON.parse(response[i].Specification);
@@ -62,24 +72,12 @@ function ProductController($rootScope, $stateParams, $uibModal, toastr, ProductS
                     }
                     products.push(response[i]);
                 }
-            })
-            .catch(function (res) {
-                toastr.error(res);
-            })
-            .finally(function () {
-                vm.loadingProducts = false;
-            });
 
-        ProductService.countAll(query, vm.currentUser.kiosk.code)
-            .then(function (res) {
-                vm.productQuery.count = res.count;
-            })
-            .catch(function (res) {
-                toastr.error(res);
-            })
-            .finally(function () {
+                response = responses[1];
+                query.count = response.count;
+
                 vm.loadingProducts = false;
-            });
+            })
     }
 
     function initQuery() {
