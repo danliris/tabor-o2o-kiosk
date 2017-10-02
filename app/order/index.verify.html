@@ -28,7 +28,7 @@
                             <label class="control-label">
                                 PIN
                             </label>
-                            <input type="text" class="form-control"paym
+                            <input type="text" class="form-control" paym
                                    name="pin"
                                    ng-model="vm.pin"
                                    required
@@ -49,7 +49,7 @@
     </div>
 
     <div ng-if="vm.order">
-        <!-- kalo belum arrived, masih tahap mau requested -->
+        <!-- kalo belum arrived, masih processed -->
         <div class="row" ng-if="vm.order.Status != 'ARRIVED' && vm.order.Status != 'RECEIVED'">
             <div class="col-sm-12">
                 <div class="panel panel-default">
@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <!-- kalo arrived, udah bisa received (kalo belum lunas, lunasin. kalo udah lunas, print)  -->
+        <!-- kalo arrived, udah bisa completed (kalo belum lunas, lunasin. kalo udah lunas, print)  -->
         <div ng-if="vm.order.Status == 'ARRIVED'">
             <div class="row" ng-if="!vm.order.IsFullyPaid">
                 <div class="col-sm-5">
@@ -157,24 +157,28 @@
 
             <div class="row" ng-if="vm.order.IsFullyPaid">
                 <div class="col-sm-12">
+                    <order-detail order="vm.order"></order-detail>
+                </div>
 
-                    <div class="panel panel-default no-margin">
-
+                <div class="col-sm-12">
+                    <div class="panel panel-default">
                         <button class="btn btn-success btn-block btn-lg"
                                 ng-disabled="vm.loadingCompleteOrder"
                                 ng-click="vm.completeOrder(vm.order)">
-                            Selesaikan Order <i class="fa fa-spin fa-spinner" ng-if="vm.loadingCompleteOrder"></i>
+                            <i class="fa fa-circle-o-notch fa-spin" ng-if="vm.loadingCompleteOrder"></i> Selesaikan Order
                         </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div ng-if="vm.order.Status == 'RECEIVED'">
-            <button class="btn btn-info btn-lg btn-block m-t-10"
-                    ng-click="vm.goToPrint()">
-                CETAK
-            </button>
+        <div class="row" ng-if="vm.order.Status == 'RECEIVED'">
+            <div class="col-sm-12">
+                <button class="btn btn-info btn-lg btn-block m-t-10"
+                        ng-click="vm.goToPrint()">
+                    CETAK
+                </button>
+            </div>
         </div>
     </div>
 </div>

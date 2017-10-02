@@ -35,20 +35,24 @@ function ProductService($http, Urls) {
 
     function countAll(query, kioskCode) {
         var q = {
-            where: {
-                'Name': {
-                    like: '%' + (query.keyword || '') + '%'
-                },
-                'BrandCode': query.brandCode,
-                'ProductCategoryCode': query.categoryCode,
-                'KioskCode': kioskCode
-            }
+            //where: {
+            'Name': {
+                like: '%' + (query.keyword || '') + '%'
+            },
+            'BrandCode': query.brandCode,
+            'ProductCategoryCode': query.categoryCode,
+            'KioskCode': kioskCode
+            //}
         };
         //return $http.get(Urls.BASE_API + '/vmappedproducts/count?' + $.param(q))
         //    .then(handleSuccess);
 
-        return $http.get(Urls.BASE_API + '/vmappedproducts/count', { params: { filter: JSON.stringify(q) } })
+        //return $http.get(Urls.BASE_API + '/vmappedproducts/count', { params: { filter: JSON.stringify(q) } })
+        //   .then(handleSuccess);
+
+        return $http.get(Urls.BASE_API + '/vmappedproducts/count', { params: { where: JSON.stringify(q) } })
            .then(handleSuccess);
+
     }
 
     function getByCode(code) {

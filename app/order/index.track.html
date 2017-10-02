@@ -20,6 +20,10 @@
                 </form>
             </div>
         </div>
-
     </div>
+
+    <loading-indicator ng-if="vm.loadingGetOrder"></loading-indicator>
+
+    <order-detail order="vm.order" ng-if="vm.order"></order-detail>
+
 </div>

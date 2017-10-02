@@ -1,23 +1,22 @@
 ﻿angular.module('app')
     .controller('OrderTrackController', OrderTrackController);
 
-OrderTrackController.$inject = ['OrderService', '$uibModal'];
-function OrderTrackController(OrderService, $uibModal) {
+OrderTrackController.$inject = ['OrderService'];
+function OrderTrackController(OrderService) {
     var vm = this;
     vm.getOrder = getOrder;
 
     function getOrder(code) {
-        var modalInstance = $uibModal.open({
-            animation: true,
-            templateUrl: 'app/order/detail.modal.html',
-            controller: 'OrderDetailModalController',
-            controllerAs: 'vm',
-            size: 'lg',
-            resolve: {
-                code: function () {
-                    return code;
-                }
-            }
-        });
+        vm.loadingGetOrder = true;
+        OrderService.getByCode(code)
+            .then(function (order) {
+                vm.order = order;
+            })
+            .catch(err => {
+                toastr.error(err);
+            })
+            .finally(() => {
+                vm.loadingGetOrder = false;
+            });
     }
 }

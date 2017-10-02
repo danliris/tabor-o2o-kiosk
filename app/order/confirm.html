@@ -67,8 +67,8 @@
                 <div class="panel-body">
                     <table class="table no-margin">
                         <tr>
-                            <td class="col-sm-3">Nama</td>
-                            <td>{{ vm.order.name }}</td>
+                            <td class="col-sm-4">Nama</td>
+                            <td class="col-sm-8">{{ vm.order.name }}</td>
                         </tr>
                         <tr>
                             <td>Alamat</td>
@@ -85,7 +85,7 @@
                         </tr>
                         <tr>
                             <td>E-mail</td>
-                            <td>{{ vm.order.email }}</td>
+                            <td>{{ vm.order.email || '-' }}</td>
                         </tr>
                         <tr>
                             <td>No. Identitas (KTP / SIM)</td>

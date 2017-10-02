@@ -9,8 +9,8 @@ function LoginController(AuthenticationService, AuthenticationState, $localStora
     var vm = this;
 
     vm.user = {
-        email: 'ben.hardi@moonlay.com',
-        password: '12345'
+        email: '',
+        password: ''
     };
 
     vm.login = login;
