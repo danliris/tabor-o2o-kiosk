@@ -80,7 +80,7 @@ function OrderConfirmController($state, $window, toastr, Order, OrderService, $t
         vm.order = Order.getCurrentOrder();
 
         if (vm.order.items.length == 0) {
-            toastr.warning('Your cart is empty.');
+            toastr.warning('Keranjang belanja Anda kosong.');
             $state.go('app.home');
         }
     })();

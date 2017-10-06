@@ -47,7 +47,7 @@ function ProductController($q, $rootScope, $stateParams, $uibModal, toastr, Prod
             dealerCode: product.DealerCode
         });
 
-        toastr.success('Item has been added to the shopping bag.', 'Message');
+        toastr.success('Item telah ditambahkan ke kerajang belanja.', 'Pesan');
     }
 
     function getProducts(products, query) {

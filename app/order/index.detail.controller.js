@@ -12,6 +12,7 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
     vm.back = back;
     vm.voidDraft = voidDraft;
     vm.getLocations = getLocations;
+    //vm.selectLocation = selectLocation;
     vm.selectPricingOption = selectPricingOption;
     vm.updateDetail = updateDetail;
     vm.removeCurrentShippingInformation = removeCurrentShippingInformation;
@@ -49,6 +50,7 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
     }
 
     function updateDraft(order) {
+
         vm.loadingUpdateDraft = true;
 
         var orderToBeUpdated = {
@@ -95,11 +97,11 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
     }
 
     function voidDraft(code) {
-        if (confirm('Are you sure want to void this data?')) {
+        if (confirm('Apakah Anda yakin untuk membatalkan pesanan ini?')) {
             vm.loadingVoidDraft = true;
             OrderService.voidDraft(code)
                 .then(function (res) {
-                    toastr.info('Order has been voided');
+                    toastr.info('Pesanan telah dibatalkan.');
                     $state.go('app.order.draft');
                 })
                 .catch(function (res) {
@@ -120,6 +122,10 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
 
             });
     }
+
+    //function selectLocation(destination) {
+    //    selectPricingOption(destination.pricingOptions.find(x => x.productCode == 'REG'));
+    //}
 
     function selectPricingOption(pricingOption) {
         vm.pricingOption = pricingOption;
@@ -160,6 +166,7 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
     }
 
     function removeCurrentShippingInformation() {
+        delete vm.pricingOption;
         vm.order.ShippingDestination = '';
         vm.order.ShippingProductCode = '';
         vm.order.ShippingDueDay = 0;

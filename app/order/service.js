@@ -71,9 +71,10 @@ function OrderService($http, Urls) {
                     like: '%' + query.keyword + '%'
                 },
                 'Status': {
-                    nlike: 'DRAFTED'
+                    nin: ["DRAFTED", "VOIDED"]
                 },
                 'KioskCode': kioskCode
+
             }
         };
 
@@ -88,7 +89,7 @@ function OrderService($http, Urls) {
                     like: '%' + query.keyword + '%'
                 },
                 'Status': {
-                    nlike: 'DRAFTED'
+                    nin: ["DRAFTED", "VOIDED"]
                 },
                 'KioskCode': kioskCode
             }
@@ -178,7 +179,7 @@ function OrderService($http, Urls) {
             },
             include: [
                 {
-                    'OrderDetails': 'Product'
+                    'OrderDetails': ['Product', 'OrderTracks']
                 },
                 'OrderPayments'
             ]

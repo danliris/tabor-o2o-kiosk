@@ -43,9 +43,9 @@
                        ng-if="!order.IsFullyPaid">
                         Bayar
                     </a>-->
-                    <label class="pull-right" ng-class="{ 'text-success': vm.order.IsFullyPaid, 'text-warning': !vm.order.IsFullyPaid }">
-                        <i class="fa" ng-class="{ 'fa-check': vm.order.IsFullyPaid, 'fa-exclamation-triangle': !vm.order.IsFullyPaid }"></i>
-                        <span ng-if="!vm.order.IsFullyPaid">BELUM</span> LUNAS
+                    <label class="pull-right" ng-class="{ 'text-success': order.IsFullyPaid, 'text-warning': !order.IsFullyPaid }">
+                        <i class="fa" ng-class="{ 'fa-check': order.IsFullyPaid, 'fa-exclamation-triangle': !order.IsFullyPaid }"></i>
+                        <span ng-if="!order.IsFullyPaid">BELUM</span> LUNAS
                     </label>
 
                 </h5>
@@ -74,10 +74,17 @@
                                 <label class="control-label">Metode Pembayaran</label>
                                 <p>{{ payment.PaymentType }}</p>
                             </div>
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label class="control-label">Biaya / Jumlah yang dibayarkan</label>
                                 <p>
                                     {{ payment.Amount | currency: 'Rp. ': 0 }} / {{ payment.PaidAmount | currency: 'Rp. ': 0 }}
+                                </p>
+                            </div>-->
+
+                            <div class="form-group">
+                                <label class="control-label">Jumlah yang dibayarkan</label>
+                                <p>
+                                    {{ payment.PaidAmount | currency: 'Rp. ': 0 }}
                                 </p>
                             </div>
                         </td>
@@ -99,14 +106,15 @@
                     <thead>
                         <tr>
                             <th class="col-sm-2">&nbsp;</th>
-                            <th class="col-sm-5">Nama Produk</th>
-                            <th class="col-sm-2 text-center">Status</th>
+                            <th class="col-sm-4">Nama Produk</th>
+                            <th class="col-sm-3 text-center">Status</th>
                             <th class="col-sm-3 text-right">Total Harga</th>
                         </tr>
                     </thead>
                     <tbody ng-repeat="detail in order.OrderDetails" ng-if="detail.Quantity > 0">
                         <tr ng-click="detail.toggleTrack = !detail.toggleTrack" class="cursor-pointer">
                             <td class="text-center">
+                                <span class="fa" ng-class="{ 'fa-angle-down': !detail.toggleTrack, 'fa-angle-up': detail.toggleTrack }"></span>
                                 <img style="width: 90px;" src="{{ detail.Product.Image || 'statics/images/phone-placeholder.png' }}"
                                      alt="{{ detail.Product.Name }}"
                                      title="{{ detail.Product.Name }}" />
@@ -116,7 +124,7 @@
                                 <p class="small">{{ detail.Quantity }} pcs x {{ detail.Price | currency: 'Rp. ': 0 }}</p>
                             </td>
                             <td class="text-center">
-                                {{ detail.Status }}
+                                <small>{{ detail.Status }}</small>
                             </td>
                             <td class="text-right">
                                 {{ detail.Price * detail.Quantity | currency: 'Rp. ' : 0 }}
@@ -128,7 +136,7 @@
                                 <ul class="list-unstyled">
                                     <li ng-repeat="track in detail.OrderTracks">
                                         <span class="small">
-                                            {{ track.TrackDate | date: 'dd MMM yyyy' }} - {{ track.Status }}
+                                            {{ track.TrackDate | date: 'dd MMM yyyy' }} - {{ track.Status | humanify }}
                                         </span>
                                     </li>
                                 </ul>

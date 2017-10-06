@@ -132,23 +132,18 @@ header {
     .bottom-bar .list-menu > .item {
         flex: 0;
         text-align: center;
+        white-space: nowrap;
+        padding-left: 1.5em;
+        padding-right: 1.5em;
     }
-
-        .bottom-bar .list-menu > .item > a {
-            white-space: nowrap;
-            padding-left: 1.5em;
-            padding-right: 1.5em;
-        }
 
         .bottom-bar .list-menu > .item:hover,
         .bottom-bar .list-menu > .item:active,
-        .bottom-bar .list-menu > .item:focus {
+        .bottom-bar .list-menu > .item:focus,
+        .bottom-bar .list-menu > .item.active {
             background: #05D0A1;
+            color: #fff;
         }
-
-            .bottom-bar .list-menu > .item:hover > a {
-                color: #fff;
-            }
 
 .cart-item-menu {
     width: 320px;
@@ -233,7 +228,7 @@ footer {
     margin-bottom: 15px;
     position: relative;
     cursor: pointer;
-    /*overflow: hidden;*/
+    overflow: hidden;
     display: flex;
     flex-flow: row wrap;
     height: 220px;
@@ -582,4 +577,12 @@ body.auth-page {
 
     body.auth-page .btn-primary {
         border-color: #00a67f;
+    }
+
+
+.action-link {
+}
+
+    .action-link:hover > .fa {
+        transform: rotate(180deg);
     }

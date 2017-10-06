@@ -22,7 +22,11 @@
                 </tr>
                 <tr>
                     <td class="text-right border-top-1" colspan="3">Total Belanja</td>
-                    <td class="text-right border-top-1">{{ order.TotalPrice + order.TotalShippingFee | currency: 'Rp. ': 0 }}</td>
+                    <td class="text-right border-top-1">{{ order.TotalPrice | currency: 'Rp. ': 0 }}</td>
+                </tr>
+                <tr>
+                    <td class="text-right" colspan="3">Biaya Pengiriman</td>
+                    <td class="text-right">{{ order.TotalShippingFee | currency: 'Rp. ': 0 }}</td>
                 </tr>
                 <tr>
                     <td class="text-right" colspan="3">Pembayaran</td>
@@ -30,17 +34,12 @@
                         {{ orderPayment.PaidAmount | currency: 'Rp. ': 0 }}
                     </td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td class="text-right" colspan="3">Kembali</td>
                     <td class="text-right">
                         {{ orderPayment.PaidAmount - (order.TotalPrice + order.TotalShippingFee) | currency: 'Rp. ': 0 }}
                     </td>
-                </tr>
-
-                <tr ng-if="orderPayment.PaymentType == 'DOWN PAYMENT'">
-                    <td class="text-right" colspan="3"><b>Sisa yang harus dibayarkan</b></td>
-                    <td class="text-right"><b>{{ (order.TotalPrice + order.TotalShippingFee) - (order.DP + order.TotalShippingFee) | currency: 'Rp. ': 0 }}</b></td>
-                </tr>
+                </tr> -->
             </table>
         </div>
     </div>

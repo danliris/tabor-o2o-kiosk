@@ -24,7 +24,7 @@ function httpInterceptor($q, $rootScope, $localStorage, $location) {
         request: function (config) {
             config.headers = config.headers || {};
             //config.params = [];
-            
+
             if ($localStorage.token) {
                 config.headers.Authorization = 'Bearer ' + $localStorage.token;
             }
@@ -72,6 +72,7 @@ settings.$inject = [
 
 function settings($rootScope) {
     var settings = {
+        pageTitle: 'O2O',
         cartOpen: false,
         toggleCartOpen: toggleCartOpen
     };
@@ -103,6 +104,21 @@ function runBlock($rootScope, $state, $transitions, settings, AuthenticationStat
             $state.go('authentication.login');
         }
 
+        // check authorized user
+        var stateData = trans.$to().data;
+        if (stateData.authorizedRoles)
+        {
+            var currentUser = AuthenticationState.getUser();
+            var authorized = false;
+            for (var i = 0, length = stateData.authorizedRoles.length; i < length; i++) {
+                authorized = authorized || (currentUser.roles.find(x => x.name == stateData.authorizedRoles[i]) ? true : false);
+            }
+            if (!authorized) {
+                $state.go('app.home');
+            }
+        }
+
+        $rootScope.$settings.pageTitle = stateData.pageTitle;
         $rootScope.$settings.cartOpen = false;
     });
 }

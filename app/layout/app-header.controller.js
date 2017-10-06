@@ -12,13 +12,15 @@ function HeaderController($state, $stateParams, toastr, Order, BrandService, Cat
     vm.logout = logout;
 
     (function () {
-        getBrands();
+        //getBrands();
         getCategories();
 
         var currentOrder = Order.getCurrentOrder();
         vm.cartItems = currentOrder.items;
 
         vm.authenticatedUser = AuthenticationState.getUser();
+
+        vm.isStaff = AuthenticationState.isStaff();
     })();
 
     function getCategories() {
@@ -33,27 +35,27 @@ function HeaderController($state, $stateParams, toastr, Order, BrandService, Cat
             });
     }
 
-    function getBrands() {
-        BrandService.getAll()
-            .then(function (response) {
-                vm.brands = response;
-            })
-            .catch(function (err) {
-                toastr.error(err);
-            })
-            .finally(function () {
-            });
-    }
+    //function getBrands() {
+    //    BrandService.getAll()
+    //        .then(function (response) {
+    //            vm.brands = response;
+    //        })
+    //        .catch(function (err) {
+    //            toastr.error(err);
+    //        })
+    //        .finally(function () {
+    //        });
+    //}
 
     function searchProduct(keyword) {
         if (keyword)
-            $state.go('app.product', { keyword: keyword }, { reload: true });
+            $state.go('app.product', { keyword: keyword, brand: '', category: '' }, { reload: true });
     }
 
     function removeOrderItem(item) {
-        if (confirm('Are you sure want to delete this item?')) {
+        if (confirm('Apakah anda yakin untuk membatalkan transaksi item ini?')) {
             Order.removeOrderItem(item);
-            toastr.warning('Item has been removed from the shopping bag.', 'Message');
+            toastr.warning('Item telah dihapus dari transaksi ini', 'Pesan');
         }
     }
 

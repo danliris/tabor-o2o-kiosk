@@ -1,8 +1,8 @@
 ﻿angular.module('app')
     .controller('OrderCheckInController', OrderCheckInController);
 
-OrderCheckInController.$inject = ['OrderService', 'toastr', '$uibModal'];
-function OrderCheckInController(OrderService, toastr, $uibModal) {
+OrderCheckInController.$inject = ['OrderService', 'toastr'];
+function OrderCheckInController(OrderService, toastr) {
     var vm = this;
     vm.getOrder = getOrder;
     vm.arriveOrder = arriveOrder;
@@ -30,7 +30,7 @@ function OrderCheckInController(OrderService, toastr, $uibModal) {
         vm.loadingArriveOrder = true;
         OrderService.arrive(order.Code)
             .then(res => {
-                toastr.success('Order has been set to arrived');
+                toastr.success('Pesanan telah berhasil diterima di outlet.');
                 delete vm.order;
             })
             .catch(err => {
