@@ -1,8 +1,8 @@
 ﻿angular.module('app')
     .controller('ProductController', ProductController);
 
-ProductController.$inject = ['$q', '$rootScope', '$stateParams', '$uibModal', 'toastr', 'ProductService', 'Order', 'AuthenticationState'];
-function ProductController($q, $rootScope, $stateParams, $uibModal, toastr, ProductService, Order, AuthenticationState) {
+ProductController.$inject = ['$q', '$rootScope', '$stateParams', '$uibModal', 'toastr', 'ProductService', 'Order', 'AuthenticationState', 'Urls'];
+function ProductController($q, $rootScope, $stateParams, $uibModal, toastr, ProductService, Order, AuthenticationState, Urls) {
     var vm = this;
 
     vm.currentUser = AuthenticationState.getUser();
@@ -70,6 +70,9 @@ function ProductController($q, $rootScope, $stateParams, $uibModal, toastr, Prod
                     } catch (e) {
 
                     }
+
+                    // response[i].Image = `${Urls.BASE_API}/${response[i].Image}`;
+
                     products.push(response[i]);
                 }
 

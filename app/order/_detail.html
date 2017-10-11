@@ -130,13 +130,13 @@
                                 {{ detail.Price * detail.Quantity | currency: 'Rp. ' : 0 }}
                             </td>
                         </tr>
-                        <tr ng-if="detail.toggleTrack">
+                        <tr ng-show="detail.toggleTrack">
                             <td colspan="4">
                                 <h6 class="section-title">Tracks</h6>
                                 <ul class="list-unstyled">
                                     <li ng-repeat="track in detail.OrderTracks">
                                         <span class="small">
-                                            {{ track.TrackDate | date: 'dd MMM yyyy' }} - {{ track.Status | humanify }}
+                                            {{ track.TrackDate | date: 'dd MMM yyyy - HH:mm:ss' }} - {{ track.Status | humanify }}
                                         </span>
                                     </li>
                                 </ul>
@@ -160,7 +160,7 @@
                                 <b class="price" ng-if="vm.order.SelfPickUp">GRATIS</b>
 
                                 <span ng-if="!vm.order.SelfPickUp">
-                                    {{ vm.order.TotalShippingFee || 0 | currency: 'Rp ': 0 }}
+                                    {{ order.TotalShippingFee | currency: 'Rp ': 0 }}
                                 </span>
                             </td>
                         </tr>

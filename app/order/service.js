@@ -20,7 +20,8 @@ function OrderService($http, Urls) {
         pay: pay,
         updatePaymentStatus: updatePaymentStatus,
         complete: complete,
-        arrive: arrive
+        arrive: arrive,
+        detailArrive: detailArrive
     };
 
     function getAll(query, kioskCode) {
@@ -220,6 +221,11 @@ function OrderService($http, Urls) {
 
     function arrive(code) {
         return $http.post(Urls.BASE_API + '/orders/arrive', { code: code })
+            .then(handleSuccess);
+    }
+
+    function detailArrive(code, detailCode) {
+        return $http.post(`${Urls.BASE_API}/orders/${code}/orderdetails/${detailCode}/arrive`)
             .then(handleSuccess);
     }
 

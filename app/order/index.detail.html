@@ -149,7 +149,7 @@
                         </div>
                         <div ng-if="!vm.order.ShippingDestination">
                             <div class="form-group" ng-if="!vm.order.SelfPickUp">
-                                <label class="control-label col-sm-4">Kota</label>
+                                <label class="control-label col-sm-4">Kota <i class="fa fa-circle-o-notch fa-spin" ng-show="loadingLocations"></i></label>
                                 <div class="col-sm-8">
                                     <input class="form-control"
                                            autocomplete="off"
@@ -161,7 +161,8 @@
                                            typeahead-no-results="noResults"
                                            typeahead-wait-ms="500"
                                            typeahead-min-length="3"
-                                           typeahead-editable="false" />
+                                           typeahead-editable="false"
+                                           typeahead-on-select="vm.selectLocation(vm.destination.display)" />
                                     <div ng-show="noResults">
                                         <i class="fa fa-times"></i> Lokasi tidak ditemukan
                                     </div>
@@ -178,10 +179,15 @@
                                         <tr>
                                             <th class="text-center">Produk</th>
                                             <th class="text-center">Harga</th>
-                                            <th class="text-center">Estimasi</th>
+                                            <th class="text-center">Estimasi (hari)</th>
                                             <th style="width: 30px;"></th>
                                         </tr>
-                                        <tr ng-repeat="option in vm.destination.pricingOptions | orderBy: 'calculationResult'"
+                                        <tr ng-if="vm.loadingPricings">
+                                            <td colspan="4" class="text-center">
+                                                <i class="fa fa-circle-o-notch fa-spin"></i>
+                                            </td>
+                                        </tr>
+                                        <tr ng-repeat="option in vm.pricingOptions | filter: { productCode: '!CRG' } | orderBy: 'calculationResult'"
                                             ng-click="vm.selectPricingOption(option)"
                                             class="cursor-pointer">
                                             <td class="text-center">
@@ -246,7 +252,7 @@
                                 <td class="text-right">
                                     <b class="price" ng-if="vm.order.SelfPickUp">GRATIS</b>
 
-                                    <span ng-if="!vm.order.SelfPickUp">
+                                    <span ng-if="!vm.order.SelfPickUp" ng-click="vm.calculate()">
                                         {{ vm.order.TotalShippingFee | currency: 'Rp ': 0 }}
                                     </span>
                                 </td>
@@ -264,10 +270,10 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block"
-                        ng-disabled="vm.loadingUpdateDraft">
+                        ng-disabled="vm.loadingUpdateDraft || vm.order.TotalPrice == 0">
                     LANJUT
                     <i class="fa fa-angle-right pull-right" ng-if="!vm.loadingUpdateDraft"></i>
-                    <i class="fa fa-circle-o-notch pull-right" ng-if="vm.loadingUpdateDraft"></i>
+                    <i class="fa fa-circle-o-notch fa-spin pull-right" ng-if="vm.loadingUpdateDraft"></i>
                 </button>
 
 
