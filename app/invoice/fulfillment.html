@@ -26,20 +26,20 @@
                 </tr>
                 <tr>
                     <td class="text-right" colspan="3">Total DP</td>
-                    <td class="text-right">{{ order.DP + order.TotalShippingFee | currency: 'Rp. ': 0 }}</td>
+                    <td class="text-right">{{ order.TotalPrice + order.TotalShippingFee - orderPayment.PaidAmount | currency: 'Rp. ': 0 }}</td>
                 </tr>
-                <tr>
+                <!--<tr>
                     <td class="text-right" colspan="3"><b>Sisa yang harus dibayarkan</b></td>
                     <td class="text-right"><b>{{ (order.TotalPrice + order.TotalShippingFee) - (order.DP + order.TotalShippingFee) | currency: 'Rp. ': 0 }}</b></td>
-                </tr>
+                </tr>-->
                 <tr>
-                    <td class="text-right" colspan="3">Pembayaran</td>
-                    <td class="text-right">{{ orderPayment.PaidAmount | currency: 'Rp. ': 0 }}</td>
+                    <td class="text-right" colspan="3"><b>Pembayaran</b></td>
+                    <td class="text-right"><b>{{ orderPayment.PaidAmount | currency: 'Rp. ': 0 }}</b></td>
                 </tr>
-                <tr>
+                <!--<tr>
                     <td class="text-right" colspan="3">Kembali</td>
                     <td class="text-right">{{ orderPayment.PaidAmount - ((order.TotalPrice + order.TotalShippingFee) - (order.DP + order.TotalShippingFee))  | currency: 'Rp. ': 0 }}</td>
-                </tr>
+                </tr>-->
             </table>
 
             

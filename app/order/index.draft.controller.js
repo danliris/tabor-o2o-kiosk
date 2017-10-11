@@ -6,6 +6,7 @@ function OrderDraftController(OrderService, toastr, $q, AuthenticationState) {
     var vm = this;
     vm.currentUser = AuthenticationState.getUser();
     vm.changePage = changePage;
+    vm.getOrders = getOrders;
 
     function initQuery() {
         return {
@@ -33,10 +34,13 @@ function OrderDraftController(OrderService, toastr, $q, AuthenticationState) {
             );
 
         vm.loadingGetOrders = true;
+        vm.isError = false;
+
         $q.all(promises)
             .then(function (res) {
             })
             .catch(function (err) {
+                vm.isError = true;
             })
             .finally(function () {
                 vm.loadingGetOrders = false;

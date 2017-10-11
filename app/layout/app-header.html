@@ -3,7 +3,7 @@
         <div class="container">
             <div class="col-sm-12">
                 <ul class="list-inline pull-right">
-                    <li>
+                    <li ng-if="vm.isStaff">
                         <a ui-sref="app.order.draft">Order</a>
                     </li>
                     <li>
@@ -100,12 +100,13 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="list-menu">
-                        <div ng-repeat="category in vm.categories" class="item">
-                            <a href="javascript:;"
-                               ui-sref="app.product({ keyword: vm.keyword, brand: category.BrandCode, category: category.Code })">
-                                {{ category.Name }}
-                            </a>
-                        </div>
+                        <a href="javascript:;"
+                           ui-sref="app.product({ keyword: vm.keyword, brand: category.BrandCode, category: category.Code })"
+                           class="item"
+                           ui-sref-active="active"
+                           ng-repeat="category in vm.categories">
+                            {{ category.Name }}
+                        </a>
                         <!--<div ng-repeat="brand in vm.brands" class="item">
                             <a href="javascript:;"
                                ui-sref="app.search({ keyword: vm.keyword, brand: brand.Name })">

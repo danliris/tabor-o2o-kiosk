@@ -61,36 +61,62 @@
             </div>
         </div>
 
-        <div class="col-sm-8">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <form class="form-horizontal">
+        <form class="form-horizontal" name="formOrder" novalidate
+              ng-submit="formOrder.$valid && vm.updateDraft(vm.order)">
+            <div class="col-sm-8">
+                <div class="panel panel-default">
+                    <div class="panel-body">
                         <div class="form-group">
                             <label class="control-label col-sm-4">Name</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control"
+                                <input type="text" name="name"
+                                       class="form-control"
+                                       required
                                        ng-model="vm.order.Name" />
+
+                                <small class="help-block"
+                                       ng-show="formOrder.$submitted && formOrder.name.$error.required">
+                                    Harus diisi.
+                                </small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-4">Phone</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control"
+                                <input type="text" name="phone"
+                                       class="form-control"
+                                       required
                                        ng-model="vm.order.Phone" />
+                                <small class="help-block"
+                                       ng-show="formOrder.$submitted && formOrder.phone.$error.required">
+                                    Harus diisi.
+                                </small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-4">Email <i class="text-muted small">(opsional)</i></label>
                             <div class="col-sm-8">
-                                <input type="email" class="form-control"
+                                <input type="email" name="email"
+                                       class="form-control"
+                                       placeholder="cth: seseorang@mail.com"
                                        ng-model="vm.order.Email" />
+                                <small class="help-block"
+                                       ng-show="formOrder.$submitted && formOrder.email.$error.email">
+                                    E-mail tidak valid.
+                                </small>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-4">No. Identitas <small class="text-muted">(KTP/SIM)</small></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control"
+                                <input type="text" name="idCard"
+                                       required
+                                       class="form-control"
                                        ng-model="vm.order.IdCard" />
+                                <small class="help-block"
+                                       ng-show="formOrder.$submitted && formOrder.idCard.$error.required">
+                                    Harus diisi.
+                                </small>
                             </div>
                         </div>
                         <div class="form-group">
@@ -111,30 +137,41 @@
                                            ng-click="vm.toggleSelfPickUp(vm.order.SelfPickUp)" /> Alamat Customer
                                 </label>
                                 <textarea class="form-control"
+                                          name="address"
                                           ng-if="!vm.order.SelfPickUp"
                                           style="height: 6em"
+                                          ng-required="!vm.order.SelfPickUp"
                                           ng-model="vm.order.Address"></textarea>
+                                <small ng-show="formOrder.$submitted && !vm.order.SelfPickUp && formOrder.address.$error.required" class="help-block">
+                                    Harus diisi.
+                                </small>
                             </div>
                         </div>
-
                         <div ng-if="!vm.order.ShippingDestination">
                             <div class="form-group" ng-if="!vm.order.SelfPickUp">
-                                <label class="control-label col-sm-4">Kota</label>
+                                <label class="control-label col-sm-4">Kota <i class="fa fa-circle-o-notch fa-spin" ng-show="loadingLocations"></i></label>
                                 <div class="col-sm-8">
                                     <input class="form-control"
+                                           autocomplete="off"
+                                           name="destination"
+                                           ng-required="!vm.order.SelfPickUp"
                                            ng-model="vm.destination"
                                            uib-typeahead="location as location.display for location in vm.getLocations($viewValue)"
                                            typeahead-loading="loadingLocations"
                                            typeahead-no-results="noResults"
                                            typeahead-wait-ms="500"
                                            typeahead-min-length="3"
-                                           typeahead-editable="false" />
+                                           typeahead-editable="false"
+                                           typeahead-on-select="vm.selectLocation(vm.destination.display)" />
                                     <div ng-show="noResults">
                                         <i class="fa fa-times"></i> Lokasi tidak ditemukan
                                     </div>
+
+                                    <small ng-show="formOrder.$submitted && !vm.order.SelfPickUp && formOrder.destination.$error.required" class="help-block">
+                                        Harus diisi.
+                                    </small>
                                 </div>
                             </div>
-
                             <div class="form-group" ng-if="vm.destination">
                                 <label class="control-label col-sm-4"></label>
                                 <div class="col-sm-8">
@@ -142,10 +179,15 @@
                                         <tr>
                                             <th class="text-center">Produk</th>
                                             <th class="text-center">Harga</th>
-                                            <th class="text-center">Estimasi</th>
+                                            <th class="text-center">Estimasi (hari)</th>
                                             <th style="width: 30px;"></th>
                                         </tr>
-                                        <tr ng-repeat="option in vm.destination.pricingOptions | orderBy: 'calculationResult'"
+                                        <tr ng-if="vm.loadingPricings">
+                                            <td colspan="4" class="text-center">
+                                                <i class="fa fa-circle-o-notch fa-spin"></i>
+                                            </td>
+                                        </tr>
+                                        <tr ng-repeat="option in vm.pricingOptions | filter: { productCode: '!CRG' } | orderBy: 'calculationResult'"
                                             ng-click="vm.selectPricingOption(option)"
                                             class="cursor-pointer">
                                             <td class="text-center">
@@ -164,6 +206,10 @@
                                             </td>
                                         </tr>
                                     </table>
+
+                                    <small ng-show="formOrder.$submitted && !vm.order.SelfPickUp && vm.destination && !vm.pricingOption" class="help-block">
+                                        Harus dipilih.
+                                    </small>
                                 </div>
                             </div>
                         </div>
@@ -173,6 +219,7 @@
                             <div class="col-sm-8">
                                 <div class="input-group">
                                     <input type="text" class="form-control"
+                                           name="deliveryOption"
                                            disabled
                                            ng-value="vm.order.ShippingProductCode + ' - ' + vm.order.ShippingDestination">
                                     <span class="input-group-btn">
@@ -185,61 +232,59 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <table class="table no-margin">
-                        <tr>
-                            <td>Total Harga</td>
-                            <td class="text-right">
-                                {{ vm.order.TotalPrice | currency: 'Rp. ': 0 }}
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Biaya Pengiriman</td>
-                            <td class="text-right">
-                                <b class="price" ng-if="vm.order.SelfPickUp">GRATIS</b>
-
-                                <span ng-if="!vm.order.SelfPickUp">
-                                    {{ vm.order.TotalShippingFee | currency: 'Rp ': 0 }}
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><b>Total Belanja</b></td>
-                            <td class="text-right">
-                                <span class="price">
-                                    {{ vm.order.TotalPrice + vm.order.TotalShippingFee | currency: 'Rp. ' : 0 }}
-                                </span>
-                            </td>
-                        </tr>
-                    </table>
+                    </div>
                 </div>
             </div>
 
-            <button type="button" class="btn btn-primary btn-block"
-                    ng-disabled="vm.loadingUpdateDraft"
-                    ng-click="vm.updateDraft(vm.order)">
-                LANJUT
-                <i class="fa fa-angle-right pull-right" ng-if="!vm.loadingUpdateDraft"></i>
-                <i class="fa fa-circle-o-notch pull-right" ng-if="vm.loadingUpdateDraft"></i>
-            </button>
+            <div class="col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table no-margin">
+                            <tr>
+                                <td>Total Harga</td>
+                                <td class="text-right">
+                                    {{ vm.order.TotalPrice | currency: 'Rp. ': 0 }}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Biaya Pengiriman</td>
+                                <td class="text-right">
+                                    <b class="price" ng-if="vm.order.SelfPickUp">GRATIS</b>
+
+                                    <span ng-if="!vm.order.SelfPickUp" ng-click="vm.calculate()">
+                                        {{ vm.order.TotalShippingFee | currency: 'Rp ': 0 }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Total Belanja</b></td>
+                                <td class="text-right">
+                                    <span class="price">
+                                        {{ vm.order.TotalPrice + vm.order.TotalShippingFee | currency: 'Rp. ' : 0 }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block"
+                        ng-disabled="vm.loadingUpdateDraft || vm.order.TotalPrice == 0">
+                    LANJUT
+                    <i class="fa fa-angle-right pull-right" ng-if="!vm.loadingUpdateDraft"></i>
+                    <i class="fa fa-circle-o-notch fa-spin pull-right" ng-if="vm.loadingUpdateDraft"></i>
+                </button>
 
 
-            <button type="button" class="btn btn-danger btn-block"
-                    ng-disabled="vm.loadingVoidDraft"
-                    ng-click="vm.voidDraft(vm.order.Code)">
-                BATAL
-                <i class="fa fa-times pull-right" ng-if="!vm.loadingVoidDraft"></i>
-                <i class="fa fa-circle-o-notch pull-right" ng-if="vm.loadingVoidDraft"></i>
-            </button>
-        </div>
+                <button type="button" class="btn btn-danger btn-block"
+                        ng-disabled="vm.loadingVoidDraft"
+                        ng-click="vm.voidDraft(vm.order.Code)">
+                    BATAL
+                    <i class="fa fa-times pull-right" ng-if="!vm.loadingVoidDraft"></i>
+                    <i class="fa fa-circle-o-notch pull-right" ng-if="vm.loadingVoidDraft"></i>
+                </button>
+            </div>
+        </form>
     </div>
 </div>

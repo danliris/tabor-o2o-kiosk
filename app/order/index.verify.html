@@ -16,11 +16,7 @@
                             <label class="control-label">
                                 Kode Pesanan
                             </label>
-                            <input type="text" class="form-control"
-                                   name="code"
-                                   ng-model="vm.code"
-                                   required
-                                   autocomplete="off" />
+                            <input type="text" class="form-control" name="code" ng-model="vm.code" required autocomplete="off" />
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -28,11 +24,7 @@
                             <label class="control-label">
                                 PIN
                             </label>
-                            <input type="text" class="form-control" paym
-                                   name="pin"
-                                   ng-model="vm.pin"
-                                   required
-                                   autocomplete="off" />
+                            <input type="text" class="form-control" paym name="pin" ng-model="vm.pin" required autocomplete="off" />
                         </div>
                     </div>
                     <div class="col-sm-3">
@@ -50,7 +42,7 @@
 
     <div ng-if="vm.order">
         <!-- kalo belum arrived, masih processed -->
-        <div class="row" ng-if="vm.order.Status != 'ARRIVED' && vm.order.Status != 'RECEIVED'">
+        <div class="row" ng-if="vm.order.Status != 'ARRIVED' && vm.order.Status != 'COMPLETED'">
             <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
@@ -64,7 +56,7 @@
         <div ng-if="vm.order.Status == 'ARRIVED'">
             <div class="row" ng-if="!vm.order.IsFullyPaid">
                 <div class="col-sm-5">
-                    <div ng-if="vm.order.Status == 'ARRIVED'">
+                    <!--<div ng-if="vm.order.Status == 'ARRIVED'">
                         <h4 class="section-title">RINCIAN PEMBAYARAN</h4>
                         <div class="row">
                             <div class="col-sm-12">
@@ -145,10 +137,85 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>-->
+
+                    <div ng-if="vm.order.Status == 'ARRIVED'">
+                        <h4 class="section-title">RINCIAN PEMBAYARAN</h4>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="panel panel-default no-margin">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            TOTAL HARGA
+
+                                            <span class="price pull-right">{{ vm.order.TotalPrice + vm.order.TotalShippingFee | currency: 'Rp. ': 0 }}</span>
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <table class="table no-margin">
+                                            <thead>
+                                                <tr>
+                                                    <th>Item</th>
+                                                    <th class="text-right">Nominal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in vm.order.OrderDetails">
+                                                    <td>
+                                                        {{ item.Product.Name }}
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span>{{ item.Price * item.Quantity | currency: 'Rp. ': 0 }}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>Total DP</label>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {{ vm.order.DP | currency: 'Rp. ' : 0 }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>Biaya Pengiriman</label>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {{ vm.order.TotalShippingFee | currency: 'Rp. ' : 0 }}
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>
+                                                        <label>DP yang dibayarkan</label>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {{ vm.order.TotalPrice + vm.order.TotalShippingFee - vm.orderPayment.Amount | currency: 'Rp. ' : 0 }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="panel-footer">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div style="display: flex; align-items: center;">
+                                                    <span class="flex-1">Sisa yang harus dibayarkan</span>
+
+                                                    <div class="flex-1 text-right">
+                                                        <span class="price">{{ vm.orderPayment.Amount | currency: 'Rp. ' : 0 }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <button class="btn btn-primary btn-lg btn-block m-t-10"
-                                ng-disabled="vm.loadingPay"
-                                ng-click="vm.pay(vm.orderPayment)">
+
+
+                        <button class="btn btn-primary btn-lg btn-block m-t-10" ng-disabled="vm.loadingPay" ng-click="vm.pay(vm.orderPayment)">
                             BAYAR <i class="fa fa-spinner fa-spin" ng-if="vm.loadingPay"></i>
                         </button>
                     </div>
@@ -162,9 +229,8 @@
 
                 <div class="col-sm-12">
                     <div class="panel panel-default">
-                        <button class="btn btn-success btn-block btn-lg"
-                                ng-disabled="vm.loadingCompleteOrder"
-                                ng-click="vm.completeOrder(vm.order)">
+                        <button class="btn btn-success btn-block btn-lg" ng-disabled="vm.loadingCompleteOrder" ng-show="vm.order.Status != 'COMPLETED'"
+                            ng-click="vm.completeOrder(vm.order)">
                             <i class="fa fa-circle-o-notch fa-spin" ng-if="vm.loadingCompleteOrder"></i> Selesaikan Order
                         </button>
                     </div>
@@ -172,13 +238,19 @@
             </div>
         </div>
 
-        <div class="row" ng-if="vm.order.Status == 'RECEIVED'">
+        <div class="row" ng-if=vm.order.Status=='COMPLETED'>
+            <div class="col-sm-12">
+                <order-detail order="vm.order"></order-detail>
+            </div>
+        </div>
+
+        <!-- <div class="row" ng-if="vm.order.Status == 'RECEIVED'">
             <div class="col-sm-12">
                 <button class="btn btn-info btn-lg btn-block m-t-10"
                         ng-click="vm.goToPrint()">
                     CETAK
                 </button>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>

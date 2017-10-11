@@ -82,7 +82,7 @@ function routeConfig($stateProvider, $urlRouterProvider, $locationProvider) {
             .state('app.order', {
                 url: '/order',
                 templateUrl: 'app/order/index.html',
-                data: { pageTitle: 'Order' },
+                data: { pageTitle: 'Order', authorizedRoles: ['staff'] },
                 controller: 'OrderController',
                 controllerAs: 'vm'
             })
@@ -90,35 +90,35 @@ function routeConfig($stateProvider, $urlRouterProvider, $locationProvider) {
                 .state('app.order.history', {
                     url: '/history',
                     templateUrl: 'app/order/index.history.html',
-                    data: { pageTitle: 'History' },
+                    data: { pageTitle: 'History', authorizedRoles: ['staff'] },
                     controller: 'OrderHistoryController',
                     controllerAs: 'vm'
                 })
                 .state('app.order.track', {
                     url: '/track',
                     templateUrl: 'app/order/index.track.html',
-                    data: { pageTitle: 'Track' },
+                    data: { pageTitle: 'Track', authorizedRoles: ['staff'] },
                     controller: 'OrderTrackController',
                     controllerAs: 'vm'
                 })
                 .state('app.order.verify', {
                     url: '/verify',
                     templateUrl: 'app/order/index.verify.html',
-                    data: { pageTitle: 'Verify' },
+                    data: { pageTitle: 'Verify', authorizedRoles: ['staff'] },
                     controller: 'OrderVerifyController',
                     controllerAs: 'vm'
                 })
                 .state('app.order.draft', {
                     url: '/draft',
                     templateUrl: 'app/order/index.draft.html',
-                    data: { pageTitle: 'Draft' },
+                    data: { pageTitle: 'Draft', authorizedRoles: ['staff'] },
                     controller: 'OrderDraftController',
                     controllerAs: 'vm'
                 })
                 .state('app.order.checkin', {
                     url: '/check-in',
                     templateUrl: 'app/order/index.checkin.html',
-                    data: { pageTitle: 'Check In' },
+                    data: { pageTitle: 'Check In', authorizedRoles: ['staff'] },
                     controller: 'OrderCheckInController',
                     controllerAs: 'vm'
                 })
@@ -126,7 +126,7 @@ function routeConfig($stateProvider, $urlRouterProvider, $locationProvider) {
                 .state('app.order.detail', {
                     url: '/{code}',
                     templateUrl: 'app/order/index.detail.html',
-                    data: { pageTitle: 'Order Detail' },
+                    data: { pageTitle: 'Order Detail', authorizedRoles: ['staff'] },
                     controller: 'OrderDetailController',
                     controllerAs: 'vm'
                 })
@@ -134,7 +134,7 @@ function routeConfig($stateProvider, $urlRouterProvider, $locationProvider) {
             .state('app.order-payment', {
                 url: '/order/{code}/payment',
                 templateUrl: 'app/order/payment.html',
-                data: { pageTitle: 'Order Payment' },
+                data: { pageTitle: 'Order Payment', authorizedRoles: ['staff'] },
                 controller: 'OrderPaymentController',
                 controllerAs: 'vm'
             })
@@ -152,7 +152,7 @@ function routeConfig($stateProvider, $urlRouterProvider, $locationProvider) {
             .state('blank.invoice', {
                 url: '/order/{code}/invoice/{paymentId}',
                 templateUrl: 'app/invoice/invoice.html',
-                data: { pageTitle: 'Invoice' },
+                data: { pageTitle: 'Invoice', authorizedRoles: ['staff'] },
                 controller: 'InvoiceController',
                 controllerAs: 'vm'
             })
