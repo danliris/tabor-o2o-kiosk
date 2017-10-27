@@ -5,10 +5,11 @@
     <div class="modal-body" ng-if="!vm.loadingGetProduct">
         <div class="row">
             <div class="col-sm-4">
-                <img ng-src="{{ vm.product.Image }}"
-                     alt="{{ vm.product.Name }}"
-                     title="{{ vm.product.Title }}"
-                     class="img-responsive" />
+                <image-api src="vm.product.Image"
+                    name="vm.product.Name"
+                    class="img-responsive"
+                    style="margin: auto;">
+                </image-api>
             </div>
 
             <div class="col-sm-8">

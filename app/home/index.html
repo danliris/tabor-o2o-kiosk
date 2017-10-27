@@ -4,7 +4,65 @@
 
 <section id="best-seller" class="container">
     <div class="container">
-        <div class="col-sm-12">
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <div class="sub-menu-list">
+                    <a class="cursor-pointer" ng-class="{ 'active': vm.sliderType == 'BEST SELLER' }" ng-click="vm.changeSliderType('BEST SELLER')">BEST SELLER</a>
+                    |
+                    <a class="cursor-pointer" ng-class="{ 'active': vm.sliderType == 'NEW' }" ng-click="vm.changeSliderType('NEW')">NEW</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="featured-products m-t-20" ng-swipe-left="vm.next(2)" ng-swipe-right="vm.prev(2)">
+                    <div class="item header">
+                        <div class="display-flex column full-height">
+                            <div class="flex-3">
+                                <h3 class="text-right" style="white-space: normal;">
+                                    CHECK OUR
+                                    <br/>
+                                    <label class="text-success no-margin" ng-if="vm.sliderType == 'BEST SELLER'">
+                                        BEST SELLER
+                                    </label>
+                                    <label class="text-success no-margin" ng-if="vm.sliderType == 'NEW'">
+                                        NEW
+                                    </label>
+                                    PRODUCTS
+                                </h3>
+                            </div>
+                            <div class="flex-1">
+                                <a href="javascript:;" ng-click="vm.prev()">
+                                    <i class="fa fa-chevron-left fa-2x"></i>
+                                </a>
+
+                                <a href="javascript:;" class="pull-right" ng-click="vm.next()">
+                                    <i class="fa fa-chevron-right fa-2x"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item" ng-if="vm.loadingProducts">
+                        <div class="position-center">
+                            <i class="fa fa-spinner fa-spin fa-2x"></i>
+                        </div>
+                    </div>
+
+                    <div class="item" ng-if="vm.isError">
+                        <div class="position-center">
+                            <a class="action-link" href="javascript:;" ng-click="vm.changeSliderType(vm.sliderType)">
+                                <i class="fa fa-repeat fa-2x m-y-15"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <featured-item product="product" ng-repeat="product in vm.products" ng-if="!vm.loadingProducts" open-detail-item="vm.openDetailItem(product)"
+                        add-order-item="vm.addOrderItem(product)">
+                    </featured-item>
+                </div>
+            </div>
         </div>
     </div>
 </section>

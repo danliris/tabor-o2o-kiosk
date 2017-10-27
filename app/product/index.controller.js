@@ -1,8 +1,8 @@
 ﻿angular.module('app')
     .controller('ProductController', ProductController);
 
-ProductController.$inject = ['$q', '$rootScope', '$stateParams', '$uibModal', 'toastr', 'ProductService', 'Order', 'AuthenticationState', 'Urls'];
-function ProductController($q, $rootScope, $stateParams, $uibModal, toastr, ProductService, Order, AuthenticationState, Urls) {
+ProductController.$inject = ['$q', '$rootScope', '$state', '$stateParams', '$uibModal', 'toastr', 'ProductService', 'Order', 'AuthenticationState', 'Urls'];
+function ProductController($q, $rootScope, $state, $stateParams, $uibModal, toastr, ProductService, Order, AuthenticationState, Urls) {
     var vm = this;
 
     vm.currentUser = AuthenticationState.getUser();
@@ -13,6 +13,8 @@ function ProductController($q, $rootScope, $stateParams, $uibModal, toastr, Prod
     vm.openDetailItem = openDetailItem;
     vm.addOrderItem = addOrderItem;
     vm.nextPage = nextPage;
+    vm.getProducts = getProducts;
+    vm.openMessenger = openMessenger;
 
     function openDetailItem(product) {
         var modalInstance = $uibModal.open({
@@ -50,7 +52,12 @@ function ProductController($q, $rootScope, $stateParams, $uibModal, toastr, Prod
         toastr.success('Item telah ditambahkan ke kerajang belanja.', 'Pesan');
     }
 
+    function openMessenger(product) {
+        
+    }
+
     function getProducts(products, query) {
+        vm.isError = false;
         vm.loadingProducts = true;
         var promises = [];
         promises.push(
@@ -64,6 +71,7 @@ function ProductController($q, $rootScope, $stateParams, $uibModal, toastr, Prod
         $q.all(promises)
             .then((responses) => {
                 var response = responses[0];
+
                 for (var i = 0, l = response.length; i < l; i++) {
                     try {
                         response[i].ArrayedSpecification = JSON.parse(response[i].Specification);
@@ -71,16 +79,19 @@ function ProductController($q, $rootScope, $stateParams, $uibModal, toastr, Prod
 
                     }
 
-                    // response[i].Image = `${Urls.BASE_API}/${response[i].Image}`;
-
                     products.push(response[i]);
                 }
 
                 response = responses[1];
                 query.count = response.count;
 
-                vm.loadingProducts = false;
             })
+            .catch(res => {
+                vm.isError = true;
+            })
+            .finally(() => {
+                vm.loadingProducts = false;
+            });
     }
 
     function initQuery() {
@@ -108,6 +119,12 @@ function ProductController($q, $rootScope, $stateParams, $uibModal, toastr, Prod
     (function () {
         vm.products = [];
         vm.productQuery = initQuery();
+
+        if (!$stateParams.keyword
+            && !$stateParams.brand
+            && !$stateParams.category)
+            $state.go('app.home');
+
         vm.productQuery.keyword = $stateParams.keyword;
         vm.productQuery.brandCode = $stateParams.brand;
         vm.productQuery.categoryCode = $stateParams.category;

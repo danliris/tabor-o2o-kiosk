@@ -8,8 +8,9 @@ function productItemCard() {
         scope: {
             product: '=',
             openDetailItem: '&',
-            addOrderItem: '&'
+            addOrderItem: '&',
+            openMessenger: '&'
         },
-        templateUrl: 'app/product/item-card.html'
+        templateUrl: 'app/product/_item-card.html'
     }
 }

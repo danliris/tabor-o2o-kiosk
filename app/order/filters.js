@@ -45,24 +45,5 @@ function humanify() {
             return 'Pesanan dibatalkan oleh pembeli';
         else
             return status;
-        //Requested :
-        //    -> Pesanan telah dikirim ke Dealer
-        //    -> Menunggu konfirmasi dealer 
-
-        //Submitted :
-        //    -> Sudah diterima oleh Dealer
-        //    -> Sedang Diproses oleh Dealer
-
-        //Rejected :
-        //    -> Dibatalkan oleh Dealer 
-
-        //Delivered :
-        //    -> Pesanan sedang dikirim
-
-        //Arrived :
-        //    -> Pesanan sudah sampai di Outlet 
-
-        //Completed :
-        //    -> Pesanan sudah diterima oleh Customer
     }
 }

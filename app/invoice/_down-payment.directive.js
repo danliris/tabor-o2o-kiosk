@@ -9,6 +9,6 @@ function invoiceDownPayment() {
             order: '=',
             orderPayment: '='
         },
-        templateUrl: 'app/invoice/down-payment.html'
+        templateUrl: 'app/invoice/_down-payment.html'
     }
 }

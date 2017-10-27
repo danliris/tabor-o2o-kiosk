@@ -9,6 +9,6 @@ function invoiceFulfillment() {
             order: '=',
             orderPayment: '='
         },
-        templateUrl: 'app/invoice/fulfillment.html'
+        templateUrl: 'app/invoice/_fulfillment.html'
     }
 }

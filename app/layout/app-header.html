@@ -7,7 +7,8 @@
                         <a ui-sref="app.order.draft">Order</a>
                     </li>
                     <li>
-                        Hi, {{ vm.authenticatedUser.username }}. <a href="javascript:;" ng-click="vm.logout()">Logout</a>
+                        Hi, {{ vm.authenticatedUser.username }}.
+                        <a href="javascript:;" ng-click="vm.logout()">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -26,7 +27,8 @@
                     <form ng-submit="vm.searchProduct(vm.keyword)">
                         <div class="form-group no-margin">
                             <div class="input-group">
-                                <input type="text" class="form-control search-input" placeholder="Cari produk" ng-model="vm.keyword" />
+                                <input type="text" class="form-control search-input" placeholder="Cari produk" ng-model="vm.keyword"
+                                />
                                 <span class="input-group-btn">
                                     <button class="btn btn-primary" type="submit">CARI</button>
                                 </span>
@@ -36,54 +38,76 @@
                 </div>
                 <div class="col-sm-2 text-right">
                     <ul class="list-inline no-margin">
-                        <li>
-                            <a ui-sref="app.notification"
-                               class="icon-wrapper">
+                        <li uib-dropdown on-toggle="toggled(open)" ng-if="vm.isStaff">
+                            <a class="icon-wrapper m-r-10" href="javascript:;" uib-dropdown-toggle>
                                 <span class="icon">
                                     <i class="fa fa-bell-o"></i>
                                 </span>
+                                <span id="total-items" class="number" ng-if="vm.totalUnreadNotifications > 0">
+                                    <span ng-if="vm.loadingGetUnreadNotifications" class="fa fa-refresh fa-spin"></span>
+                                    <span ng-if="!vm.loadingGetUnreadNotifications">{{ vm.totalUnreadNotifications }}
+                                    </span>
+                                </span>
                             </a>
+                            <div class="dropdown-menu pull-right notification-item-menu">
+                                <ul>
+                                    <li ng-repeat="notification in vm.notifications" ng-click="vm.trackOrder(notification)">
+                                        <div>{{ notification.Message }}
+                                        </div>
+                                        <div class="small text-muted text-uppercase">{{ notification.NotifiedDate | date: 'dd MMM yyyy - HH:mm:ss' }}</div>
+                                        <i class="fa fa-exclamation-circle text-danger" ng-if="!notification.IsRead"></i>
+                                    </li>
+                                </ul>
+
+                                <div class="p-15 text-center" ng-if="vm.notifications.length == 0">
+                                    <i class="fa fa-exclamation-triangle fa-4x text-warning"></i>
+                                    <div>Belum ada notifikasi</div>
+                                </div>
+
+                                <div class="footer text-center">
+                                    <a href="javascript:;" ui-sref="app.notification">
+                                        Lihat semua
+                                    </a>
+                                </div>
+                            </div>
                         </li>
-                        <li class="dropdown" ng-class="{ 'open': $settings.cartOpen }">
-                            <a class="icon-wrapper" href="javascript:;"
-                               ng-click="$settings.toggleCartOpen()">
+                        <li uib-dropdown on-toggle="toggled(open)">
+                            <a class="icon-wrapper" href="javascript:;" uib-dropdown-toggle ng-disabled="vm.cartItems.length == 0">
                                 <span class="icon">
                                     <i class="fa fa-shopping-bag"></i>
                                 </span>
-                                <span id="total-items" class="number">{{ vm.cartItems | sum: 'quantity' }}</span>
+                                <span id="total-items" class="number">{{ vm.cartItems | sum: 'quantity' }}
+                                </span>
                             </a>
 
                             <div class="dropdown-menu pull-right cart-item-menu" ng-if="vm.cartItems.length > 0">
                                 <ul>
-                                    <li ng-repeat="item in vm.cartItems"
-                                        class="list-cart-item-compact">
+                                    <li ng-repeat="item in vm.cartItems" class="list-cart-item-compact">
 
-                                        <a class="top-right" href="javascript:;"
-                                           ng-click="vm.removeOrderItem(item)">
+                                        <a class="top-right" href="javascript:;" ng-click="vm.removeOrderItem(item)">
                                             <i class="fa fa-trash"></i>
                                         </a>
 
                                         <div class="image-wrapper">
-                                            <img ng-src="{{ item.image || 'statics/images/phone-placeholder.png' }}"
-                                                 alt="{{ item.name }}"
-                                                 title="{{ item.name }}"
-                                                 class="img-responsive" />
+                                            <img ng-src="{{ item.image || 'statics/images/phone-placeholder.png' }}" alt="{{ item.name }}"
+                                                title="{{ item.name }}" class="img-responsive"
+                                            />
                                         </div>
 
                                         <div class="description-wrapper">
-                                            <span class="name">{{ item.name }}</span><br />
-                                            <span class="price">{{ item.price | currency: 'Rp. ' : 0 }}</span>
+                                            <span class="name">{{ item.name }}</span>
+                                            <br />
+                                            <span class="price">{{ item.price | currency: 'Rp. ' : 0
+                                                }}</span>
 
-                                            <input type="number" class="quantity input-sm form-control"
-                                                   ng-model="item.quantity"
-                                                   min="1" />
+                                            <input type="number" class="quantity input-sm form-control" ng-model="item.quantity"
+                                                min="1" />
                                         </div>
                                     </li>
                                 </ul>
 
                                 <div class="footer">
-                                    <a class="btn btn-block btn-primary"
-                                       ui-sref="app.checkout">
+                                    <a class="btn btn-block btn-primary" ui-sref="app.checkout">
                                         CHECKOUT
                                     </a>
                                 </div>
@@ -100,11 +124,8 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="list-menu">
-                        <a href="javascript:;"
-                           ui-sref="app.product({ keyword: vm.keyword, brand: category.BrandCode, category: category.Code })"
-                           class="item"
-                           ui-sref-active="active"
-                           ng-repeat="category in vm.categories">
+                        <a href="javascript:;" ui-sref="app.product({ keyword: vm.keyword, brand: category.BrandCode, category: category.Code })"
+                            class="item" ui-sref-active="active" ng-repeat="category in vm.categories">
                             {{ category.Name }}
                         </a>
                         <!--<div ng-repeat="brand in vm.brands" class="item">

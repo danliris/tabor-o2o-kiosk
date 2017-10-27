@@ -126,6 +126,7 @@
                     <table class="table table-striped no-margin">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th class="col-sm-2">&nbsp;</th>
                                 <th class="col-sm-3">Nama Produk</th>
                                 <th class="col-sm-3 text-center">Status</th>
@@ -135,10 +136,12 @@
                         </thead>
                         <tbody ng-repeat="detail in vm.order.OrderDetails" ng-if="detail.Quantity > 0">
                             <tr ng-click="detail.toggleTrack = !detail.toggleTrack" class="cursor-pointer">
-                                <td class="text-center">
+                                <td>
                                     <span class="fa" ng-class="{ 'fa-angle-down': !detail.toggleTrack, 'fa-angle-up': detail.toggleTrack }"></span>
-                                    <img style="width: 90px;" src="{{ detail.Product.Image || 'statics/images/phone-placeholder.png' }}" alt="{{ detail.Product.Name }}"
-                                        title="{{ detail.Product.Name }}" />
+                                </td>
+                                <td class="text-center">
+                                    <image-api src="detail.Product.Image" name="detail.Product.Name" class="img-responsive" style="display: inline; margin: auto;">
+                                    </image-api>
                                 </td>
                                 <td>
                                     {{ detail.Product.Name }}
@@ -159,7 +162,7 @@
                                 </td>
                             </tr>
                             <tr ng-if="detail.toggleTrack ">
-                                <td colspan="5 ">
+                                <td colspan="6">
                                     <h6 class="section-title ">Tracks</h6>
                                     <ul class="list-unstyled ">
                                         <li ng-repeat="track in detail.OrderTracks ">
@@ -173,7 +176,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="3 " class="text-right ">
+                                <td colspan="4" class="text-right ">
                                     Total Harga
                                 </td>
                                 <td class="text-right ">
@@ -182,7 +185,7 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td colspan="3 " class="text-right ">
+                                <td colspan="4" class="text-right ">
                                     Biaya Pengiriman
                                 </td>
                                 <td class="text-right ">
@@ -195,7 +198,7 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <th colspan="3 " class="text-right ">
+                                <th colspan="4" class="text-right ">
                                     <p>Total Belanja</p>
                                 </th>
                                 <td class="text-right ">

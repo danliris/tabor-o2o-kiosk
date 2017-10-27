@@ -30,8 +30,7 @@ function AuthenticationState($http, $localStorage) {
     }
 
     function remove() {
-        delete $localStorage.token;
-        delete $localStorage.user;
+        $localStorage.$reset();
         delete $http.defaults.headers.common.Authorization;
     }
 

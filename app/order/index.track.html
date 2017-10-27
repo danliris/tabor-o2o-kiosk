@@ -3,12 +3,12 @@
         LACAK PEMESANAN
     </h3>
     <div class="row">
-        <form ng-submit="vm.getOrder(vm.code)">
+        <form ng-submit="vm.submitOrder(vm.code)">
             <div class="col-sm-5">
                 <div class="form-group">
                     <label class="control-label">Kode Pesanan</label>
-                    <input type="text" class="form-control"
-                           ng-model="vm.code">
+                    <input type="text" class="form-control" ng-model="vm.code">
+                    <span class="text-danger" ng-bind="vm.message"></span>
                 </div>
             </div>
             <div class="col-sm-2">

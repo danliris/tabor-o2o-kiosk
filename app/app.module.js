@@ -6,7 +6,7 @@
     'fcsa-number',
     //'ngAnimate',
     'toastr',
-
+    'ngTouch',
     'app.authentication' // bukan library
 ]);
 
@@ -16,27 +16,23 @@ angular.module('app')
 httpInterceptor.$inject = [
     '$q',
     '$rootScope',
-    '$location'
+    '$localStorage'
 ];
 
-function httpInterceptor($q, $rootScope, $localStorage, $location) {
+function httpInterceptor($q, $rootScope, $localStorage) {
     return {
         request: function (config) {
-            config.headers = config.headers || {};
-            //config.params = [];
-
-            if ($localStorage.token) {
-                config.headers.Authorization = 'Bearer ' + $localStorage.token;
-            }
+            // !@#$##@#$
+            // config.params = config.params || {};
+            // if ($localStorage.token) {
+            //     config.params.access_token = $localStorage.token;
+            // }
 
             return config;
         },
 
         responseError: function (rejection) {
-            //if (rejection.data.error === 'token_not_provided' || rejection.data.error === 'token_expired') {
-            //    $location.path('/login');
-            //}
-            console.log(rejection);
+            console.warn(rejection);
 
             if (rejection.data) {
                 if (rejection.data.error) {
@@ -49,6 +45,11 @@ function httpInterceptor($q, $rootScope, $localStorage, $location) {
     };
 }
 
+angular
+    .module('app')
+    .config(['$localStorageProvider', function ($localStorageProvider) {
+        $localStorageProvider.setKeyPrefix('jet-o2o-');
+    }]);
 
 angular
     .module('app')
@@ -73,13 +74,21 @@ settings.$inject = [
 function settings($rootScope) {
     var settings = {
         pageTitle: 'O2O',
-        cartOpen: false,
-        toggleCartOpen: toggleCartOpen
+        // cartOpen: false,
+        // notificationOpen: false,
+        // toggleCartOpen: toggleCartOpen,
+        // toggleNotificationOpen: toggleNotificationOpen
     };
 
-    function toggleCartOpen() {
-        this.cartOpen = !this.cartOpen;
-    }
+    // function toggleCartOpen() {
+    //     this.cartOpen = !this.cartOpen;
+    //     this.notificationOpen = false;
+    // }
+
+    // function toggleNotificationOpen() {
+    //     this.notificationOpen = !this.notificationOpen;
+    //     this.cartOpen = false;
+    // }
 
     return settings;
 }
@@ -106,8 +115,7 @@ function runBlock($rootScope, $state, $transitions, settings, AuthenticationStat
 
         // check authorized user
         var stateData = trans.$to().data;
-        if (stateData.authorizedRoles)
-        {
+        if (stateData.authorizedRoles) {
             var currentUser = AuthenticationState.getUser();
             var authorized = false;
             for (var i = 0, length = stateData.authorizedRoles.length; i < length; i++) {
@@ -119,6 +127,6 @@ function runBlock($rootScope, $state, $transitions, settings, AuthenticationStat
         }
 
         $rootScope.$settings.pageTitle = stateData.pageTitle;
-        $rootScope.$settings.cartOpen = false;
+        // $rootScope.$settings.cartOpen = false;
     });
 }

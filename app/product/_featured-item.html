@@ -1,0 +1,35 @@
+<div class="item" ng-class="{ 'unavailable': product.Quantity <= 0 }">
+    <div class="display-flex column align-center">
+        <div class="image-holder">
+            <image-api src="product.Image" name="product.Name" class="img-responsive">
+            </image-api>
+        </div>
+        <div class="text-center">
+            <label>
+                {{ product.Name }}
+            </label>
+            <br/>
+            <span class="price">
+                {{ product.Price | currency: 'Rp. ': 0 }}
+            </span>
+        </div>
+    </div>
+
+    <div class="overlay">
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-primary btn-circle"
+                ng-click="addOrderItem(product);">
+            <i class="fa fa-shopping-cart"></i>
+        </button>
+        <button class="btn btn-default btn-circle"
+                ng-click="openDetailItem(product);">
+            <i class="fa fa-search"></i>
+        </button>
+    </div>
+
+    <div class="overlay-dark">
+        NOT AVAILABLE
+    </div>
+</div>

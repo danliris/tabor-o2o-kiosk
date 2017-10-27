@@ -9,6 +9,6 @@ function invoiceFullPayment() {
             order: '=',
             orderPayment: '='
         },
-        templateUrl: 'app/invoice/full-payment.html'
+        templateUrl: 'app/invoice/_full-payment.html'
     }
 }
