@@ -1,6 +1,14 @@
-﻿<section id="banners">
+﻿<!-- <section id="banners">
     <img src="statics/images/banner-1.jpg" alt="Alternate Text" />
-</section>
+</section> -->
+
+<div id="banners">
+    <div uib-carousel active="vm.currentActiveSlide" interval="5000" no-wrap="false" no-transition="false">
+        <div uib-slide ng-repeat="slide in vm.slides track by slide.id" index="slide.id">
+            <img ng-src="{{slide.image}}" style="margin: auto;">
+        </div>
+    </div>
+</div>
 
 <section id="best-seller" class="container">
     <div class="container">
@@ -58,8 +66,7 @@
                         </div>
                     </div>
 
-                    <featured-item product="product" ng-repeat="product in vm.products" ng-if="!vm.loadingProducts" open-detail-item="vm.openDetailItem(product)"
-                        add-order-item="vm.addOrderItem(product)">
+                    <featured-item product="product" ng-repeat="product in vm.products" ng-if="!vm.loadingProducts" open-detail-item="vm.openDetailItem(product)" add-order-item="vm.addOrderItem(product)">
                     </featured-item>
                 </div>
             </div>

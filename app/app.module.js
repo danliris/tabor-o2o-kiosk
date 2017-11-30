@@ -4,9 +4,10 @@
     //'ngSanitize',
     'ngStorage',
     'fcsa-number',
-    //'ngAnimate',
+    // 'ngAnimate',
     'toastr',
     'ngTouch',
+    'firebase',
     'app.authentication' // bukan library
 ]);
 
@@ -28,6 +29,9 @@ function httpInterceptor($q, $rootScope, $localStorage) {
             //     config.params.access_token = $localStorage.token;
             // }
 
+            // if ($localStorage.token) {
+            //     config.headers.access_token = $localStorage.token;
+            // }
             return config;
         },
 
@@ -47,12 +51,6 @@ function httpInterceptor($q, $rootScope, $localStorage) {
 
 angular
     .module('app')
-    .config(['$localStorageProvider', function ($localStorageProvider) {
-        $localStorageProvider.setKeyPrefix('jet-o2o-');
-    }]);
-
-angular
-    .module('app')
     .config(['$httpProvider', function ($httpProvider) {
         $httpProvider.interceptors.push('httpInterceptor');
     }]);
@@ -65,6 +63,27 @@ angular
 
 angular
     .module('app')
+    .config(['$localStorageProvider', function ($localStorageProvider) {
+        $localStorageProvider.setKeyPrefix('jet-o2o-');
+    }]);
+
+angular
+    .module('app')
+    .config(() => {
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyD1NNv6unTGmyCb8ESkoA_Z3Qxh1qZIaTA",
+            authDomain: "o2o-dev.firebaseapp.com",
+            databaseURL: "https://o2o-dev.firebaseio.com",
+            projectId: "o2o-dev",
+            storageBucket: "o2o-dev.appspot.com",
+            messagingSenderId: "174807202396"
+        };
+        firebase.initializeApp(config);
+    });
+
+angular
+    .module('app')
     .factory('settings', settings);
 
 settings.$inject = [
@@ -74,21 +93,9 @@ settings.$inject = [
 function settings($rootScope) {
     var settings = {
         pageTitle: 'O2O',
-        // cartOpen: false,
-        // notificationOpen: false,
-        // toggleCartOpen: toggleCartOpen,
-        // toggleNotificationOpen: toggleNotificationOpen
+        firebaseReady: false,
+        walletBalance: 0
     };
-
-    // function toggleCartOpen() {
-    //     this.cartOpen = !this.cartOpen;
-    //     this.notificationOpen = false;
-    // }
-
-    // function toggleNotificationOpen() {
-    //     this.notificationOpen = !this.notificationOpen;
-    //     this.cartOpen = false;
-    // }
 
     return settings;
 }
@@ -119,14 +126,17 @@ function runBlock($rootScope, $state, $transitions, settings, AuthenticationStat
             var currentUser = AuthenticationState.getUser();
             var authorized = false;
             for (var i = 0, length = stateData.authorizedRoles.length; i < length; i++) {
-                authorized = authorized || (currentUser.roles.find(x => x.name == stateData.authorizedRoles[i]) ? true : false);
+                // authorized = authorized || (currentUser.roles.find(x => x.name == stateData.authorizedRoles[i]) ? true : false);
+
+                authorized = authorized || (AuthenticationState.getRole() == stateData.authorizedRoles[i] ? true : false);
             }
+
+
             if (!authorized) {
                 $state.go('app.home');
             }
         }
 
         $rootScope.$settings.pageTitle = stateData.pageTitle;
-        // $rootScope.$settings.cartOpen = false;
     });
 }

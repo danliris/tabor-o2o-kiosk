@@ -175,6 +175,15 @@
                 </td>
             </tr>
             <tr>
+                <td>Saldo</td>
+                <td>
+                    {{ $settings.walletBalance | currency: 'Rp. ': 0 }}
+                    <span class="help-block" ng-if="$settings.walletBalance < vm.orderPayment.PaidAmount">
+                        Saldo tidak mencukupi. Silahkan lakukan pengisian top up wallet terlebih dahulu.
+                    </span>
+                </td>
+            </tr>
+            <tr>
                 <th>Jumlah yang dibayarkan</th>
                 <td>
                     <span class="price">{{ vm.orderPayment.PaidAmount | currency: 'Rp. ': 0 }}</span>

@@ -11,6 +11,19 @@ function OrderVerifyController(OrderService, toastr, $filter, $timeout, $state, 
     vm.completeOrder = completeOrder;
     vm.goToPrint = goToPrint;
 
+    function weightRounding(weight) {
+        if (weight == 0)
+            weight = 0;
+        else if (weight < 1)
+            weight = 1;
+        else if (weight - Math.floor(weight) > 0.3)
+            weight = Math.ceil(weight);
+        else
+            weight = Math.floor(weight);
+
+        return weight;
+    }
+
     function searchOrderByCodeAndPin(code, pin) {
         vm.loadingGetOrder = true;
 
@@ -21,18 +34,79 @@ function OrderVerifyController(OrderService, toastr, $filter, $timeout, $state, 
                     return;
                 }
 
+                delete vm.order;
+
                 var order = response[0];
+
+                if (order.Status != 'ARRIVED'
+                    && order.Status != 'COMPLETED'
+                    && order.Status != 'REJECTED'
+                    && order.Status != 'REFUNDED') {
+                    toastr.warning('Pesanan anda sedang diproses.', 'Pesan');
+                    return;
+                }
 
                 vm.order = order;
 
-                var currentPaidAmount = $filter('sum')(vm.order.OrderPayments, 'PaidAmount');
+                let rejectedAmount = vm.order.OrderDetails
+                    .reduce((a, b) => {
+                        return a + (b.Status == 'REJECTED' || b.Status == 'REFUNDED' ? b.Price : 0);
+                    }, 0);
 
-                vm.orderPayment = {
-                    PaymentType: 'FULFILLMENT',
-                    OrderCode: order.Code,
-                    PaidAmount: order.TotalPrice + order.TotalShippingFee - currentPaidAmount,
-                    Amount: order.TotalPrice + order.TotalShippingFee - currentPaidAmount
-                };
+                vm.order.DPAmount = 0;
+                var dpPayment = vm.order.OrderPayments.find(t => t.PaymentType == 'DOWN PAYMENT');
+                if (dpPayment)
+                    vm.order.DPAmount = dpPayment.PaidAmount;
+
+                let paidAmount = vm.order.OrderPayments
+                    .reduce((a, b) => {
+                        return a + b.PaidAmount;
+                    }, 0);
+
+                //region Itung biaya kirim yang seharusnya
+                // let reducedShippingFee = vm.order.TotalShippingFee;
+                let reducedShippingFee = 0;
+
+                if (vm.order.TotalShippingFee > 0) {
+                    let usedShippingFee = 0;
+
+                    let dealerCodes = Array.from(new Set(vm.order.OrderDetails.map(t => t.DealerCode)));
+
+                    dealerCodes.forEach(dealerCode => {
+                        // totalweight
+                        let dealerTotalWeight = vm.order.OrderDetails
+                            .reduce((a, b) => {
+                                return a + b.Weight;
+                            }, 0);
+
+                        let dealerTotalShippingFee = weightRounding(dealerTotalWeight) * vm.order.OrderDetails[0].ShippingFee;
+
+                        // totalusedweight
+                        let dealerUsedTotalWeight = vm.order.OrderDetails
+                            .filter(t => t.Status != 'REJECTED')
+                            .reduce((a, b) => {
+                                return a + b.Weight;
+                            }, 0);
+
+                        let dealerUsedTotalShippingFee = weightRounding(dealerUsedTotalWeight) * vm.order.OrderDetails[0].ShippingFee;
+
+                        reducedShippingFee += dealerTotalShippingFee - dealerUsedTotalShippingFee;
+                    });
+                }
+                //endregion
+
+                let paymentAmountLeft = vm.order.TotalPrice + vm.order.TotalShippingFee - rejectedAmount - paidAmount - reducedShippingFee;
+
+                delete vm.orderPayment;
+
+                if (paymentAmountLeft != 0) {
+                    vm.orderPayment = {
+                        PaymentType: paymentAmountLeft > 0 ? 'FULFILLMENT' : 'REFUNDMENT',
+                        OrderCode: code,
+                        PaidAmount: paymentAmountLeft,
+                        Amount: paymentAmountLeft
+                    };
+                }
             })
             .catch(function (err) {
                 toastr.error(err);
@@ -43,10 +117,10 @@ function OrderVerifyController(OrderService, toastr, $filter, $timeout, $state, 
     }
 
     function pay(orderPayment) {
-        if (orderPayment.Amount > orderPayment.PaidAmount) {
-            toastr.error('Insufficient funds');
-            return;
-        }
+        // if (orderPayment.Amount > orderPayment.PaidAmount) {
+        //     toastr.error('Insufficient funds');
+        //     return;
+        // }
 
         vm.loadingPay = true;
 
@@ -95,7 +169,7 @@ function OrderVerifyController(OrderService, toastr, $filter, $timeout, $state, 
         vm.loadingCompleteOrder = true;
         OrderService.complete(order.Code)
             .then(function (res) {
-                toastr.success('Pesanan telah diterima oleh customer.');
+                toastr.success('Transaksi telah selesai dilakukan.');
                 return searchOrderByCodeAndPin(vm.code, vm.pin);
             })
             .catch(function (err) {

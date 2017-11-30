@@ -42,6 +42,7 @@
                     <invoice-down-payment order="vm.order" order-payment="vm.orderPayment" ng-if="vm.orderPayment.PaymentType == 'DOWN PAYMENT'"></invoice-down-payment>
                     <invoice-full-payment order="vm.order" order-payment="vm.orderPayment" ng-if="vm.orderPayment.PaymentType == 'FULL PAYMENT'"></invoice-full-payment>
                     <invoice-fulfillment order="vm.order" order-payment="vm.orderPayment" ng-if="vm.orderPayment.PaymentType == 'FULFILLMENT'"></invoice-fulfillment>
+                    <invoice-refundment order="vm.order" order-payment="vm.orderPayment" ng-if="vm.orderPayment.PaymentType == 'REFUNDMENT'"></invoice-refundment>
 
                 </section>
             </div>

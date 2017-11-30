@@ -9,7 +9,9 @@ function productItemCard() {
             product: '=',
             openDetailItem: '&',
             addOrderItem: '&',
-            openMessenger: '&'
+            openMessenger: '&',
+            isMessengerReady: '=',
+            isStaff: '='
         },
         templateUrl: 'app/product/_item-card.html'
     }

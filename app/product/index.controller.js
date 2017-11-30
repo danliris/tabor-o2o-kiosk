@@ -1,20 +1,22 @@
 ﻿angular.module('app')
     .controller('ProductController', ProductController);
 
-ProductController.$inject = ['$q', '$rootScope', '$state', '$stateParams', '$uibModal', 'toastr', 'ProductService', 'Order', 'AuthenticationState', 'Urls'];
-function ProductController($q, $rootScope, $state, $stateParams, $uibModal, toastr, ProductService, Order, AuthenticationState, Urls) {
+ProductController.$inject = ['$q', '$rootScope', '$state', '$stateParams', '$uibModal', 'toastr', 'ProductService', 'Order', 'AuthenticationState', 'Urls', 'DealerService', 'MessageChannels'];
+function ProductController($q, $rootScope, $state, $stateParams, $uibModal, toastr, ProductService, Order, AuthenticationState, Urls, DealerService, MessageChannels) {
     var vm = this;
 
     vm.currentUser = AuthenticationState.getUser();
+    vm.isStaff = AuthenticationState.isStaff();
 
     vm.products = [];
     vm.productQuery = {};
-
+    vm.$settings = $rootScope.$settings;
     vm.openDetailItem = openDetailItem;
     vm.addOrderItem = addOrderItem;
     vm.nextPage = nextPage;
     vm.getProducts = getProducts;
     vm.openMessenger = openMessenger;
+    vm.filterPrice = filterPrice;
 
     function openDetailItem(product) {
         var modalInstance = $uibModal.open({
@@ -53,7 +55,17 @@ function ProductController($q, $rootScope, $state, $stateParams, $uibModal, toas
     }
 
     function openMessenger(product) {
-        
+        return DealerService.getUserIdByDealerCode(product.DealerCode)
+            .then(dealerUsers => {
+                if (dealerUsers.length == 0) {
+                    toastr.error(`There are no users assigned to dealer ${product.DealerCode}`);
+                    return;
+                }
+
+                MessageChannels.add((new IDGenerator()).generate(), dealerUsers[0].UserId, dealerUsers[0].DealerCode);
+
+                return;
+            });
     }
 
     function getProducts(products, query) {
@@ -99,13 +111,19 @@ function ProductController($q, $rootScope, $state, $stateParams, $uibModal, toas
             keyword: '',
             orderBy: '+Name',
             page: 1,
-            limit: 9
+            limit: 9,
+            priceRange: { min: 0, max: 0, display: 'Semua' }
         };
+    }
+
+    function filterPrice(query) {
+        query.page = 1;
+        vm.products = [];
+        getProducts(vm.products, query);
     }
 
     function nextPage(query) {
         query.page++;
-
         getProducts(vm.products, query);
     }
 
@@ -114,6 +132,27 @@ function ProductController($q, $rootScope, $state, $stateParams, $uibModal, toas
         vm.products = [];
 
         getProducts(vm.products, query);
+    }
+
+    function IDGenerator() {
+        this.timestamp = +new Date;
+
+        var _getRandomInt = function (min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        this.generate = function (length = 8) {
+            var ts = this.timestamp.toString();
+            var parts = ts.split("").reverse();
+            var id = "";
+
+            for (var i = 0; i < length; ++i) {
+                var index = _getRandomInt(0, parts.length - 1);
+                id += parts[index];
+            }
+
+            return id;
+        }
     }
 
     (function () {
@@ -128,6 +167,16 @@ function ProductController($q, $rootScope, $state, $stateParams, $uibModal, toas
         vm.productQuery.keyword = $stateParams.keyword;
         vm.productQuery.brandCode = $stateParams.brand;
         vm.productQuery.categoryCode = $stateParams.category;
+
+        vm.priceRangeOptions = [
+            { min: 0, max: 0, display: 'Semua' },
+            { min: 0, max: 2000000, display: '< Rp. 2jt' },
+            { min: 2000001, max: 5000000, display: 'Rp. 2jt - Rp. 5jt' },
+            { min: 5000001, max: 10000000, display: 'Rp. 5jt - Rp. 10jt' },
+            { min: 10000001, max: 0, display: '> Rp. 10jt' }
+        ];
+
+        vm.productQuery.priceRange = vm.priceRangeOptions[0];
 
         getProducts(vm.products, vm.productQuery);
     })();

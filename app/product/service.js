@@ -20,14 +20,20 @@ function ProductService($http, Urls) {
             limit: query.limit,
             skip: (query.page - 1) * query.limit,
             where: {
-                'Name': {
-                    like: '%' + (query.keyword || '') + '%'
-                },
+                'Name': { like: '%' + (query.keyword || '') + '%' },
                 'BrandCode': query.brandCode,
                 'ProductCategoryCode': query.categoryCode,
-                'KioskCode': kioskCode,
+                'KioskCode': kioskCode
             }
         };
+
+        if (query.priceRange.min != 0 || query.priceRange.max != 0) {
+            q.where.Price = { between: [query.priceRange.min, query.priceRange.max] };
+        }
+
+        if (query.priceRange.min != 0 && query.priceRange.max == 0) {
+            q.where.Price = { gt: query.priceRange.min };
+        }
 
         return $http.get(Urls.BASE_API + '/vmappedproducts', { params: { filter: JSON.stringify(q) } })
             .then(handleSuccess);
@@ -42,6 +48,13 @@ function ProductService($http, Urls) {
                 { 'KioskCode': kioskCode }
             ]
         };
+
+        if (query.priceRange.min != 0 || query.priceRange.max != 0)
+            q.and.push({ Price: { between: [query.priceRange.min, query.priceRange.max] } });
+
+        if (query.priceRange.min != 0 && query.priceRange.max == 0) {
+            q.and.push({ Price: { gt: query.priceRange.min } });
+        }
 
 
         return $http.get(Urls.BASE_API + '/vmappedproducts/count?where=' + encodeURI(JSON.stringify(q)))

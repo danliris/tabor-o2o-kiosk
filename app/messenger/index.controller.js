@@ -1,37 +1,58 @@
 'use strict';
 
-angular.module('app.messenger')
+angular.module('app')
     .controller('MessengerController', MessengerController);
 
-MessengerController.$inject = ['ChatMessage'];
+MessengerController.$inject = ['MessageChannels', 'AuthenticationState', '$location', '$anchorScroll', '$timeout', '$rootScope'];
 
-function MessengerController(ChatMessage) {
+function MessengerController(MessageChannels, AuthenticationState, $location, $anchorScroll, $timeout, $rootScope) {
     var vm = this;
-    vm.user = `Guest ${Math.round(Math.random() * 100)}`;
-    // we add chatMessages array to the scope to be used in our ng-repeat
-    vm.messages = ChatMessage;
+    vm.currentDate = new Date();
 
+    vm.currentUser = AuthenticationState.getUser();
 
-    // a method to create new messages; called by ng-submit
-    vm.addMessage = function () {
-        // calling $add on a synchronized array is like Array.push(),
-        // except that it saves the changes to our database!
-        vm.messages.$add({
-            from: vm.user,
-            content: vm.message
-        });
+    MessageChannels.init(vm.currentUser.id);
 
-        // reset the message input
-        vm.message = "";
-    };
+    vm.rooms = MessageChannels.rooms;
 
-    // if the messages are empty, add something for fun!
-    vm.messages.$loaded(function () {
-        if (vm.messages.length === 0) {
-            vm.messages.$add({
-                from: "Firebase Docs",
-                content: "Hello world!"
-            });
-        }
+    vm.rooms.$loaded(() => {
+        $rootScope.$settings.firebaseReady = true;
+        // vm.rooms.forEach(room => {
+        //     fetchMessages(room);
+        // });
     });
+
+    vm.sendMessage = sendMessage;
+    function sendMessage(room) {
+        if (!room.inputMessage) return;
+
+        MessageChannels.addMessage(room, vm.currentUser.id, vm.currentUser.username, room.inputMessage);
+        room.inputMessage = '';
+
+        scrollBottom(room.$id);
+    }
+
+    vm.toggleOpenRoom = toggleOpenRoom;
+    function toggleOpenRoom(room) {
+        room.open = !room.open;
+
+        if (room.open) {
+            MessageChannels.fetchMessages(room);
+
+        }
+    }
+
+    vm.removeRoom = removeRoom;
+    function removeRoom(room) {
+        MessageChannels.close(room);
+    }
+
+    function scrollBottom(id, time = 100) {
+        $timeout(() => {
+            $location.hash(`anchor_${id}`);
+
+            $anchorScroll();
+
+        }, time);
+    }
 }

@@ -140,6 +140,7 @@ function PaymentConfirmationController($uibModalInstance, order, orderPayment) {
             vm.orderPayment.PaymentType = 'FULL PAYMENT';
             vm.orderPayment.Amount = vm.orderPayment.PaidAmount = order.TotalPrice + order.TotalShippingFee;
         }
+
     })();
 
     function ok() {

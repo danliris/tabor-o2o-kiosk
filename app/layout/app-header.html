@@ -7,8 +7,38 @@
                         <a ui-sref="app.order.draft">Order</a>
                     </li>
                     <li>
-                        Hi, {{ vm.authenticatedUser.username }}.
-                        <a href="javascript:;" ng-click="vm.logout()">Logout</a>
+                        <a href="javascript:;" ng-click="vm.openModalChangeMode()" title="Switch">
+                            Switch
+                        </a>
+                    </li>
+                    <li uib-dropdown on-toggle="toggled(open)">
+                        <a href="javascript:;" uib-dropdown-toggle>
+                            {{ vm.authenticatedUser.username }}
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+
+                        <div class="dropdown-menu pull-right user-menu">
+                            <div class="user-header">
+                                <i class="fa fa-user-circle fa-4x"></i>
+                                <div class="username">
+                                    {{ vm.authenticatedUser.username }}
+                                </div>
+
+                                <div class="wallet-balance" ng-if="vm.isStaff">
+                                    Saldo: {{ $settings.walletBalance | currency: 'Rp.': 0 }}
+                                    <a href="javascript:;" ng-click="vm.getWalletBalance(); $event.stopPropagation()">
+                                        <i class="fa fa-refresh" ng-class="{ 'fa-spin': vm.loadingGetWalletBalance }"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="user-body"></div>
+                            <div class="user-footer">
+                                <a href="javascript:;" class="btn btn-default" ng-click="vm.openModalChangePassword()" ng-if="vm.isStaff">Ubah Password</a>
+                                <a href="javascript:;" class="btn btn-default pull-right" ng-click="vm.logout()">Logout</a>
+
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -27,8 +57,7 @@
                     <form ng-submit="vm.searchProduct(vm.keyword)">
                         <div class="form-group no-margin">
                             <div class="input-group">
-                                <input type="text" class="form-control search-input" placeholder="Cari produk" ng-model="vm.keyword"
-                                />
+                                <input type="text" class="form-control search-input" placeholder="Cari produk" ng-model="vm.keyword" />
                                 <span class="input-group-btn">
                                     <button class="btn btn-primary" type="submit">CARI</button>
                                 </span>
@@ -89,19 +118,16 @@
                                         </a>
 
                                         <div class="image-wrapper">
-                                            <img ng-src="{{ item.image || 'statics/images/phone-placeholder.png' }}" alt="{{ item.name }}"
-                                                title="{{ item.name }}" class="img-responsive"
-                                            />
+                                            <img ng-src="{{ item.image || 'statics/images/phone-placeholder.png' }}" alt="{{ item.name }}" title="{{ item.name }}" class="img-responsive" />
                                         </div>
 
                                         <div class="description-wrapper">
                                             <span class="name">{{ item.name }}</span>
                                             <br />
-                                            <span class="price">{{ item.price | currency: 'Rp. ' : 0
-                                                }}</span>
+                                            <span class="price">{{ item.price | currency: 'Rp. ' : 0 }}
+                                            </span>
 
-                                            <input type="number" class="quantity input-sm form-control" ng-model="item.quantity"
-                                                min="1" />
+                                            <input type="number" class="quantity input-sm form-control" ng-model="item.quantity" min="1" />
                                         </div>
                                     </li>
                                 </ul>
@@ -124,8 +150,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="list-menu">
-                        <a href="javascript:;" ui-sref="app.product({ keyword: vm.keyword, brand: category.BrandCode, category: category.Code })"
-                            class="item" ui-sref-active="active" ng-repeat="category in vm.categories">
+                        <a href="javascript:;" ui-sref="app.product({ keyword: vm.keyword, brand: category.BrandCode, category: category.Code })" class="item" ui-sref-active="active" ng-repeat="category in vm.categories">
                             {{ category.Name }}
                         </a>
                         <!--<div ng-repeat="brand in vm.brands" class="item">

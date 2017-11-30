@@ -1,7 +1,7 @@
-﻿angular.module('app')
-    .directive('invoiceFulfillment', invoiceFulfillment);
+angular.module('app')
+    .directive('invoiceRefundment', invoiceRefundment);
 
-function invoiceFulfillment() {
+function invoiceRefundment() {
     return {
         restrict: 'E',
         replace: true,
@@ -10,8 +10,7 @@ function invoiceFulfillment() {
             orderPayment: '='
         },
         link: (scope, element, attrs, controllers) => {
-
         },
-        templateUrl: 'app/invoice/_fulfillment.html'
+        templateUrl: 'app/invoice/_refundment.html'
     }
 }

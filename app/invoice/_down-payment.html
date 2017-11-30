@@ -28,15 +28,21 @@
                 </tr>
                 <tr>
                     <td class="text-right border-top-1" colspan="3">Total Belanja</td>
-                    <td class="text-right border-top-1">{{ order.TotalPrice + order.TotalShippingFee | currency: 'Rp. ': 0 }}</td>
+                    <td class="text-right border-top-1">{{ order.TotalPrice | currency: 'Rp. ': 0 }}</td>
                     <td class="bg-grey border-top-1"></td>
                     <td class="bg-grey border-top-1"></td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="3">Total DP</td>
+                    <td class="text-right" colspan="3">Biaya Pengiriman</td>
+                    <td class="text-right">{{ order.TotalShippingFee | currency: 'Rp. ': 0 }}</td>
+                    <td class="bg-grey"></td>
+                    <td class="bg-grey"></td>
+                </tr>
+                <tr>
+                    <td class="text-right" colspan="3">DP Minimum</td>
                     <td class="text-right"></td>
                     <td class="bg-grey"></td>
-                    <td class="text-right bg-grey">{{ order.DP + order.TotalShippingFee | currency: 'Rp. ': 0 }}</td>
+                    <td class="text-right bg-grey">{{ order.DP | currency: 'Rp. ': 0 }}</td>
                 </tr>
                 <tr>
                     <td class="text-right" colspan="3">Pembayaran</td>
@@ -54,8 +60,12 @@
                 </tr>-->
 
                 <tr>
-                    <td class="text-right" colspan="3"><b>Sisa yang harus dibayarkan</b></td>
-                    <td class="text-right"><b>{{ (order.TotalPrice + order.TotalShippingFee) - orderPayment.PaidAmount | currency: 'Rp. ': 0 }}</b></td>
+                    <td class="text-right" colspan="3">
+                        <b>Sisa yang harus dibayarkan</b>
+                    </td>
+                    <td class="text-right">
+                        <b>{{ (order.TotalPrice + order.TotalShippingFee) - orderPayment.PaidAmount | currency: 'Rp. ': 0 }}</b>
+                    </td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -66,7 +76,8 @@
         <div class="col-xs-6">
             <b>METODE PEMBAYARAN</b>
             <div class="m-y-5">
-                <span class="text-strikethrough">FULL PAYMENT</span> | <span>DOWN PAYMENT</span>
+                <span class="text-strikethrough">FULL PAYMENT</span> |
+                <span>DOWN PAYMENT</span>
             </div>
             <small>* sisa pembayaran dilakukan saat barang sampai outlet/dikirimkan ke pemesan</small>
             <div class="m-y-5">

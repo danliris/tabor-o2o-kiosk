@@ -12,6 +12,12 @@ function HomeController($state, HomeService, ProductService, AuthenticationState
     vm.openDetailItem = openDetailItem;
     vm.addOrderItem = addOrderItem;
 
+    (function () {
+        changeSliderType('BEST SELLER');
+
+
+    })();
+
     function next(multiplier = 1) {
         scrollFeaturedProducts(true, multiplier);
     }
@@ -40,10 +46,6 @@ function HomeController($state, HomeService, ProductService, AuthenticationState
             getNewProducts();
     }
 
-    (function () {
-        changeSliderType('BEST SELLER');
-    })();
-
     function getBestSellerProducts() {
         vm.isError = false;
         vm.loadingProducts = true;
@@ -52,7 +54,8 @@ function HomeController($state, HomeService, ProductService, AuthenticationState
             orderBy: '-Sold',
             page: 1,
             limit: 9,
-            categoryCode: '*'
+            categoryCode: '*',
+            priceRange: { min: 0, max: 0, display: 'Semua' }
         }, vm.currentUser.kiosk.code)
             .then(res => {
                 vm.products = res;
@@ -73,7 +76,8 @@ function HomeController($state, HomeService, ProductService, AuthenticationState
             orderBy: '-CreatedDate',
             page: 1,
             limit: 9,
-            categoryCode: '*'
+            categoryCode: '*',
+            priceRange: { min: 0, max: 0, display: 'Semua' }
         }, vm.currentUser.kiosk.code)
             .then(res => {
                 vm.products = res;
@@ -120,5 +124,22 @@ function HomeController($state, HomeService, ProductService, AuthenticationState
         });
 
         toastr.success('Item telah ditambahkan ke kerajang belanja.', 'Pesan');
+    }
+
+    vm.slides = [];
+    var currIndex = 0;
+    vm.currentActiveSlide = 0;
+
+    function addSlide() {
+        var newWidth = 600 + vm.slides.length + 1;
+        vm.slides.push({
+            image: 'https://picsum.photos/' + newWidth + '/160',
+            text: ['Nice image', 'Awesome photograph', 'That is so cool', 'I love that'][vm.slides.length % 4],
+            id: currIndex++
+        });
+    };
+
+    for (var i = 0; i < 4; i++) {
+        addSlide();
     }
 }

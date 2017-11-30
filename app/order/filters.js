@@ -43,6 +43,8 @@ function humanify() {
             return 'Pesanan sudah diterima oleh Customer';
         else if (status == 'VOIDED')
             return 'Pesanan dibatalkan oleh pembeli';
+        else if (status == 'REFUNDED')
+            return 'Dana telah dikembalikan';
         else
             return status;
     }

@@ -11,8 +11,10 @@ function AuthenticationState($http, $localStorage) {
         getUser: getUser,
         isLoggedIn: isLoggedIn,
         remove: remove,
+        setRole: setRole,
+        getRole: getRole,
         isGuest: isGuest,
-        isStaff: isStaff
+        isStaff: isStaff,
     }
 
     function setToken(token) {
@@ -42,16 +44,27 @@ function AuthenticationState($http, $localStorage) {
         return $localStorage.user;
     }
 
-    function isGuest() {
-        if ($localStorage.user.roles)
-            return $localStorage.user.roles.find(x => x.name == 'guest') ? true : false;
+    function setRole(role) {
+        $localStorage.user.role = role;
+    }
 
+    function getRole() {
+        return $localStorage.user.role;
+    }
+
+    function isGuest() {
+        // if ($localStorage.user.roles)
+        //     return $localStorage.user.roles.find(x => x.name == 'guest') ? true : false;
+        if ($localStorage.user.role)
+            return $localStorage.user.role == 'guest' ? true : false;
         return false;
     }
 
     function isStaff() {
-        if ($localStorage.user.roles)
-            return $localStorage.user.roles.find(x => x.name == 'staff') ? true : false;
+        // if ($localStorage.user.roles)
+        //     return $localStorage.user.roles.find(x => x.name == 'staff') ? true : false;
+        if ($localStorage.user.role)
+            return $localStorage.user.role == 'staff' ? true : false;
 
         return false;
 

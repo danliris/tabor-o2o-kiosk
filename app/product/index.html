@@ -20,15 +20,15 @@
                 </div>
                 <div class="col-sm-8">
                     <div class="form-horizontal">
-                        <label class="control-label col-sm-4">
-                            Filter:
-                        </label>
-                        <div class="col-sm-8">
-                            <select class="form-control" ng-model="vm.productQuery.priceRange" ng-change="vm.getProducts(vm.productQuery)">
-                                <option value="< 1000000">0 sampai Rp. 1.000.000,-</option>
-                                <option value="1000000 - 2500000">Rp. 1.000.000 sampai Rp. 2.500.000</option>
-                                <option value="> 2500000">&gt; Rp. 2.500.000</option>
-                            </select>
+                        <div class="row">
+                            <label class="control-label col-sm-4">
+                                Filter:
+                            </label>
+                            <div class="col-sm-8">
+                                <select class="form-control" ng-model="vm.productQuery.priceRange" ng-options="option as option.display for option in vm.priceRangeOptions"
+                                    ng-change="vm.filterPrice(vm.productQuery)">
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -46,32 +46,33 @@
                         <div class="panel-body">
                             <i class="fa fa-info-circle fa-4x text-warning"></i>
                             <div ng-if="vm.productQuery.keyword">
-                                <h4>Kami tidak menemukan hasil pencarian untuk "<i>{{ vm.productQuery.keyword }}</i>" dalam kategori ini.</h4>
-                                <p class="small">Tolong periksa pengejaan kata, atau hubungi staff kami untuk informasi lebih lanjut.</p>
+                                <h4>Kami tidak menemukan hasil pencarian untuk "
+                                    <i>{{ vm.productQuery.keyword }}</i>" dalam kategori
+                                    ini.</h4>
+                                <p class="small">Tolong periksa pengejaan kata, atau hubungi staff
+                                    kami untuk informasi lebih lanjut.</p>
                             </div>
 
                             <div ng-if="!vm.productQuery.keyword">
-                                <h4>Kami tidak menemukan hasil pencarian dalam kategori ini.</h4>
-                                <p class="small">Silahkan hubungi staff kami untuk informasi lebih lanjut.</p>
+                                <h4>Kami tidak menemukan hasil pencarian dalam kategori
+                                    ini.</h4>
+                                <p class="small">Silahkan hubungi staff kami untuk informasi lebih
+                                    lanjut.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="col-xs-6 col-sm-4" ng-repeat="product in vm.products | orderBy: vm.productQuery.orderBy">
 
                     <product-item-card product="product"
                         add-order-item="vm.addOrderItem(product)"
                         open-detail-item="vm.openDetailItem(product)"
-                        open-messenger = "vm.openMessenger(product)">
+                        is-messenger-ready="vm.$settings.firebaseReady"
+                        open-messenger="vm.openMessenger(product)"
+                        is-staff="vm.isStaff">
                     </product-item-card>
 
                 </div>
-
-                <loading-indicator ng-if="vm.loadingProducts"></loading-indicator>
-
-                <reload-indicator ng-if="vm.isError && !vm.loadingProducts" action="vm.getProducts(vm.productQuery)">
-                </reload-indicator>
 
                 <div class="col-sm-12 text-center" ng-if="vm.productQuery.count > vm.productQuery.page * vm.productQuery.limit">
                     <button class="btn btn-default" ng-click="vm.nextPage(vm.productQuery)">
@@ -82,7 +83,10 @@
                     </button>
                 </div>
             </div>
+            <loading-indicator ng-if="vm.loadingProducts"></loading-indicator>
 
+            <reload-indicator ng-if="vm.isError && !vm.loadingProducts" action="vm.getProducts(vm.productQuery)">
+            </reload-indicator>
         </div>
     </div>
 </div>

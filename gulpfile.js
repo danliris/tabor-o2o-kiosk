@@ -2,9 +2,18 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     minify = require('gulp-minify'),
     cleanCss = require('gulp-clean-css'),
-    rev = require('gulp-rev');
+    rev = require('gulp-rev')
+    del = require('del');
 
 //region PRD
+gulp.task('clean', () => {
+    var promises = [];
+    del.sync([
+        'build/css/**',
+        'build/js/**'
+    ]);
+})
+
 gulp.task('pack-js-prd', () => {
     return gulp.src([
         'app/app.module.js',
@@ -45,7 +54,7 @@ gulp.task('pack-css-prd', () => {
         .pipe(gulp.dest(''));
 });
 
-gulp.task('prd', ['pack-js-prd', 'pack-css-prd']);
+gulp.task('prd', ['clean', 'pack-js-prd', 'pack-css-prd']);
 //endregion
 
 //region DEV
@@ -79,10 +88,12 @@ gulp.task('pack-css-dev', () => {
         .pipe(gulp.dest('build/css'));
 });
 
-gulp.task('dev', ['pack-js-dev', 'pack-css-dev']);
+gulp.task('dev', ['clean', 'pack-js-dev', 'pack-css-dev']);
 //endregion
 
 gulp.task('watch', function () {
     gulp.watch('app/**/*.js', ['pack-js-dev']);
     gulp.watch('statics/css/*.css', ['pack-css-dev']);
 });
+
+gulp.task('default', ['dev', 'watch']);

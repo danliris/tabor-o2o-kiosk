@@ -1,6 +1,11 @@
 ﻿
 <div>
     <div class="product-card" ng-class="{ 'unavailable': product.Quantity <= 0 }">
+        <label class="label label-warning warning-message"
+            title="Silahkan hubungi Dealer terkait untuk informasi lebih lanjut."
+            ng-if="product.Quantity > 0 && product.Quantity < product.MinQuantity">
+            STOK TERBATAS
+        </label>
         <div class="flex-1 text-center">
             <div class="img-placeholder">
                 <image-api src="product.Image"
@@ -64,8 +69,11 @@
                 <i class="fa fa-search"></i>
             </button>
 
-            <button class="btn btn-info btn-circle"
-                ng-click="openMessenger(product);">
+            <button class="btn btn-circle"
+                ng-class="{ 'btn-info': product.Quantity >= product.MinQuantity, 'btn-warning': product.Quantity < product.MinQuantity }"
+                ng-click="openMessenger(product);"
+                ng-if="isStaff"
+                ng-disabled="!isMessengerReady">
             <i class="fa fa-comments"></i>
         </button>
         </div>
