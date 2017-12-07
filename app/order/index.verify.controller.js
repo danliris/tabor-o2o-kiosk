@@ -27,6 +27,9 @@ function OrderVerifyController(OrderService, toastr, $filter, $timeout, $state, 
     function searchOrderByCodeAndPin(code, pin) {
         vm.loadingGetOrder = true;
 
+        delete vm.order;
+        delete vm.orderPayment;
+
         OrderService.getByCodePIN(code, pin)
             .then(function (response) {
                 if (response.length == 0) {
@@ -34,14 +37,13 @@ function OrderVerifyController(OrderService, toastr, $filter, $timeout, $state, 
                     return;
                 }
 
-                delete vm.order;
-
                 var order = response[0];
 
                 if (order.Status != 'ARRIVED'
                     && order.Status != 'COMPLETED'
                     && order.Status != 'REJECTED'
-                    && order.Status != 'REFUNDED') {
+                    && order.Status != 'REFUNDED'
+                ) {
                     toastr.warning('Pesanan anda sedang diproses.', 'Pesan');
                     return;
                 }
@@ -83,7 +85,7 @@ function OrderVerifyController(OrderService, toastr, $filter, $timeout, $state, 
 
                         // totalusedweight
                         let dealerUsedTotalWeight = vm.order.OrderDetails
-                            .filter(t => t.Status != 'REJECTED')
+                            .filter(t => t.Status != 'REJECTED' && t.Status != 'REFUNDED')
                             .reduce((a, b) => {
                                 return a + b.Weight;
                             }, 0);
@@ -97,7 +99,6 @@ function OrderVerifyController(OrderService, toastr, $filter, $timeout, $state, 
 
                 let paymentAmountLeft = vm.order.TotalPrice + vm.order.TotalShippingFee - rejectedAmount - paidAmount - reducedShippingFee;
 
-                delete vm.orderPayment;
 
                 if (paymentAmountLeft != 0) {
                     vm.orderPayment = {

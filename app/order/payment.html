@@ -177,7 +177,7 @@
             <tr>
                 <td>Saldo</td>
                 <td>
-                    {{ $settings.walletBalance | currency: 'Rp. ': 0 }}
+                    {{ $settings.walletBalance | currency: 'Rp. ': 0 }} <a ng-click="vm.getWalletBalance()" href="javascript:;"><i class="fa fa-refresh" ng-class="{ 'fa-spin': vm.loadingGetWalletBalance }"></i></a>
                     <span class="help-block" ng-if="$settings.walletBalance < vm.orderPayment.PaidAmount">
                         Saldo tidak mencukupi. Silahkan lakukan pengisian top up wallet terlebih dahulu.
                     </span>
@@ -193,6 +193,6 @@
     </div>
     <div class="modal-footer">
         <button ng-click="vm.cancel()" class="btn btn-default pull-left">Batal</button>
-        <button ng-click="vm.ok()" class="btn btn-success pull-right">Lanjut</button>
+        <button ng-click="vm.ok()" class="btn btn-success pull-right" ng-disabled="$settings.walletBalance < vm.orderPayment.PaidAmount || vm.loadingGetWalletBalance">Lanjut</button>
     </div>
 </script>

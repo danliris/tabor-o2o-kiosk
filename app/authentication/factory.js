@@ -20,7 +20,7 @@ function AuthenticationState($http, $localStorage) {
     function setToken(token) {
         $localStorage.token = token.id;
         $localStorage.tokenExpiredAt = new Date(new Date(token.created) + token.ttl);
-        $http.defaults.headers.common.Authorization = token.id;
+        // $http.defaults.headers.common.Authorization = token.id;
     }
 
     function getToken() {

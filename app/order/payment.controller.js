@@ -127,20 +127,22 @@ function OrderPaymentController($rootScope, $filter, $stateParams, $state, $wind
 angular.module('app')
     .controller('PaymentConfirmationController', PaymentConfirmationController);
 
-PaymentConfirmationController.$inject = ['$uibModalInstance', 'order', 'orderPayment'];
-function PaymentConfirmationController($uibModalInstance, order, orderPayment) {
+PaymentConfirmationController.$inject = ['AuthenticationState', '$uibModalInstance', 'order', 'orderPayment', 'WalletService', '$rootScope'];
+function PaymentConfirmationController(AuthenticationState, $uibModalInstance, order, orderPayment, WalletService, $rootScope) {
     var vm = this;
     vm.orderPayment = orderPayment;
 
     vm.ok = ok;
     vm.cancel = cancel;
+    vm.getWalletBalance = getWalletBalance;
 
     (function () {
+        getWalletBalance();
+
         if (order.TotalPrice + order.TotalShippingFee <= orderPayment.PaidAmount) {
             vm.orderPayment.PaymentType = 'FULL PAYMENT';
             vm.orderPayment.Amount = vm.orderPayment.PaidAmount = order.TotalPrice + order.TotalShippingFee;
         }
-
     })();
 
     function ok() {
@@ -149,5 +151,20 @@ function PaymentConfirmationController($uibModalInstance, order, orderPayment) {
 
     function cancel() {
         $uibModalInstance.dismiss('cancel');
+    }
+
+    function getWalletBalance() {
+        vm.loadingGetWalletBalance = true;
+        return WalletService.getWalletBalance(AuthenticationState.getUser().email)
+            .then(res => {
+                var result = res.result;
+                $rootScope.$settings.walletBalance = (result.topupCredit + result.rewardCredit) || 0;
+            })
+            .catch(err => {
+
+            })
+            .finally(() => {
+                vm.loadingGetWalletBalance = false;
+            });
     }
 }

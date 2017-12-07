@@ -29,9 +29,10 @@ function httpInterceptor($q, $rootScope, $localStorage) {
             //     config.params.access_token = $localStorage.token;
             // }
 
-            // if ($localStorage.token) {
-            //     config.headers.access_token = $localStorage.token;
-            // }
+            if ($localStorage.token) {
+                config.headers.Authorization = $localStorage.token;
+            }
+            
             return config;
         },
 

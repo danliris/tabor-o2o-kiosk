@@ -21,9 +21,6 @@ function orderDetail() {
                 .reduce((a, b) => {
                     return a + (b.Status == 'REJECTED' || b.Status == 'REFUNDED' ? b.Price : 0);
                 }, 0);
-
-            scope.order.Refund = rejectedAmount;
-
             //region Itung biaya kirim yang seharusnya
             // let reducedShippingFee = vm.order.TotalShippingFee;
             let reducedShippingFee = 0;
@@ -44,7 +41,7 @@ function orderDetail() {
 
                     // totalusedweight
                     let dealerUsedTotalWeight = scope.order.OrderDetails
-                        .filter(t => t.Status != 'REJECTED')
+                        .filter(t => t.Status != 'REJECTED' && t.Status != 'REFUNDED')
                         .reduce((a, b) => {
                             return a + b.Weight;
                         }, 0);
@@ -54,8 +51,11 @@ function orderDetail() {
                     reducedShippingFee += dealerTotalShippingFee - dealerUsedTotalShippingFee;
                 });
             }
+
             //endregion
             // }
+            scope.order.Refund = rejectedAmount + reducedShippingFee;
+
             scope.order.GrandTotal = scope.order.TotalPrice + scope.order.TotalShippingFee - scope.order.Refund;
 
             function weightRounding(weight) {
