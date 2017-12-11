@@ -1,1 +1,1 @@
-angular.module('app.authentication', ['firebase']);
+angular.module('app.authentication', []);

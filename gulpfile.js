@@ -21,6 +21,7 @@ gulp.task('pack-js-prd', () => {
         'app/app.filters.js',
         'app/app.directives.js',
         'app/app.routes.js',
+        'app/app-firebase.config.js',
 
         'app/*/module.js',
         'app/*/service.js',
@@ -65,7 +66,8 @@ gulp.task('pack-js-dev', () => {
         'app/app.filters.js',
         'app/app.directives.js',
         'app/app.routes.js',
-
+        'app/app-firebase.config.js',
+        
         'app/*/module.js',
         'app/*/service.js',
         'app/*/factory.js',
