@@ -4,6 +4,7 @@
   "description": "customer's online catalog",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "moonlay",
@@ -18,6 +19,7 @@
     "angular-ui-router": "^1.0.3",
     "angularfire": "^2.3.0",
     "bootstrap": "^3.3.7",
+    "express": "^4.16.2",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
     "ngstorage": "^0.3.11"
