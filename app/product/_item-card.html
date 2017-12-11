@@ -1,0 +1,85 @@
+﻿
+<div>
+    <div class="product-card" ng-class="{ 'unavailable': product.Quantity <= 0 }">
+        <label class="label label-warning warning-message"
+            title="Silahkan hubungi Dealer terkait untuk informasi lebih lanjut."
+            ng-if="product.Quantity > 0 && product.Quantity < product.MinQuantity">
+            STOK TERBATAS
+        </label>
+        <div class="flex-1 text-center">
+            <div class="img-placeholder">
+                <image-api src="product.Image"
+                    name="product.Name"
+                    class="img-responsive">
+                </image-api>
+            </div>
+        </div>
+        <div class="flex-1">
+            <div class="description-block">
+                <div class="flex-1">
+                    <div class="name-block">
+                        <span class="name">
+                            {{ product.Name }}
+                        </span>
+                    </div>
+                </div>
+                <div class="flex-2">
+                    <div class="price-block">
+                        <!--<span class="original-price">
+                            Rp. 3.500.000
+                        </span>-->
+                        <span class="price">
+                            {{ product.Price | currency: 'Rp. ': 0 }}
+                        </span>
+                    </div>
+                    <div class="specification-block">
+                        <table class="table table-condensed table-specification">
+                            <colgroup>
+                                <col style="width: 25px;" />
+                                <col />
+                            </colgroup>
+                            <tr>
+                                <td><i class="fa fa-camera-retro"></i></td>
+                                <td>{{ (product.ArrayedSpecification | filter: { key: 'Camera' })[0].value }}</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fa fa-cube"></i></td>
+                                <td>{{ (product.ArrayedSpecification | filter: { key: 'RAM' })[0].value }}</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fa fa-battery-three-quarters"></i></td>
+                                <td>{{ (product.ArrayedSpecification | filter: { key: 'Battery' })[0].value }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay">
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary btn-circle"
+                    ng-click="addOrderItem(product);">
+                <i class="fa fa-shopping-cart"></i>
+            </button>
+            <button class="btn btn-default btn-circle"
+                    ng-click="openDetailItem(product);">
+                <i class="fa fa-search"></i>
+            </button>
+
+            <button class="btn btn-circle"
+                ng-class="{ 'btn-info': product.Quantity >= product.MinQuantity, 'btn-warning': product.Quantity < product.MinQuantity }"
+                ng-click="openMessenger(product);"
+                ng-if="isStaff"
+                ng-disabled="!isMessengerReady">
+            <i class="fa fa-comments"></i>
+        </button>
+        </div>
+
+        <div class="overlay-dark">
+            NOT AVAILABLE
+        </div>
+    </div>
+</div>

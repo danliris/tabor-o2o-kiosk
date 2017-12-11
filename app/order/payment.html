@@ -45,20 +45,6 @@
 
                 <div class="col-sm-12">
                     <div class="panel panel-default no-margin">
-                        <div class="panel-heading" ng-click="vm.openOrderDetail = !vm.openOrderDetail">
-                            <h4 class="panel-title">
-                                TOTAL HARGA
-
-                                <!--<span class="fa pull-right"
-                                      style="line-height: 2em;"
-                                      ng-class="{ 'fa-angle-down': !vm.openOrderDetail, 'fa-angle-up': vm.openOrderDetail }">
-                                </span>-->
-
-                                <span class="price pull-right" ng-if="vm.orderPayment.PaymentType == 'FULL PAYMENT'">{{ vm.order.TotalPrice + vm.order.TotalShippingFee | currency: 'Rp. ': 0 }}</span>
-                                <span class="price pull-right" ng-if="vm.orderPayment.PaymentType == 'DOWN PAYMENT'">{{ vm.order.DP + vm.order.TotalShippingFee | currency: 'Rp. ': 0 }}</span>
-
-                            </h4>
-                        </div>
                         <!--<div class="panel-body" ng-show="vm.openOrderDetail">-->
                         <div class="panel-body">
                             <table class="table no-margin">
@@ -98,15 +84,25 @@
                                             {{ vm.order.TotalPrice | currency: 'Rp. ' : 0 }}
                                         </td>
                                     </tr>
-
                                     <tr>
                                         <td>
                                             <label>Biaya Pengiriman</label>
                                         </td>
                                         <td class="text-right">
-                                            {{ vm.order.TotalShippingFee | currency: 'Rp. ' : 0 }}
+                                            <span ng-if="vm.order.TotalShippingFee > 0">{{ vm.order.TotalShippingFee | currency: 'Rp. ' : 0 }}</span>
+                                            <span ng-if="vm.order.TotalShippingFee == 0">GRATIS</span>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Grand Total</label>
+                                        </td>
+                                        <td class="text-right">
+                                            <span class="price" ng-if="vm.orderPayment.PaymentType == 'FULL PAYMENT'">{{ vm.order.TotalPrice + vm.order.TotalShippingFee | currency: 'Rp. ': 0 }}</span>
+                                            <span class="price" ng-if="vm.orderPayment.PaymentType == 'DOWN PAYMENT'">{{ vm.order.DP + vm.order.TotalShippingFee | currency: 'Rp. ': 0 }}</span>
+                                        </td>
+                                    </tr>
+    
                                 </tbody>
                             </table>
                         </div>
@@ -171,23 +167,32 @@
         <h4 class="modal-title">Konfirmasi Pembayaran ({{ vm.orderPayment.OrderCode }})</h4>
     </div>
     <div class="modal-body">
-        <table class="table">
+        <table class="table table-borderless">
             <tr>
-                <th>Tipe Pembayaran</th>
-                <td>
+                <th class="col-sm-4">Tipe Pembayaran</th>
+                <td class="col-sm-8">
                     {{ vm.orderPayment.PaymentType }}
+                </td>
+            </tr>
+            <tr>
+                <td>Saldo</td>
+                <td>
+                    {{ $settings.walletBalance | currency: 'Rp. ': 0 }} <a ng-click="vm.getWalletBalance()" href="javascript:;"><i class="fa fa-refresh" ng-class="{ 'fa-spin': vm.loadingGetWalletBalance }"></i></a>
+                    <span class="help-block" ng-if="$settings.walletBalance < vm.orderPayment.PaidAmount">
+                        Saldo tidak mencukupi. Silahkan lakukan pengisian top up wallet terlebih dahulu.
+                    </span>
                 </td>
             </tr>
             <tr>
                 <th>Jumlah yang dibayarkan</th>
                 <td>
-                    <span class="price">{{ vm.orderPayment.PaidAmount | currency: 'Rp .': 0 }}</span>
+                    <span class="price">{{ vm.orderPayment.PaidAmount | currency: 'Rp. ': 0 }}</span>
                 </td>
             </tr>
         </table>
     </div>
     <div class="modal-footer">
         <button ng-click="vm.cancel()" class="btn btn-default pull-left">Batal</button>
-        <button ng-click="vm.ok()" class="btn btn-success pull-right">Lanjut</button>
+        <button ng-click="vm.ok()" class="btn btn-success pull-right" ng-disabled="$settings.walletBalance < vm.orderPayment.PaidAmount || vm.loadingGetWalletBalance">Lanjut</button>
     </div>
 </script>

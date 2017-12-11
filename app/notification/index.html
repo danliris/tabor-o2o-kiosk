@@ -1,0 +1,45 @@
+<div class="container">
+    <h3 class="section-title">NOTIFIKASI</h3>
+
+    <reload-indicator ng-if="vm.isError" action="vm.getNotifications(vm.query)"></reload-indicator>
+
+    <div ng-if="!vm.isError">
+
+        <div ng-if="!vm.loadingGetNotifications">
+            <no-data ng-if="vm.notifications.length == 0"></no-data>
+
+            <div class="row" ng-if="vm.notifications.length > 0">
+                <div class="col-sm-12">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-3 text-center">Tanggal</th>
+                                <th class="col-sm-9 text-center">Pesan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="notification in vm.notifications" ng-click="vm.trackOrder(notification)" class="cursor-pointer">
+                                <td class="text-center">{{ notification.NotifiedDate | date: 'dd MMM yyyy HH:mm:ss' }} </td>
+                                <td>{{ notification.Message }}
+                                    <i class="fa fa-exclamation-circle text-danger" ng-if="!notification.IsRead" title="Belum dibuka"></i>
+
+                                    <i class="fa fa-circle-o-notch fa-spin pull-right" ng-show="notification.loading"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <loading-indicator ng-if="vm.loadingGetNotifications"></loading-indicator>
+
+        <div class="row" ng-if="vm.query.count > vm.query.page * vm.query.limit">
+            <div class="col-sm-12 text-center">
+                <a href="javascript:;" ng-click="vm.next()">tampilkan lebih banyak..</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>

@@ -18,26 +18,22 @@ function OrderDraftController(OrderService, toastr, $q, AuthenticationState) {
     }
 
     function getOrders(query) {
-        var promises = [];
-        promises.push(
-            OrderService.getAllDraft(query, vm.currentUser.kiosk.code)
-                .then(function (res) {
-                    vm.orders = res;
-                })
-            );
 
-        promises.push(
-            OrderService.countAllDraft(query, vm.currentUser.kiosk.code)
-                .then(function (res) {
-                    vm.orderQuery.count = res.count;
-                })
-            );
+        var promises = [];
+        promises.push(OrderService.getAllDraft(query, vm.currentUser.kiosk.code));
+
+        promises.push(OrderService.countAllDraft(query, vm.currentUser.kiosk.code));
 
         vm.loadingGetOrders = true;
         vm.isError = false;
 
         $q.all(promises)
-            .then(function (res) {
+            .then(function (responses) {
+                var response = responses[0];
+                vm.orders = response;
+
+                response = responses[1];
+                vm.orderQuery.count = response.count;
             })
             .catch(function (err) {
                 vm.isError = true;

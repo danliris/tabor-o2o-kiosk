@@ -11,25 +11,22 @@
     <meta name="author" content="" />
     <link rel="icon" href="favicon.ico" />
 
-    <title>{{ $settings.pageTitle }}</title>
+    <title ng-bind="$settings.pageTitle">O2O</title>
 
     <!-- Bootstrap core CSS -->
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css" rel="stylesheet" />
     <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="node_modules/angular-toastr/dist/angular-toastr.min.css" rel="stylesheet" />
-
-    <link href="statics/css/theme.css" rel="stylesheet" />
-    <link href="statics/css/style.sm.css" rel="stylesheet" />
-    <link href="statics/css/print.css" rel="stylesheet" />
-
+    <link href="build/css/style.css" rel="stylesheet" />
+    <!-- <link href="build/css/style-ad9e698567.css" rel="stylesheet" > -->
 </head>
 
 <body>
     <div ui-view="root"></div>
 
     <div ng-spinner-bar>
-        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 99999;">
+        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.5); z-index: 99999;">
             <i class="fa fa-spinner fa-spin fa-4x" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)"></i>
         </div>
     </div>
@@ -42,66 +39,20 @@
         window.jQuery || document.write('<script src="node_modules/bootstrap/assets/js/vendor/jquery.min.js"><\/script>')
     </script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="node_modules/angular/angular.js"></script>
+    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="node_modules/angular-touch/angular-touch.min.js"></script>
     <!--<script src="node_modules/angular-animate/angular-animate.min.js"></script>-->
     <script src="node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
     <script src="node_modules/ngstorage/ngStorage.min.js"></script>
     <script src="node_modules/angular-fcsa-number/src/fcsaNumber.min.js"></script>
     <script src="node_modules/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
+    <script src="node_modules/firebase/firebase.js"></script>
+    <script src="node_modules/angularfire/dist/angularfire.min.js"></script>
 
-    <script src="app/app.module.js"></script>
-    <script src="app/app.constants.js"></script>
-    <script src="app/app.filters.js"></script>
-    <script src="app/app.directives.js"></script>
-    <script src="app/app.routes.js"></script>
-
-    <script src="app/order/filters.js"></script>
-
-    <script src="app/order/factory.js"></script>
-    <script src="app/brand/service.js"></script>
-    <script src="app/category/service.js"></script>
-    <script src="app/shipping/service.js"></script>
-
-    <script src="app/layout/app-header.controller.js"></script>
-    <script src="app/layout/app-footer.controller.js"></script>
-
-    <script src="app/authentication/module.js"></script>
-    <script src="app/authentication/service.js"></script>
-    <script src="app/authentication/factory.js"></script>
-    <script src="app/authentication/login.controller.js"></script>
-
-    <script src="app/components/loading-indicator.directive.js"></script>
-    <script src="app/components/reload-indicator.directive.js"></script>
-    <script src="app/components/no-data.directive.js"></script>
-    <script src="app/product/item-card.directive.js"></script>
-
-    <script src="app/home/service.js"></script>
-    <script src="app/home/index.controller.js"></script>
-
-    <script src="app/product/service.js"></script>
-    <script src="app/product/detail.modal.controller.js"></script>
-    <script src="app/product/index.controller.js"></script>
-
-    <script src="app/order/_detail.directive.js"></script>
-    <script src="app/order/service.js"></script>
-    <script src="app/order/checkout.controller.js"></script>
-    <script src="app/order/payment.controller.js"></script>
-    <script src="app/order/confirm.controller.js"></script>
-    <script src="app/order/confirm-message.controller.js"></script>
-    <script src="app/order/detail.modal.controller.js"></script>
-    <script src="app/order/index.controller.js"></script>
-    <script src="app/order/index.history.controller.js"></script>
-    <script src="app/order/index.track.controller.js"></script>
-    <script src="app/order/index.verify.controller.js"></script>
-    <script src="app/order/index.draft.controller.js"></script>
-    <script src="app/order/index.detail.controller.js"></script>
-    <script src="app/order/index.checkin.controller.js"></script>
-
-    <script src="app/invoice/down-payment.directive.js"></script>
-    <script src="app/invoice/fulfillment.directive.js"></script>
-    <script src="app/invoice/full-payment.directive.js"></script>
-    <script src="app/invoice/invoice.controller.js"></script>
+    <script src="build/js/bundle.js"></script>
+    <!-- <script src="build/js/bundle-min-9465302dd7.js"></script> -->
+    
 </body>
 
 </html>
