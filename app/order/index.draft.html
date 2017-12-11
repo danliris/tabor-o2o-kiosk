@@ -1,0 +1,75 @@
+﻿<div class="container">
+    <h3 class="section-title">
+        DRAFT PEMESANAN
+    </h3>
+
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-8">
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control"
+                       placeholder="Cari pesanan"
+                       ng-model="vm.orderQuery.keyword"
+                       ng-change="vm.changePage()"
+                       ng-model-options="{ debounce: 500 }" />
+                <span class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
+            </div>
+        </div>
+    </div>
+
+    <reload-indicator ng-if="vm.isError"
+                      action="vm.getOrders(vm.orderQuery)">
+    </reload-indicator>
+
+    <div ng-if="!vm.isError">
+
+        <loading-indicator ng-if="vm.loadingGetOrders"></loading-indicator>
+
+        <no-data ng-if="!vm.loadingGetOrders && vm.orders.length == 0"></no-data>
+
+        <div class="row" ng-if="!vm.loadingGetOrders && vm.orders.length > 0">
+            <div class="col-sm-12">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Kode</th>
+                            <th class="text-center">Pembeli</th>
+                            <th class="text-center">Jumlah Item</th>
+                            <th class="text-center">Total Harga</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="order in vm.orders" class="cursor-pointer"
+                            ui-sref="app.order.detail({ code: order.Code })">
+                            <td class="text-center">{{ order.Code }}</td>
+                            <td>
+                                <span>
+                                    {{ order.Name }}
+                                    <br /><small class="text-muted"><i class="fa fa-phone"></i> {{ order.Phone }}</small>
+                                </span>
+                            </td>
+                            <td class="text-center">{{ order.TotalQuantity }}</td>
+                            <td class="text-center">
+                                <span class="price">{{ order.TotalPrice + order.TotalShippingFee | currency: 'Rp. ':0 }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-sm-12 text-center">
+                <ul uib-pagination
+                    boundary-links="true"
+                    boundary-link-numbers="true"
+                    total-items="vm.orderQuery.count"
+                    ng-model="vm.orderQuery.page"
+                    ng-change="vm.changePage()"
+                    max-size="4"
+                    previous-text="&lsaquo;"
+                    next-text="&rsaquo;"
+                    first-text="&laquo;"
+                    last-text="&raquo;"></ul>
+            </div>
+        </div>
+
+    </div>
+</div>

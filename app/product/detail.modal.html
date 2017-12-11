@@ -1,0 +1,44 @@
+﻿
+<div>
+    <loading-indicator ng-if="vm.loadingGetProduct"></loading-indicator>
+
+    <div class="modal-body" ng-if="!vm.loadingGetProduct">
+        <div class="row">
+            <div class="col-sm-4">
+                <img ng-src="{{ vm.product.Image }}"
+                     alt="{{ vm.product.Name }}"
+                     title="{{ vm.product.Title }}"
+                     class="img-responsive" />
+            </div>
+
+            <div class="col-sm-8">
+                <h3>{{ vm.product.Name }}</h3>
+                <h4 class="price">{{ vm.product.Price | currency: 'Rp. ': 0 }}</h4>
+                <button class="btn btn-primary" type="button" ng-click="vm.addToCart(vm.product)">Tambahkan ke keranjang</button>
+                <hr />
+                <label>DESKRIPSI</label>
+                <p class="text-muted small">{{ vm.product.Description }}</p>
+                <hr />
+                <label>SPESIFIKASI</label>
+                <table class="table table-condensed table-specification table-borderless text-muted small">
+                    <colgroup>
+                        <col style="width: 25px;" />
+                        <col />
+                    </colgroup>
+                    <tr>
+                        <td><i class="fa fa-camera-retro"></i></td>
+                        <td>{{ (vm.product.ArrayedSpecification | filter: { key: 'Camera' })[0].value }}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa fa-cube"></i></td>
+                        <td>{{ (vm.product.ArrayedSpecification | filter: { key: 'RAM' })[0].value }}</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa fa-battery-three-quarters"></i></td>
+                        <td>{{ (vm.product.ArrayedSpecification | filter: { key: 'Battery' })[0].value }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

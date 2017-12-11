@@ -1,0 +1,223 @@
+﻿<div class="container">
+    <h3 class="section-title">
+        CHECK IN ORDER
+    </h3>
+    <div class="row">
+        <form ng-submit="vm.getOrder(vm.code)">
+            <div class="col-sm-5">
+                <div class="form-group">
+                    <label class="control-label">Kode Pesanan</label>
+                    <input type="text" class="form-control" ng-model="vm.code">
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <label class="control-label">&nbsp;</label>
+                <button class="btn btn-primary form-control" type="submit">
+                    <i class="fa fa-circle-o-notch fa-spin" ng-if="vm.loadingGetOrder"></i> CARI
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="row" ng-if="vm.order">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5 class="panel-title">
+                        Informasi Pembeli
+                    </h5>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label">Nama</label>
+                        <p>{{ vm.order.Name }}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Telepon</label>
+                        <p>{{ vm.order.Phone }}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Email</label>
+                        <p>{{ vm.order.Email || '-' }}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">No. Identitas
+                            <small class="text-muted">(KTP/SIM)</small>
+                        </label>
+                        <p>{{ vm.order.IdCard }}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Alamat</label>
+                        <br />
+                        <label ng-if="vm.order.SelfPickUp">{{ vm.order.KioskCode }}</label>
+                        <p style="white-space: pre-wrap;">{{ vm.order.Address }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5 class="panel-title">
+                        Histori Pembayaran
+
+                        <!--<a class="pull-right btn-link"
+                               ui-sref="app.order-payment({ 'code': vm.order.Code })"
+                               ng-if="!vm.order.IsFullyPaid">
+                                Bayar
+                            </a>-->
+                        <label class="pull-right" ng-class="{ 'text-success': vm.order.IsFullyPaid, 'text-warning': !vm.order.IsFullyPaid }">
+                            <i class="fa" ng-class="{ 'fa-check': vm.order.IsFullyPaid, 'fa-exclamation-triangle': !vm.order.IsFullyPaid }"></i>
+                            <span ng-if="!vm.order.IsFullyPaid">BELUM</span> LUNAS
+                        </label>
+
+                    </h5>
+                </div>
+
+                <div class="panel-body" style="max-height: 300px; overflow: auto; ">
+                    <p class="m-15" ng-if="vm.order.OrderPayments.length <= 0">
+                        <i class="fa fa-exclamation-triangle"></i> Belum ada transaksi pembayaran
+                    </p>
+
+                    <table class="table table-striped no-margin">
+                        <tr ng-repeat="payment in vm.order.OrderPayments | orderBy: '-TransactionDate'">
+                            <td class="p-15">
+                                <a class="close" title="Print" ui-sref="blank.invoice({ code: vm.order.Code, paymentId: payment.id })" target="_blank">
+                                    <i class="fa fa-print"></i>
+                                </a>
+
+                                <div class="form-group">
+                                    <label class="control-label">Tanggal</label>
+                                    <p>{{ payment.TransactionDate | date: 'dd MMM yyyy - HH:mm:ss' }}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Metode Pembayaran</label>
+                                    <p>{{ payment.PaymentType }}</p>
+                                </div>
+                                <!--<div class="form-group">
+                                        <label class="control-label">Biaya / Jumlah yang dibayarkan</label>
+                                        <p>
+                                            {{ payment.Amount | currency: 'Rp. ': 0 }} / {{ payment.PaidAmount | currency: 'Rp. ': 0 }}
+                                        </p>
+                                    </div>-->
+
+                                <div class="form-group">
+                                    <label class="control-label">Jumlah yang dibayarkan</label>
+                                    <p>
+                                        {{ payment.PaidAmount | currency: 'Rp. ': 0 }}
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h5 class="panel-title">
+                        Informasi Barang
+                    </h5>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped no-margin">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-2">&nbsp;</th>
+                                <th class="col-sm-3">Nama Produk</th>
+                                <th class="col-sm-3 text-center">Status</th>
+                                <th class="col-sm-3 text-right">Total Harga</th>
+                                <th class="col-sm-1 text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="detail in vm.order.OrderDetails" ng-if="detail.Quantity > 0">
+                            <tr ng-click="detail.toggleTrack = !detail.toggleTrack" class="cursor-pointer">
+                                <td class="text-center">
+                                    <span class="fa" ng-class="{ 'fa-angle-down': !detail.toggleTrack, 'fa-angle-up': detail.toggleTrack }"></span>
+                                    <img style="width: 90px;" src="{{ detail.Product.Image || 'statics/images/phone-placeholder.png' }}" alt="{{ detail.Product.Name }}"
+                                        title="{{ detail.Product.Name }}" />
+                                </td>
+                                <td>
+                                    {{ detail.Product.Name }}
+                                    <p class="small">{{ detail.Quantity }} pcs x {{ detail.Price | currency: 'Rp. ': 0 }}</p>
+                                </td>
+                                <td class="text-center">
+                                    <small>{{ detail.Status }}</small>
+                                </td>
+                                <td class="text-right">
+                                    {{ detail.Price * detail.Quantity | currency: 'Rp. ' : 0 }}
+                                </td>
+                                <td class="text-center">
+                                    <i class="fa fa-check" ng-if="detail.Status == 'ARRIVED'"></i>
+                                    <i class="fa fa-circle-o-notch fa-spin" ng-if="detail.loading"></i>
+                                    <button class=" btn btn-default " ng-click="vm.arriveOrderDetail(detail); $event.stopPropagation(); " ng-if="detail.Status=='DELIVERED' && !detail.loading">
+                                        <i class="fa fa-download"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr ng-if="detail.toggleTrack ">
+                                <td colspan="5 ">
+                                    <h6 class="section-title ">Tracks</h6>
+                                    <ul class="list-unstyled ">
+                                        <li ng-repeat="track in detail.OrderTracks ">
+                                            <span class="small ">
+                                                {{ track.TrackDate | date: 'dd MMM yyyy - HH:mm:ss' }} - {{ track.Status | humanify }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3 " class="text-right ">
+                                    Total Harga
+                                </td>
+                                <td class="text-right ">
+                                    {{ vm.order.TotalPrice | currency: 'Rp. ': 0 }}
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3 " class="text-right ">
+                                    Biaya Pengiriman
+                                </td>
+                                <td class="text-right ">
+                                    <b class="price " ng-if="vm.vm.order.SelfPickUp ">GRATIS</b>
+
+                                    <span ng-if="!vm.vm.order.SelfPickUp ">
+                                        {{ vm.order.TotalShippingFee | currency: 'Rp ': 0 }}
+                                    </span>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th colspan="3 " class="text-right ">
+                                    <p>Total Belanja</p>
+                                </th>
+                                <td class="text-right ">
+                                    <span class="price ">{{ vm.order.TotalPrice + vm.order.TotalShippingFee | currency: 'Rp. ': 0 }}</span>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- <div class="row " ng-if="vm.order ">
+        <div class="col-sm-12 ">
+            <button ng-click="vm.arriveOrder(vm.order) " class="btn btn-primary ">
+
+                <i class="fa " ng-class="{ 'fa-circle-o-notch': vm.loadingArriveOrder, 'fa-download': !vm.loadingArriveOrder
+                                        } "></i>
+                &nbsp;Check In
+            </button>
+        </div>
+    </div> -->
+</div>

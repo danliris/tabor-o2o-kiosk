@@ -1,0 +1,121 @@
+﻿<header>
+    <div class="top-bar">
+        <div class="container">
+            <div class="col-sm-12">
+                <ul class="list-inline pull-right">
+                    <li ng-if="vm.isStaff">
+                        <a ui-sref="app.order.draft">Order</a>
+                    </li>
+                    <li>
+                        Hi, {{ vm.authenticatedUser.username }}. <a href="javascript:;" ng-click="vm.logout()">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-2">
+                    <a ui-sref="app.home">
+                        SHOP NAME
+                    </a>
+                </div>
+                <div class="col-sm-8">
+                    <form ng-submit="vm.searchProduct(vm.keyword)">
+                        <div class="form-group no-margin">
+                            <div class="input-group">
+                                <input type="text" class="form-control search-input" placeholder="Cari produk" ng-model="vm.keyword" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="submit">CARI</button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-sm-2 text-right">
+                    <ul class="list-inline no-margin">
+                        <li>
+                            <a ui-sref="app.notification"
+                               class="icon-wrapper">
+                                <span class="icon">
+                                    <i class="fa fa-bell-o"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="dropdown" ng-class="{ 'open': $settings.cartOpen }">
+                            <a class="icon-wrapper" href="javascript:;"
+                               ng-click="$settings.toggleCartOpen()">
+                                <span class="icon">
+                                    <i class="fa fa-shopping-bag"></i>
+                                </span>
+                                <span id="total-items" class="number">{{ vm.cartItems | sum: 'quantity' }}</span>
+                            </a>
+
+                            <div class="dropdown-menu pull-right cart-item-menu" ng-if="vm.cartItems.length > 0">
+                                <ul>
+                                    <li ng-repeat="item in vm.cartItems"
+                                        class="list-cart-item-compact">
+
+                                        <a class="top-right" href="javascript:;"
+                                           ng-click="vm.removeOrderItem(item)">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+
+                                        <div class="image-wrapper">
+                                            <img ng-src="{{ item.image || 'statics/images/phone-placeholder.png' }}"
+                                                 alt="{{ item.name }}"
+                                                 title="{{ item.name }}"
+                                                 class="img-responsive" />
+                                        </div>
+
+                                        <div class="description-wrapper">
+                                            <span class="name">{{ item.name }}</span><br />
+                                            <span class="price">{{ item.price | currency: 'Rp. ' : 0 }}</span>
+
+                                            <input type="number" class="quantity input-sm form-control"
+                                                   ng-model="item.quantity"
+                                                   min="1" />
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <div class="footer">
+                                    <a class="btn btn-block btn-primary"
+                                       ui-sref="app.checkout">
+                                        CHECKOUT
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="list-menu">
+                        <a href="javascript:;"
+                           ui-sref="app.product({ keyword: vm.keyword, brand: category.BrandCode, category: category.Code })"
+                           class="item"
+                           ui-sref-active="active"
+                           ng-repeat="category in vm.categories">
+                            {{ category.Name }}
+                        </a>
+                        <!--<div ng-repeat="brand in vm.brands" class="item">
+                            <a href="javascript:;"
+                               ui-sref="app.search({ keyword: vm.keyword, brand: brand.Name })">
+                                {{ brand.Name }}
+                            </a>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

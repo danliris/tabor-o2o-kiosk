@@ -1,0 +1,68 @@
+﻿<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-borderless">
+                <colgroup>
+                    <col style="width: 1cm;" />
+                    <col />
+                    <col style="width: 3cm;" />
+                    <col style="width: 3cm;" />
+                </colgroup>
+                <tr>
+                    <th class="text-center">Jumlah</th>
+                    <th>Produk</th>
+                    <th class="text-right">Harga</th>
+                    <th class="text-right">Subtotal</th>
+                </tr>
+                <tr ng-repeat="detail in order.OrderDetails" ng-if="detail.Quantity > 0">
+                    <td class="text-center">{{ detail.Quantity }}</td>
+                    <td>{{ detail.Product.Name }}</td>
+                    <td class="text-right">{{ detail.Price | currency: 'Rp. ' }}</td>
+                    <td class="text-right">{{ detail.Price * detail.Quantity | currency: 'Rp. ': 0 }}</td>
+                </tr>
+                <tr>
+                    <td class="text-right border-top-1" colspan="3">Total Belanja</td>
+                    <td class="text-right border-top-1">{{ order.TotalPrice + order.TotalShippingFee | currency: 'Rp. ': 0 }}</td>
+                </tr>
+                <tr>
+                    <td class="text-right" colspan="3">Total DP</td>
+                    <td class="text-right">{{ order.TotalPrice + order.TotalShippingFee - orderPayment.PaidAmount | currency: 'Rp. ': 0 }}</td>
+                </tr>
+                <!--<tr>
+                    <td class="text-right" colspan="3"><b>Sisa yang harus dibayarkan</b></td>
+                    <td class="text-right"><b>{{ (order.TotalPrice + order.TotalShippingFee) - (order.DP + order.TotalShippingFee) | currency: 'Rp. ': 0 }}</b></td>
+                </tr>-->
+                <tr>
+                    <td class="text-right" colspan="3"><b>Pembayaran</b></td>
+                    <td class="text-right"><b>{{ orderPayment.PaidAmount | currency: 'Rp. ': 0 }}</b></td>
+                </tr>
+                <!--<tr>
+                    <td class="text-right" colspan="3">Kembali</td>
+                    <td class="text-right">{{ orderPayment.PaidAmount - ((order.TotalPrice + order.TotalShippingFee) - (order.DP + order.TotalShippingFee))  | currency: 'Rp. ': 0 }}</td>
+                </tr>-->
+            </table>
+
+            
+           
+        </div>
+    </div>
+    <div class="row" style="margin-top: 3cm;">
+        <div class="col-xs-6">
+            <b>STATUS PEMBAYARAN: LUNAS</b>
+        </div>
+        <div class="col-xs-6 text-right">
+            <ul class="list-inline">
+                <li>
+                    <i style="border-top: 1px dotted #aaa; padding-top: .5em;">
+                        Tanda Tangan/Stamp Outlet
+                    </i>
+                </li>
+                <li>
+                    <i style="border-top: 1px dotted #aaa; padding-top: .5em;">
+                        Tanda Tangan Penerima
+                    </i>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

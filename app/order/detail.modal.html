@@ -1,0 +1,28 @@
+﻿<div>
+    <loading-indicator ng-if="vm.loadingGetOrderByCode"></loading-indicator>
+
+    <no-data ng-if="!vm.loadingGetOrderByCode && !vm.order"></no-data>
+
+    <div ng-if="!vm.loadingGetOrderByCode && vm.order">
+        <div class="modal-header">
+            <h3 class="modal-title section-title">
+                Rincian Pemesanan ({{ vm.order.Code }})
+                <label class="label pull-right" ng-if="vm.order.IsFullyPaid">
+                    LUNAS
+                </label>
+
+                <label class="label pull-right" ng-if="!vm.order.IsFullyPaid">
+                    BELUM LUNAS
+                </label>
+            </h3>
+        </div>
+        <div class="modal-body">
+            <order-detail order="vm.order"></order-detail>
+        </div>
+        <div class="modal-footer">
+            <button ng-click="vm.close()" class="btn btn-default">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>

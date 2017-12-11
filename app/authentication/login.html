@@ -1,0 +1,36 @@
+<div class="auth-box">
+    <div class="text-center">
+        <i class="fa fa-user-circle-o fa-4x m-y-15"></i>
+    </div>
+
+    <form ng-submit="vm.login(vm.user)" method="post">
+        <div class="form-group has-feedback">
+            <input type="text"
+                   ng-model="vm.user.email"
+                   class="form-control"
+                   placeholder="Email">
+            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+            <input type="password"
+                   ng-model="vm.user.password"
+                   class="form-control"
+                   placeholder="Password">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <button type="submit"
+                        class="btn btn-primary btn-block">
+                    Masuk<i class="fa fa-circle-o-notch pull-right fa-spin" ng-if="vm.loading"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="alert alert-danger m-t-15 small" ng-if="vm.message">
+        <i class="icon fa fa-ban"></i> {{ vm.message }}
+    </div>
+</div>
