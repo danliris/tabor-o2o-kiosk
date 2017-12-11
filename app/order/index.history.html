@@ -7,7 +7,7 @@
                 <input type="text" class="form-control"
                        placeholder="Cari pesanan"
                        ng-model="vm.orderQuery.keyword"
-                       ng-change="vm.changePage()"
+                       ng-change="vm.orderQuery.page = 1; vm.changePage()"
                        ng-model-options="{ debounce: 500 }" />
                 <span class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
             </div>
@@ -23,13 +23,13 @@
             <table class="table table-hover cursor-pointer table-bordered">
                 <thead>
                     <tr>
-                        <th class="text-center">Kode</th>
-                        <th class="text-center">Pembeli</th>
-                        <th class="text-center">Jumlah Item</th>
-                        <th class="text-center">Total Harga</th>
-                        <th class="text-center">Tanggal</th>
-                        <th class="text-center">Status</th>
-                        <th class="text-center"></th>
+                        <th class="col-sm-1 text-center">Kode</th>
+                        <th class="col-sm-3 text-center">Pembeli</th>
+                        <th class="col-sm-1 text-center">Jumlah Item</th>
+                        <th class="col-sm-2 text-center">Total Harga</th>
+                        <th class="col-sm-2 text-center">Tanggal</th>
+                        <th class="col-sm-2 text-center">Status</th>
+                        <th class="col-sm-1 text-center">Lunas</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,7 +59,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-sm-12 text-center">
+        <div class="col-sm-12 text-center" ng-if="vm.orderQuery.count / vm.orderQuery.limit > 1">
             <ul uib-pagination
                 boundary-links="true"
                 boundary-link-numbers="true"

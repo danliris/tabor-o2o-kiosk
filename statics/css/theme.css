@@ -1,45 +1,4 @@
-﻿@font-face {
-    font-family: 'Roboto';
-    src: url('../fonts/Roboto-Regular.ttf');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('../fonts/Roboto-Italic.ttf');
-    font-weight: 400;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('../fonts/Roboto-Bold.ttf');
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('../fonts/Roboto-BoldItalic.ttf');
-    font-weight: 700;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('../fonts/Roboto-Light.ttf');
-    font-weight: 200;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('../fonts/Roboto-LightItalic.ttf');
-    font-weight: 200;
-    font-style: italic;
-}
-
+﻿
 html, body {
     height: 100%;
     width: 100%;
@@ -54,8 +13,8 @@ html, body {
 body {
     background-color: #fff;
     color: #000;
-    font-family: 'Roboto', 'Calibri', sans-serif;
-    /*font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;*/
+    /* font-family: 'Roboto', 'Calibri', sans-serif; */
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
     font-size: 14px;
 }
 
@@ -214,6 +173,10 @@ label {
         color: #fff;
     }
 
+.btn-default:hover {
+    background-color: #eee;
+}
+
 .btn .fa.pull-right {
     line-height: inherit;
 }
@@ -251,6 +214,10 @@ label {
     flex: 3;
 }
 
+.no-margin {
+    margin: 0 !important;
+}
+
 hr {
     margin-top: .5em;
     margin-bottom: .5em;
@@ -267,6 +234,10 @@ hr {
 
 .m-t-15 {
     margin-top: 15px;
+}
+
+.m-t-20 {
+    margin-top: 20px;
 }
 
 .m-r-10 {
@@ -380,4 +351,20 @@ ul.pagination {
     ul.pagination > li.disabled > a:focus,
     ul.pagination > li.disabled > a:hover {
         border: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .text-success {
+        color: #05D0A1;
+    }
+
+    .text-warning {
+        color: #ffd42a;
+    }
+
+    .text-danger {
+        color: #fd2e5c;
+    }
+
+    .text-bold {
+        font-weight: 700;
     }

@@ -19,6 +19,10 @@ function InvoiceController($stateParams, $filter, $timeout, $window, OrderServic
         OrderService.getByCode(code)
             .then(function (res) {
                 vm.order = res;
+
+                var dpPayment = vm.order.OrderPayments.find(t => t.PaymentType == 'DOWN PAYMENT');
+                vm.order.DPAmount = dpPayment ? dpPayment.PaidAmount : 0;
+
                 var orderPayments = $filter('filter')(res.OrderPayments, { id: $stateParams.paymentId });
                 if (orderPayments.length == 0) {
                     $window.close();
@@ -26,8 +30,7 @@ function InvoiceController($stateParams, $filter, $timeout, $window, OrderServic
 
                 vm.orderPayment = orderPayments[0];
 
-                //vm.order.fullPayment = vm.orderPayment.Amount == vm.order.TotalPrice
-
+                vm.order.RefundAmount = vm.order.TotalPrice + vm.order.TotalShippingFee - vm.order.DPAmount - vm.orderPayment.PaidAmount;
             })
             .catch(function (err) {
                 toastr.error(err);

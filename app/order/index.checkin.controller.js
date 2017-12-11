@@ -12,8 +12,15 @@ function OrderCheckInController(OrderService, toastr) {
         vm.loadingGetOrder = true;
         OrderService.getByCode(code)
             .then(order => {
-                if (order.Status != 'DELIVERED' && order.Status != 'PARTIALLY DELIVERED') {
+                if (order.Status != 'DELIVERED'
+                    && order.Status != 'PARTIALLY DELIVERED'
+                    && order.Status != 'PARTIALLY ARRIVED') {
                     toastr.error(`Invalid status: ${order.Status}`);
+                    return;
+                }
+
+                if (!order.SelfPickUp) {
+                    toastr.error('This order should be delivered to customer');
                     return;
                 }
 

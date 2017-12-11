@@ -1,0 +1,47 @@
+<div>
+    <form name="formVerify" ng-submit="vm.verifyUser(vm.data)" novalidate>
+
+        <div class="modal-header">
+            <h3 class="modal-title">
+                Ke mode: {{ vm.authenticatedUser.role == 'staff' ? 'GUEST' : 'STAFF' }}
+            </h3>
+        </div>
+        <div class="modal-body" ng-if="vm.authenticatedUser.role == 'guest'">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="alert alert-info">
+                        Silahkan verifikasikan diri Anda terlebih dahulu.
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label">Email</label>
+                        <p>{{ vm.data.email }}</p>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error': formVerify.password.$invalid && !formVerify.password.$pristine }">
+                        <label for="" class="control-label">Password</label>
+                        <input type="password" name="password" required class="form-control" ng-model="vm.data.password" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" ng-if="vm.authenticatedUser.role == 'guest'">
+            <button type="submit" class="btn btn-block btn-primary pull-right" ng-disabled="formVerify.$invalid || vm.verifying">
+                Verifikasi
+                <i class="fa fa-circle-o-notch fa-spin" ng-if="vm.verifying"></i>
+            </button>
+        </div>
+
+        <div class="modal-body" ng-if="vm.authenticatedUser.role == 'staff'">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-block btn-primary" type="button" ng-click="vm.toGuestMode()">
+                        Verifikasi
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
