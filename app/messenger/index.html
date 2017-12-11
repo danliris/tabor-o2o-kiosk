@@ -1,0 +1,103 @@
+<div class="chat-box-list">
+    <div class="panel panel-default chat-box" ng-class="{ 'appear': room.open, 'hide': !room.show }"
+        ng-repeat="room in vm.rooms">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ room.username }}
+
+                <div class="pull-right">
+                    <button class="btn btn-default" ng-click="vm.toggleOpenRoom(room)">
+                        <i class="fa" ng-class="{ 'fa-window-maximize': !room.open, 'fa-window-minimize': room.open }">
+                        </i>
+                    </button>
+
+                    <button class="btn btn-default" ng-click="vm.removeRoom(room)">
+                        <i class="fa fa-close"></i>
+                    </button>
+                </div>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="list-message">
+                <div class="message" ng-repeat="message in room.messages" ng-class="{ 'text-right': message.username == vm.currentUser.username }">
+                    <!-- <label ng-if="message.username != vm.currentUser.username" ng-bind="message.username"></label> -->
+                    <p>{{ message.content }}</p>
+                    <span class="time">{{ message.timestamp | messageTime }}</span>
+                </div>
+                <div id="anchor_{{ room.$id }}"></div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <form ng-submit="vm.sendMessage(room)">
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="room.inputMessage" placeholder="Ketikkan pesan Anda..."
+                    />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <i class="fa fa-paper-plane"></i>
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .chat-box-list {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        z-index: 9999;
+        display: flex;
+        height: 50px;
+    }
+
+    .chat-box {
+        height: 480px;
+        width: 320px;
+        margin-bottom: 0;
+        margin-right: 15px;
+        position: relative;
+    }
+
+    .chat-box.appear {
+        transform: translateY(calc(-100% + 50px));
+    }
+
+    /* .chat-box.dock-in {
+        transform: translateY(calc(100% - 50px));
+    } */
+
+    .chat-box>.panel-body {
+        padding: 0;
+        height: calc(100% - 110px);
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .list-message>.message {
+        /* padding: 10px 10px 25px 10px; */
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        position: relative;
+    }
+
+    /* .list-message>.message:nth-child(2n+1) {
+        background: #fafafa;
+    } */
+
+    .list-message>.message>.time {
+        font-size: 0.75em;
+        color: #aaa;
+        /* position: absolute;
+        bottom: 10px;
+        right: 10px; */
+    }
+
+    .chat-box>.panel-footer {
+        position: absolute;
+        bottom: 0;
+        height: 60px;
+    }
+</style>

@@ -20,11 +20,14 @@
                     <p>{{ order.Email || '-' }}</p>
                 </div>
                 <div class="form-group">
-                    <label class="control-label">No. Identitas <small class="text-muted">(KTP/SIM)</small></label>
+                    <label class="control-label">No. Identitas
+                        <small class="text-muted">(KTP/SIM)</small>
+                    </label>
                     <p>{{ order.IdCard }}</p>
                 </div>
                 <div class="form-group">
-                    <label class="control-label">Alamat</label><br />
+                    <label class="control-label">Alamat</label>
+                    <br />
                     <label ng-if="order.SelfPickUp">{{ order.KioskCode }}</label>
                     <p style="white-space: pre-wrap;">{{ order.Address }}</p>
                 </div>
@@ -59,10 +62,7 @@
                 <table class="table table-striped no-margin">
                     <tr ng-repeat="payment in order.OrderPayments | orderBy: '-TransactionDate'">
                         <td class="p-15">
-                            <a class="close"
-                               title="Print"
-                               ui-sref="blank.invoice({ code: order.Code, paymentId: payment.id })"
-                               target="_blank">
+                            <a class="close" title="Print" ui-sref="blank.invoice({ code: order.Code, paymentId: payment.id })" target="_blank">
                                 <i class="fa fa-print"></i>
                             </a>
 
@@ -105,6 +105,7 @@
                 <table class="table table-striped no-margin">
                     <thead>
                         <tr>
+                            <th></th>
                             <th class="col-sm-2">&nbsp;</th>
                             <th class="col-sm-4">Nama Produk</th>
                             <th class="col-sm-3 text-center">Status</th>
@@ -115,37 +116,51 @@
                         <tr ng-click="detail.toggleTrack = !detail.toggleTrack" class="cursor-pointer">
                             <td class="text-center">
                                 <span class="fa" ng-class="{ 'fa-angle-down': !detail.toggleTrack, 'fa-angle-up': detail.toggleTrack }"></span>
-                                <img style="width: 90px;" src="{{ detail.Product.Image || 'statics/images/phone-placeholder.png' }}"
-                                     alt="{{ detail.Product.Name }}"
-                                     title="{{ detail.Product.Name }}" />
+                            </td>
+                            <td class="text-center">
+                                <image-api src="detail.Product.Image" name="detail.Product.Name" class="img-responsive" style="display: inline; margin: auto;">
+                                </image-api>
                             </td>
                             <td>
                                 {{ detail.Product.Name }}
-                                <p class="small">{{ detail.Quantity }} pcs x {{ detail.Price | currency: 'Rp. ': 0 }}</p>
+                                <p class="small">{{ detail.Quantity }} pcs x {{ detail.Price / detail.Quantity | currency: 'Rp. ': 0 }}</p>
                             </td>
                             <td class="text-center">
                                 <small>{{ detail.Status }}</small>
                             </td>
                             <td class="text-right">
-                                {{ detail.Price * detail.Quantity | currency: 'Rp. ' : 0 }}
+                                {{ detail.Price | currency: 'Rp. ' : 0 }}
                             </td>
                         </tr>
-                        <tr ng-show="detail.toggleTrack">
-                            <td colspan="4">
-                                <h6 class="section-title">Tracks</h6>
-                                <ul class="list-unstyled">
-                                    <li ng-repeat="track in detail.OrderTracks">
-                                        <span class="small">
-                                            {{ track.TrackDate | date: 'dd MMM yyyy - HH:mm:ss' }} - {{ track.Status | humanify }}
-                                        </span>
-                                    </li>
-                                </ul>
+                        <tr ng-if="detail.toggleTrack">
+                            <td colspan="5" style="padding: 1em 1em 1em 2em; border-left: 1px solid #ddd; border-right: 1px solid #ddd;">
+                                <h5 class="section-title">TRACKS</h5>
+
+                                <table class="table table-condensed" style="font-size: .85em;">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-sm-2 text-center">Tanggal</th>
+                                            <th class="col-sm-2 text-center">Waktu</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="track in detail.OrderTracks | orderBy: '-TrackDate'">
+                                            <td class="text-center">{{ track.TrackDate | date: 'dd MMM yyyy' }}</td>
+                                            <td class="text-center">{{ track.TrackDate | date: 'HH:mm:ss' }}</td>
+                                            <td>{{ track.Status | humanify }}
+                                                <br/>
+                                                <span ng-if="track.Remark">({{ track.Remark }})</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="3" class="text-right">
+                            <td colspan="4" class="text-right">
                                 Total Harga
                             </td>
                             <td class="text-right">
@@ -153,25 +168,46 @@
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="3" class="text-right">
+                            <td colspan="4" class="text-right">
                                 Biaya Pengiriman
                             </td>
                             <td class="text-right">
-                                <b class="price" ng-if="vm.order.SelfPickUp">GRATIS</b>
+                                <b ng-if="order.SelfPickUp">GRATIS</b>
 
-                                <span ng-if="!vm.order.SelfPickUp">
+                                <span ng-if="!order.SelfPickUp">
                                     {{ order.TotalShippingFee | currency: 'Rp ': 0 }}
+
                                 </span>
                             </td>
                         </tr>
-                        <tr>
-                            <th colspan="3" class="text-right">
+                        <!-- <tr ng-if="order.DPAmount > 0">
+                            <td colspan="4" class="text-right">
+                                Total DP
+                            </td>
+                            <td class="text-right">
+                                <span>
+                                    {{ order.DPAmount | currency: 'Rp. ': 0 }}
+                                </span>
+                            </td>
+                        </tr> -->
+                        <!-- <tr ng-if="order.Refund > 0">
+                            <td colspan="4" class="text-right">
+                                Refund
+                            </td>
+                            <td class="text-right">
+                                <span>
+                                    ({{ order.Refund | currency: 'Rp. ': 0 }})
+                                </span>
+                            </td>
+                        </tr> -->
+                        <!-- <tr ng-if="order.GrandTotal > 0">
+                            <th colspan="4" class="text-right">
                                 <p>Total Belanja</p>
                             </th>
                             <td class="text-right">
-                                <span class="price">{{ order.TotalPrice + order.TotalShippingFee | currency: 'Rp. ': 0 }}</span>
+                                <span class="price">{{ order.GrandTotal | currency: 'Rp. ': 0 }}</span>
                             </td>
-                        </tr>
+                        </tr> -->
                     </tfoot>
                 </table>
             </div>

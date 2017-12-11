@@ -10,7 +10,8 @@ function LoginController(AuthenticationService, AuthenticationState, $q, $state)
 
     vm.user = {
         email: '',
-        password: ''
+        password: '',
+        asGuest: false
     };
 
     vm.login = login;
@@ -54,17 +55,23 @@ function LoginController(AuthenticationService, AuthenticationState, $q, $state)
                     branchName: kiosk.BranchName,
                 };
 
-                // get user role
-                response = responses[2];
-                if (response.length == 0) {
-                    throw 'Unauthorized';
-                }
-                authenticatedUser.roles = [];
-                for (var i = 0, length = response.length; i < length; i++) {
-                    authenticatedUser.roles.push(response[i].role);
-                }
+                // // get user role
+                // response = responses[2];
+                // if (response.length == 0) {
+                //     throw 'Unauthorized';
+                // }
+                // authenticatedUser.roles = [];
+                // for (var i = 0, length = response.length; i < length; i++) {
+                //     authenticatedUser.roles.push(response[i].role);
+                // }
 
                 AuthenticationState.setUser(authenticatedUser);
+
+                if (vm.user.asGuest)
+                    AuthenticationState.setRole('guest');
+                else
+                    AuthenticationState.setRole('staff');
+
 
                 $state.go('app.home');
             })
