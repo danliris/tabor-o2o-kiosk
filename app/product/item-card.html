@@ -1,0 +1,71 @@
+﻿
+<div>
+    <div class="product-card" ng-class="{ 'unavailable': product.Quantity <= 0 }">
+        <div class="flex-1">
+            <div class="img-placeholder">
+                <img ng-src="{{ product.Image || 'statics/images/phone-placeholder.png' }}"
+                     alt="{{ product.Name }}"
+                     title="{{ product.Name }}" />
+            </div>
+        </div>
+        <div class="flex-1">
+            <div class="description-block">
+                <div class="flex-1">
+                    <div class="name-block">
+                        <span class="name">
+                            {{ product.Name }}
+                        </span>
+                    </div>
+                </div>
+                <div class="flex-2">
+                    <div class="price-block">
+                        <!--<span class="original-price">
+                            Rp. 3.500.000
+                        </span>-->
+                        <span class="price">
+                            {{ product.Price | currency: 'Rp. ': 0 }}
+                        </span>
+                    </div>
+                    <div class="specification-block">
+                        <table class="table table-condensed table-specification">
+                            <colgroup>
+                                <col style="width: 25px;" />
+                                <col />
+                            </colgroup>
+                            <tr>
+                                <td><i class="fa fa-camera-retro"></i></td>
+                                <td>{{ (product.ArrayedSpecification | filter: { key: 'Camera' })[0].value }}</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fa fa-cube"></i></td>
+                                <td>{{ (product.ArrayedSpecification | filter: { key: 'RAM' })[0].value }}</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fa fa-battery-three-quarters"></i></td>
+                                <td>{{ (product.ArrayedSpecification | filter: { key: 'Battery' })[0].value }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay">
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary btn-circle"
+                    ng-click="addOrderItem(product);">
+                <i class="fa fa-shopping-cart"></i>
+            </button>
+            <button class="btn btn-default btn-circle"
+                    ng-click="openDetailItem(product);">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+
+        <div class="overlay-dark">
+            NOT AVAILABLE
+        </div>
+    </div>
+</div>
