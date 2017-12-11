@@ -17,7 +17,7 @@ function OrderCheckoutController($state, $window, toastr, Order, AuthenticationS
         vm.order = Order.getCurrentOrder();
 
         if (vm.order.items.length == 0) {
-            toastr.warning('Your cart is empty.');
+            toastr.warning('Keranjang belanja Anda kosong.');
             $state.go('app.home');
         }
 
@@ -31,14 +31,15 @@ function OrderCheckoutController($state, $window, toastr, Order, AuthenticationS
             idCard: vm.order.idCard,
             toKiosk: vm.order.toKiosk
         };
+
         toggleToKiosk(vm.order.toKiosk);
+
     })();
 
     function removeOrderItem(item) {
-        if (confirm('Are you sure want to delete this item?')) {
+        if (confirm('Apakah anda yakin untuk membatalkan transaksi item ini?')) {
             Order.removeOrderItem(item);
-
-            toastr.warning('Item has been removed from the shopping bag.', 'Message');
+            toastr.warning('Item telah dihapus dari transaksi ini', 'Pesan');
         }
     }
 

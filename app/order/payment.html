@@ -110,7 +110,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="panel-footer">
+                        <div class="panel-footer" ng-if="vm.orderPayment.PaymentType == 'DOWN PAYMENT'">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div style="display: flex; align-items: center;">
@@ -146,7 +146,7 @@
                     <button class="btn btn-primary btn-lg btn-block m-t-10"
                             ng-disabled="vm.loadingPay"
                             ng-if="!vm.orderToBePrinted"
-                            ng-click="vm.pay(vm.orderPayment)">
+                            ng-click="vm.confirmPayment(vm.orderPayment)">
                         BAYAR <i class="fa fa-spin fa-circle-o-notch pull-right" ng-if="vm.loadingPay"></i>
                     </button>
 
@@ -164,3 +164,30 @@
         </div>
     </div>
 </div>
+
+
+<script type="text/ng-template" id="paymentConfirmation.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Konfirmasi Pembayaran ({{ vm.orderPayment.OrderCode }})</h4>
+    </div>
+    <div class="modal-body">
+        <table class="table">
+            <tr>
+                <th>Tipe Pembayaran</th>
+                <td>
+                    {{ vm.orderPayment.PaymentType }}
+                </td>
+            </tr>
+            <tr>
+                <th>Jumlah yang dibayarkan</th>
+                <td>
+                    <span class="price">{{ vm.orderPayment.PaidAmount | currency: 'Rp .': 0 }}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button ng-click="vm.cancel()" class="btn btn-default pull-left">Batal</button>
+        <button ng-click="vm.ok()" class="btn btn-success pull-right">Lanjut</button>
+    </div>
+</script>

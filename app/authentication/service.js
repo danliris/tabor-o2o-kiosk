@@ -12,7 +12,7 @@ function AuthenticationService($http, Urls) {
         signOut: signOut,
         getAuthenticatedUser: getAuthenticatedUser,
         getKioskUser: getKioskUser,
-        getRole: getRole
+        getRoleUser: getRoleUser
     };
 
     function signIn(user) {
@@ -46,7 +46,7 @@ function AuthenticationService($http, Urls) {
             .then(handleSuccess);
     }
 
-    function getRole(id) {
+    function getRoleUser(id) {
         var q = {
             filter: {
                 where: {
