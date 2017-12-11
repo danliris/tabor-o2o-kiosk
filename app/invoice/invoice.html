@@ -1,14 +1,14 @@
 ﻿<div class="container">
     <div class="row">
         <div class="col-xs-12">
-
-            <div id="print-wrapper">
+            <loading-indicator ng-if="vm.loadingGetOrderByCode"></loading-indicator>
+            <div id="print-wrapper" ng-if="!vm.loadingGetOrderByCode">
                 <section class="invoice">
                     <div class="row">
-                        <div class="col-xs-2">
+                        <div class="col-xs-6">
                             LOGO
                         </div>
-                        <div class="col-xs-10 text-right">
+                        <div class="col-xs-6 text-right">
                             <b>{{ vm.currentUser.kiosk.name }}</b> - {{ vm.currentUser.kiosk.address }}
                             <br />
                             <i class="fa fa-phone"></i> {{ vm.currentUser.kiosk.phone }} | www.shopname.com | lorem@ipsum.com

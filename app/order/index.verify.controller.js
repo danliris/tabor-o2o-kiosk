@@ -22,18 +22,16 @@ function OrderVerifyController(OrderService, toastr, $filter, $timeout, $state, 
                 }
 
                 var order = response[0];
-                //if (order.Status == 'RECEIVED') {
-                //    toastr.info('Pesanan ini sudah pernah diambil.');
-                //    return;
-                //}
 
                 vm.order = order;
+
+                var currentPaidAmount = $filter('sum')(vm.order.OrderPayments, 'PaidAmount');
 
                 vm.orderPayment = {
                     PaymentType: 'FULFILLMENT',
                     OrderCode: order.Code,
-                    PaidAmount: 0,
-                    Amount: order.TotalPrice + order.TotalShippingFee - order.DP
+                    PaidAmount: order.TotalPrice + order.TotalShippingFee - currentPaidAmount,
+                    Amount: order.TotalPrice + order.TotalShippingFee - currentPaidAmount
                 };
             })
             .catch(function (err) {
@@ -55,7 +53,9 @@ function OrderVerifyController(OrderService, toastr, $filter, $timeout, $state, 
         OrderService.pay(orderPayment)
             .then(function (res) {
                 //return OrderService.updatePaymentStatus(res.result.Code);
-                vm.order = res.result;
+                // vm.order = res.result;
+
+                return searchOrderByCodeAndPin(vm.code, vm.pin);
             })
             //.then(function (res) {
             //    vm.order = res.result;
@@ -95,7 +95,8 @@ function OrderVerifyController(OrderService, toastr, $filter, $timeout, $state, 
         vm.loadingCompleteOrder = true;
         OrderService.complete(order.Code)
             .then(function (res) {
-                toastr.success('Order has been completed.');
+                toastr.success('Pesanan telah diterima oleh customer.');
+                return searchOrderByCodeAndPin(vm.code, vm.pin);
             })
             .catch(function (err) {
                 toastr.error(err);
@@ -103,7 +104,6 @@ function OrderVerifyController(OrderService, toastr, $filter, $timeout, $state, 
             .finally(function () {
                 vm.loadingCompleteOrder = false;
             });
-        // ubah ke received
     }
 
     function goToPrint() {

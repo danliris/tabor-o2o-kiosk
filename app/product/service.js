@@ -47,9 +47,6 @@ function ProductService($http, Urls) {
         //return $http.get(Urls.BASE_API + '/vmappedproducts/count?' + $.param(q))
         //    .then(handleSuccess);
 
-        //return $http.get(Urls.BASE_API + '/vmappedproducts/count', { params: { filter: JSON.stringify(q) } })
-        //   .then(handleSuccess);
-
         return $http.get(Urls.BASE_API + '/vmappedproducts/count', { params: { where: JSON.stringify(q) } })
            .then(handleSuccess);
 

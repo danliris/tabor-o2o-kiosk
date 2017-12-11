@@ -1,6 +1,7 @@
 ﻿angular.module('app').filter('totalPrice', totalPrice);
 angular.module('app').filter('dpNominal', dpNominal);
 angular.module('app').filter('totalDPNominal', totalDPNominal);
+angular.module('app').filter('humanify', humanify);
 
 function totalPrice() {
     return function (items) {
@@ -21,5 +22,47 @@ function totalDPNominal() {
 function dpNominal() {
     return function (item) {
         return item.quantity * (item.dp / 100 * item.price);
+    }
+}
+
+function humanify() {
+    return function (status) {
+        if (status == 'DRAFTED')
+            return 'Pesanan dibuat oleh pembeli';
+        else if (status == 'REQUESTED')
+            return 'Pesanan telah dikirim ke Dealer';
+        else if (status == 'SUBMITTED')
+            return 'Sudah diterima oleh Dealer';
+        else if (status == 'REJECTED')
+            return 'Dibatalkan oleh Dealer';
+        else if (status == 'DELIVERED')
+            return 'Pesanan sedang diantar.';
+        else if (status == 'ARRIVED')
+            return 'Pesanan sudah sampai di Outlet';
+        else if (status == 'COMPLETED')
+            return 'Pesanan sudah diterima oleh Customer';
+        else if (status == 'VOIDED')
+            return 'Pesanan dibatalkan oleh pembeli';
+        else
+            return status;
+        //Requested :
+        //    -> Pesanan telah dikirim ke Dealer
+        //    -> Menunggu konfirmasi dealer 
+
+        //Submitted :
+        //    -> Sudah diterima oleh Dealer
+        //    -> Sedang Diproses oleh Dealer
+
+        //Rejected :
+        //    -> Dibatalkan oleh Dealer 
+
+        //Delivered :
+        //    -> Pesanan sedang dikirim
+
+        //Arrived :
+        //    -> Pesanan sudah sampai di Outlet 
+
+        //Completed :
+        //    -> Pesanan sudah diterima oleh Customer
     }
 }

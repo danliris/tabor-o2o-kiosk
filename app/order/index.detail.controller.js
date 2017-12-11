@@ -4,6 +4,9 @@
 OrderDetailController.$inject = ['$state', '$rootScope', '$filter', '$window', '$stateParams', 'AuthenticationState', 'OrderService', 'ShippingService', 'toastr'];
 function OrderDetailController($state, $rootScope, $filter, $window, $stateParams, AuthenticationState, OrderService, ShippingService, toastr) {
     var vm = this;
+
+    var weightRoundingLimit = 0.3;// default
+
     vm.order = {};
     vm.currentUser = AuthenticationState.getUser();
 
@@ -12,9 +15,11 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
     vm.back = back;
     vm.voidDraft = voidDraft;
     vm.getLocations = getLocations;
+    vm.selectLocation = selectLocation;
     vm.selectPricingOption = selectPricingOption;
     vm.updateDetail = updateDetail;
     vm.removeCurrentShippingInformation = removeCurrentShippingInformation;
+    vm.calculate = calculate;
 
     function toggleSelfPickUp(val) {
         if (val) {
@@ -49,6 +54,7 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
     }
 
     function updateDraft(order) {
+
         vm.loadingUpdateDraft = true;
 
         var orderToBeUpdated = {
@@ -95,14 +101,14 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
     }
 
     function voidDraft(code) {
-        if (confirm('Are you sure want to void this data?')) {
+        if (confirm('Apakah Anda yakin untuk membatalkan pesanan ini?')) {
             vm.loadingVoidDraft = true;
             OrderService.voidDraft(code)
                 .then(function (res) {
-                    toastr.info('Order has been voided');
+                    toastr.info('Pesanan telah dibatalkan.');
                     $state.go('app.order.draft');
                 })
-                .catch(function (res) {
+                .catch(function (err) {
                     toastr.error(err);
                 })
                 .finally(function () {
@@ -113,57 +119,87 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
     }
 
     function getLocations(keyword) {
-        return ShippingService.getLocations(vm.currentUser.kiosk.branchCode, keyword)
-            .then(function (result) {
-                return result;
-            }, function (response) {
-
+        return ShippingService.getLocations(keyword)
+            .then(res => {
+                return res.result;
             });
+    }
+
+    function selectLocation(destination) {
+        vm.loadingPricings = true;
+        ShippingService.getPricings(vm.currentUser.kiosk.branchName, destination, 1)
+            .then(res => {
+                vm.pricingOptions = res.result[0].pricingOptions;
+            })
+            .catch(err => {
+                toastr.error(err);
+            })
+            .finally(() => {
+                vm.loadingPricings = false;
+            })
     }
 
     function selectPricingOption(pricingOption) {
         vm.pricingOption = pricingOption;
         vm.order.ShippingProductCode = pricingOption.productCode;
         vm.order.ShippingDestination = vm.destination.display;
-        vm.order.ShippingDueDay = vm.pricingOption.dueDay;
+        vm.order.ShippingDueDay = pricingOption.dueDay;
 
         calculate();
     }
 
     function updateDetail(detail) {
+        detail.ShippingFee = (vm.pricingOption) ? vm.pricingOption.calculationResult : 0;
+
         calculate();
     }
 
     function calculate() {
-        if (!vm.order.SelfPickUp)
-        {
-            var grouped = groupByArray(vm.order.OrderDetails, 'DealerCode');
+        vm.order.TotalShippingFee = 0;
+        vm.order.TotalPrice = 0;
 
-            var totalWeight = 0;
-            for (var i = 0; i < grouped.length; i++) {
-                for (var j = 0; j < grouped[i].values.length; j++) {
-                    totalWeight += grouped[i].values[j].Product.Weight * grouped[i].values[j].Quantity;
-                }
+        if (!vm.order.SelfPickUp) {
+            // Set buat distinct value, Array.from buat convert Set > Array
+            var dealerCodes = Array.from(new Set(vm.order.OrderDetails.map(t => t.DealerCode)));
+
+            for (var i = 0, length = dealerCodes.length; i < length; i++) {
+                var weight = vm.order.OrderDetails
+                    .filter(t => t.DealerCode == dealerCodes[i]) // filter by dealer code
+                    .map(t => t.Quantity * t.Product.Weight) // bikin array baru yang isinya berat * quantity
+                    .reduce((a, b) => { return a + b }); // total berat
+
+                // pembulatan
+                if (weight == 0)
+                    weight = 0;
+                else if (weight < 1)
+                    weight = 1;
+                else if (weight - Math.floor(weight) > weightRoundingLimit)
+                    weight = Math.ceil(weight);
+                else
+                    weight = Math.floor(weight);
+
+                vm.order.TotalShippingFee += weight * vm.pricingOption.calculationResult;
             }
-
-            vm.order.TotalShippingFee = totalWeight * vm.pricingOption.minPrice;
-        }
-        else {
-            vm.orderTotalShippingFee = 0;
         }
 
-        var totalPrice = 0;
         for (var i = 0, length = vm.order.OrderDetails.length; i < length; i++) {
-            totalPrice += vm.order.OrderDetails[i].Quantity * vm.order.OrderDetails[i].Product.Price;
+            vm.order.TotalPrice += vm.order.OrderDetails[i].Quantity * vm.order.OrderDetails[i].Product.Price;
         }
-        vm.order.TotalPrice = totalPrice;
     }
 
     function removeCurrentShippingInformation() {
+        delete vm.pricingOption;
         vm.order.ShippingDestination = '';
         vm.order.ShippingProductCode = '';
         vm.order.ShippingDueDay = 0;
         vm.order.TotalShippingFee = 0;
+    }
+
+    function getWeightRoundingLimit() {
+        return ShippingService.getWeightRoundingLimit()
+            .then(res => {
+                weightRoundingLimit = res.result;
+            });
     }
 
     (function () {
@@ -172,6 +208,7 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
             $state.go('app.order');
         }
         getOrderByCode(code);
+        getWeightRoundingLimit();
     })();
 
     function groupByArray(xs, key) { return xs.reduce(function (rv, x) { let v = key instanceof Function ? key(x) : x[key]; let el = rv.find((r) => r && r.key === v); if (el) { el.values.push(x); } else { rv.push({ key: v, values: [x] }); } return rv; }, []); }
