@@ -70,7 +70,7 @@ function HeaderController($state, $stateParams, $timeout, $q, toastr, Order, Bra
     }
 
     function getCategories() {
-        CategoryService.getByBrandCode('SMSG')
+        CategoryService.getByBrandCode('SMG')
             .then(function (response) {
                 vm.categories = response;
             })
