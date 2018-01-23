@@ -32,5 +32,13 @@
     "gulp-image": "^4.2.0",
     "gulp-minify": "^1.0.0",
     "gulp-rev": "^8.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adythiasjamsuri/tabor-o2o-kiosk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adythiasjamsuri/tabor-o2o-kiosk/issues"
+  },
+  "homepage": "https://github.com/adythiasjamsuri/tabor-o2o-kiosk#readme"
 }
