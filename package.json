@@ -20,5 +20,13 @@
     "jquery": "^3.2.1",
     "ngstorage": "^0.3.11"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adythiasjamsuri/tabor-o2o-kiosk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adythiasjamsuri/tabor-o2o-kiosk/issues"
+  },
+  "homepage": "https://github.com/adythiasjamsuri/tabor-o2o-kiosk#readme"
 }
