@@ -1,19 +1,24 @@
 ﻿angular.module('app')
     .controller('OrderConfirmController', OrderConfirmController);
 
-OrderConfirmController.$inject = ['$state', '$window', 'toastr', 'Order', 'OrderService', '$timeout', '$filter'];
-function OrderConfirmController($state, $window, toastr, Order, OrderService, $timeout, $filter) {
+OrderConfirmController.$inject = ['$state', '$window', 'toastr', 'Order', 'OrderService', '$timeout', '$filter', 'AuthenticationState'];
+function OrderConfirmController($state, $window, toastr, Order, OrderService, $timeout, $filter, AuthenticationState) {
     var vm = this;
 
     vm.order = {};
     vm.submitOrder = submitOrder;
     vm.cancelOrder = cancelOrder;
+    vm.currentUser = AuthenticationState.getUser();
+    vm.isStaff = AuthenticationState.isStaff();
+
+    console.log(vm.currentUser);
 
     function submitOrder(order) {
         if (confirm('Apakah anda yakin ingin melakukan pemesanan?')) {
             // submit order
             var convertedOrder = {
                 KioskCode: order.kioskCode,
+                InChargeEmail: vm.isStaff ? vm.currentUser.email : '',
                 IdCard: order.idCard,
                 Name: order.name,
                 Email: order.email,
@@ -49,9 +54,10 @@ function OrderConfirmController($state, $window, toastr, Order, OrderService, $t
                 .then(function (res) {
                     Order.initiateOrder();
 
-                    //$timeout(function () {
-                    window.location.href = 'confirm-message/' + res.result.Code;
-                    //}, 1000);
+                    if (vm.isStaff)
+                        window.location.href = `order/${res.result.Code}`;
+                    else
+                        window.location.href =  `confirm-message/${res.result.Code}`;
 
                     //$state.go('confirm-message', { code: res.result.Code });
                 })

@@ -4,23 +4,35 @@
   "description": "customer's online catalog",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "moonlay",
   "license": "ISC",
   "dependencies": {
-    "angular": "^1.6.4",
-    "angular-animate": "^1.6.5",
+    "angular": "^1.6.8",
+    "angular-animate": "^1.6.8",
     "angular-fcsa-number": "^1.5.7",
     "angular-toastr": "^2.1.1",
-    "angular-ui-bootstrap": "^2.5.0",
+    "angular-touch": "^1.6.6",
+    "angular-ui-bootstrap": "^2.5.6",
     "angular-ui-router": "^1.0.3",
+    "angularfire": "^2.3.0",
     "bootstrap": "^3.3.7",
+    "express": "^4.16.2",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
     "ngstorage": "^0.3.11"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.9.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-image": "^4.2.0",
+    "gulp-minify": "^1.0.0",
+    "gulp-rev": "^8.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adythiasjamsuri/tabor-o2o-kiosk.git"

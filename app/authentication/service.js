@@ -12,7 +12,8 @@ function AuthenticationService($http, Urls) {
         signOut: signOut,
         getAuthenticatedUser: getAuthenticatedUser,
         getKioskUser: getKioskUser,
-        getRoleUser: getRoleUser
+        getRoleUser: getRoleUser,
+        changePassword: changePassword
     };
 
     function signIn(user) {
@@ -60,6 +61,11 @@ function AuthenticationService($http, Urls) {
         }
 
         return $http.get(Urls.BASE_API + '/rolemappings?' + $.param(q))
+            .then(handleSuccess);
+    }
+
+    function changePassword(user) {
+        return $http.post(`${Urls.BASE_API}/users/change-password`, user)
             .then(handleSuccess);
     }
 
