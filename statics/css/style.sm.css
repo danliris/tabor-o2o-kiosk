@@ -307,10 +307,16 @@ header {
 }
 
 footer {
+    margin-top: 2em;
     padding: 1em 0em;
     color: #666;
     font-size: .85em;
 }
+
+    footer img.jet-logo {
+        margin-left: .5em;
+        height: 1.5em;
+    }
 
 #banners {
     width: 100%;
@@ -755,6 +761,12 @@ body.auth-page {
             flex: 1 1 220px;
             display: flex;
             align-items: center;
+        }
+
+        .featured-products .item .name {
+            max-width: 220px;
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
 
         .featured-products .item .action-button-block {
