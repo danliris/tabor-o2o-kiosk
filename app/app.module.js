@@ -4,9 +4,10 @@
     //'ngSanitize',
     'ngStorage',
     'fcsa-number',
-    //'ngAnimate',
+    // 'ngAnimate',
     'toastr',
-
+    'ngTouch',
+    'firebase',
     'app.authentication' // bukan library
 ]);
 
@@ -16,27 +17,21 @@ angular.module('app')
 httpInterceptor.$inject = [
     '$q',
     '$rootScope',
-    '$location'
+    '$localStorage'
 ];
 
-function httpInterceptor($q, $rootScope, $localStorage, $location) {
+function httpInterceptor($q, $rootScope, $localStorage) {
     return {
         request: function (config) {
-            config.headers = config.headers || {};
-            //config.params = [];
-
             if ($localStorage.token) {
-                config.headers.Authorization = 'Bearer ' + $localStorage.token;
+                config.headers.Authorization = $localStorage.token;
             }
-
+            
             return config;
         },
 
         responseError: function (rejection) {
-            //if (rejection.data.error === 'token_not_provided' || rejection.data.error === 'token_expired') {
-            //    $location.path('/login');
-            //}
-            console.log(rejection);
+            console.warn(rejection);
 
             if (rejection.data) {
                 if (rejection.data.error) {
@@ -48,7 +43,6 @@ function httpInterceptor($q, $rootScope, $localStorage, $location) {
         }
     };
 }
-
 
 angular
     .module('app')
@@ -64,6 +58,12 @@ angular
 
 angular
     .module('app')
+    .config(['$localStorageProvider', function ($localStorageProvider) {
+        $localStorageProvider.setKeyPrefix('jet-o2o-');
+    }]);
+
+angular
+    .module('app')
     .factory('settings', settings);
 
 settings.$inject = [
@@ -73,13 +73,9 @@ settings.$inject = [
 function settings($rootScope) {
     var settings = {
         pageTitle: 'O2O',
-        cartOpen: false,
-        toggleCartOpen: toggleCartOpen
+        firebaseReady: false,
+        walletBalance: 0
     };
-
-    function toggleCartOpen() {
-        this.cartOpen = !this.cartOpen;
-    }
 
     return settings;
 }
@@ -106,19 +102,21 @@ function runBlock($rootScope, $state, $transitions, settings, AuthenticationStat
 
         // check authorized user
         var stateData = trans.$to().data;
-        if (stateData.authorizedRoles)
-        {
+        if (stateData.authorizedRoles) {
             var currentUser = AuthenticationState.getUser();
             var authorized = false;
             for (var i = 0, length = stateData.authorizedRoles.length; i < length; i++) {
-                authorized = authorized || (currentUser.roles.find(x => x.name == stateData.authorizedRoles[i]) ? true : false);
+                // authorized = authorized || (currentUser.roles.find(x => x.name == stateData.authorizedRoles[i]) ? true : false);
+
+                authorized = authorized || (AuthenticationState.getRole() == stateData.authorizedRoles[i] ? true : false);
             }
+
+
             if (!authorized) {
                 $state.go('app.home');
             }
         }
 
         $rootScope.$settings.pageTitle = stateData.pageTitle;
-        $rootScope.$settings.cartOpen = false;
     });
 }

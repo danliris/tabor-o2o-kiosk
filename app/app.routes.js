@@ -79,6 +79,14 @@ function routeConfig($stateProvider, $urlRouterProvider, $locationProvider) {
                 controllerAs: 'vm'
             })
 
+            .state('app.notification', {
+                url: '/notification',
+                templateUrl: 'app/notification/index.html',
+                data: { pageTitle: 'Notifications' },
+                controller: 'NotificationController',
+                controllerAs: 'vm'
+            })
+
             .state('app.order', {
                 url: '/order',
                 templateUrl: 'app/order/index.html',
@@ -95,7 +103,7 @@ function routeConfig($stateProvider, $urlRouterProvider, $locationProvider) {
                     controllerAs: 'vm'
                 })
                 .state('app.order.track', {
-                    url: '/track',
+                    url: '/track/{code}',
                     templateUrl: 'app/order/index.track.html',
                     data: { pageTitle: 'Track', authorizedRoles: ['staff'] },
                     controller: 'OrderTrackController',

@@ -9,6 +9,7 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
 
     vm.order = {};
     vm.currentUser = AuthenticationState.getUser();
+    vm.isStaff = AuthenticationState.isStaff();
 
     vm.toggleSelfPickUp = toggleSelfPickUp;
     vm.updateDraft = updateDraft;
@@ -20,6 +21,17 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
     vm.updateDetail = updateDetail;
     vm.removeCurrentShippingInformation = removeCurrentShippingInformation;
     vm.calculate = calculate;
+
+
+    (function () {
+        var code = $stateParams.code;
+        if (!code) {
+            $state.go('app.order');
+        }
+
+        getOrderByCode(code);
+        getWeightRoundingLimit();
+    })();
 
     function toggleSelfPickUp(val) {
         if (val) {
@@ -44,6 +56,15 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
                 }
 
                 vm.order = res;
+
+                if (vm.order.ShippingDestination && vm.order.ShippingProductCode) {
+                    console.log('Fetching shipping information');
+                    return selectLocation(vm.order.ShippingDestination)
+                        .then(() => {
+                            console.log('Success fetching shipping information');
+                            selectPricingOption(vm.pricingOptions.find(t => t.productCode == vm.order.ShippingProductCode));
+                        });
+                }
             })
             .catch(function (err) {
                 toastr.error(err);
@@ -60,6 +81,7 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
         var orderToBeUpdated = {
             Code: order.Code,
             KioskCode: order.KioskCode,
+            InChargeEmail: vm.isStaff ? vm.currentUser.email : '',
             IdCard: order.IdCard,
             Name: order.Name,
             Email: order.Email,
@@ -127,7 +149,7 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
 
     function selectLocation(destination) {
         vm.loadingPricings = true;
-        ShippingService.getPricings(vm.currentUser.kiosk.branchName, destination, 1)
+        return ShippingService.getPricings(vm.currentUser.kiosk.branchName, destination, 1)
             .then(res => {
                 vm.pricingOptions = res.result[0].pricingOptions;
             })
@@ -142,7 +164,7 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
     function selectPricingOption(pricingOption) {
         vm.pricingOption = pricingOption;
         vm.order.ShippingProductCode = pricingOption.productCode;
-        vm.order.ShippingDestination = vm.destination.display;
+        vm.order.ShippingDestination = vm.destination ? vm.destination.display : vm.order.ShippingDestination;
         vm.order.ShippingDueDay = pricingOption.dueDay;
 
         calculate();
@@ -202,14 +224,5 @@ function OrderDetailController($state, $rootScope, $filter, $window, $stateParam
             });
     }
 
-    (function () {
-        var code = $stateParams.code;
-        if (!code) {
-            $state.go('app.order');
-        }
-        getOrderByCode(code);
-        getWeightRoundingLimit();
-    })();
 
-    function groupByArray(xs, key) { return xs.reduce(function (rv, x) { let v = key instanceof Function ? key(x) : x[key]; let el = rv.find((r) => r && r.key === v); if (el) { el.values.push(x); } else { rv.push({ key: v, values: [x] }); } return rv; }, []); }
 }

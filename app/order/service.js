@@ -25,7 +25,6 @@ function OrderService($http, Urls) {
     };
 
     function getAll(query, kioskCode) {
-        var result = {};
         var asc = query.orderBy.indexOf('+') > -1;
         var orderByColumn = query.orderBy.substring(1);
 
@@ -34,10 +33,15 @@ function OrderService($http, Urls) {
             limit: query.limit,
             skip: (query.page - 1) * query.limit,
             where: {
-                'Name': {
-                    like: '%' + query.keyword + '%'
-                },
-                'KioskCode': kioskCode
+                and: [
+                    {
+                        or: [
+                            { 'Code': { like: '%' + query.keyword + '%' } },
+                            { 'Name': { like: '%' + query.keyword + '%' } },
+                        ]
+                    },
+                    { 'KioskCode': kioskCode }
+                ]
             }
         };
 
@@ -47,19 +51,21 @@ function OrderService($http, Urls) {
 
     function countAll(query, kioskCode) {
         var q = {
-            where: {
-                'Name': {
-                    like: '%' + query.keyword + '%'
+            and: [
+                {
+                    or: [
+                        { 'Code': { like: '%' + query.keyword + '%' } },
+                        { 'Name': { like: '%' + query.keyword + '%' } },
+                    ]
                 },
-                'KioskCode': kioskCode
-            }
+                { 'KioskCode': kioskCode }
+            ]
         };
-        return $http.get(Urls.BASE_API + '/orders/count?' + $.param(q))
+        return $http.get(Urls.BASE_API + '/orders/count?where=' + encodeURI(JSON.stringify(q)))
             .then(handleSuccess);
     }
 
     function getAllHistory(query, kioskCode) {
-        var result = {};
         var asc = query.orderBy.indexOf('+') > -1;
         var orderByColumn = query.orderBy.substring(1);
 
@@ -68,14 +74,22 @@ function OrderService($http, Urls) {
             limit: query.limit,
             skip: (query.page - 1) * query.limit,
             where: {
-                'Name': {
-                    like: '%' + query.keyword + '%'
-                },
-                'Status': {
-                    nin: ["DRAFTED", "VOIDED"]
-                },
-                'KioskCode': kioskCode
-
+                and: [
+                    {
+                        or: [
+                            { 'Code': { like: '%' + query.keyword + '%' } },
+                            { 'Name': { like: '%' + query.keyword + '%' } },
+                        ]
+                    },
+                    {
+                        'Status': {
+                            nin: ["DRAFTED", "VOIDED"]
+                        }
+                    },
+                    {
+                        'KioskCode': kioskCode
+                    }
+                ]
             }
         };
 
@@ -85,17 +99,24 @@ function OrderService($http, Urls) {
 
     function countAllHistory(query, kioskCode) {
         var q = {
-            where: {
-                'Name': {
-                    like: '%' + query.keyword + '%'
+            and: [
+                {
+                    or: [
+                        { 'Code': { like: '%' + query.keyword + '%' } },
+                        { 'Name': { like: '%' + query.keyword + '%' } },
+                    ]
                 },
-                'Status': {
-                    nin: ["DRAFTED", "VOIDED"]
+                {
+                    'Status': {
+                        nin: ["DRAFTED", "VOIDED"]
+                    }
                 },
-                'KioskCode': kioskCode
-            }
+                {
+                    'KioskCode': kioskCode
+                }
+            ]
         };
-        return $http.get(Urls.BASE_API + '/orders/count?' + $.param(q))
+        return $http.get(Urls.BASE_API + '/orders/count?where=' + encodeURI(JSON.stringify(q)))
             .then(handleSuccess);
     }
 
@@ -111,13 +132,17 @@ function OrderService($http, Urls) {
             limit: query.limit,
             skip: (query.page - 1) * query.limit,
             where: {
-                //or: [
-                //    { 'Code': { like: '%' + query.keyword + '%' } },
-                //    { 'Name': { like: '%' + query.keyword + '%' } },
-                //],
-                'Name': { like: '%' + query.keyword + '%' },
-                'Status': 'DRAFTED',
-                'KioskCode': kioskCode
+                and: [
+                    {
+                        or: [
+                            { 'Code': { like: '%' + query.keyword + '%' } },
+                            { 'Name': { like: '%' + query.keyword + '%' } },
+                        ]
+                    },
+                    { 'Status': 'DRAFTED' },
+                    { 'KioskCode': kioskCode }
+                ]
+
             }
         };
 
@@ -128,19 +153,21 @@ function OrderService($http, Urls) {
 
     function countAllDraft(query, kioskCode) {
         var q = {
-            where: {
-                //or: [
-                //    { 'Code': { like: '%' + query.keyword + '%' } },
-                //    { 'Name': { like: '%' + query.keyword + '%' } },
-                //],
-                'Name': { like: '%' + query.keyword + '%' },
-                'Status': 'DRAFTED',
-                'KioskCode': kioskCode
-            }
+            and: [
+                {
+                    or: [
+                        { 'Code': { like: '%' + query.keyword + '%' } },
+                        { 'Name': { like: '%' + query.keyword + '%' } },
+                    ]
+                },
+                { 'Status': 'DRAFTED' },
+                { 'KioskCode': kioskCode }
+            ]
         };
 
-        return $http.get(Urls.BASE_API + '/orders/count?' + $.param(q))
+        return $http.get(Urls.BASE_API + '/orders/count?where=' + encodeURI(JSON.stringify(q)))
             .then(handleSuccess);
+
     }
 
     // buat ambil count
@@ -149,9 +176,9 @@ function OrderService($http, Urls) {
     function getByCode(code) {
         var q = {
             include: [
-                 {
-                     'OrderDetails': ['Product', 'OrderTracks']
-                 },
+                {
+                    'OrderDetails': ['Product', 'OrderTracks']
+                },
                 'OrderPayments'
             ]
         };
@@ -162,9 +189,9 @@ function OrderService($http, Urls) {
     function getByCodeCanBePaid(code) {
         var q = {
             include: [
-                 {
-                     'OrderDetails': ['Product', 'OrderTracks']
-                 },
+                {
+                    'OrderDetails': ['Product', 'OrderTracks']
+                },
                 'OrderPayments'
             ]
         };
@@ -191,7 +218,7 @@ function OrderService($http, Urls) {
 
     function createDraft(order) {
         return $http.post(Urls.BASE_API + '/orders/draft', { data: order })
-		    .then(handleSuccess);
+            .then(handleSuccess);
     }
 
     function updateDraft(order) {
