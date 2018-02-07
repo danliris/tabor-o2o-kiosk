@@ -5,13 +5,15 @@
             <div id="print-wrapper" ng-if="!vm.loadingGetOrderByCode">
                 <section class="invoice">
                     <div class="row">
-                        <div class="col-xs-6">
-                            LOGO
+                        <div class="col-xs-3">
+                            <img src="build/images/logo.png" alt="Logo TAR" style="height: 1cm; margin-bottom: .25cm;" />
                         </div>
-                        <div class="col-xs-6 text-right">
+                        <div class="col-xs-9 text-right">
                             <b>{{ vm.currentUser.kiosk.name }}</b> - {{ vm.currentUser.kiosk.address }}
                             <br />
-                            <i class="fa fa-phone"></i> {{ vm.currentUser.kiosk.phone }} | www.shopname.com | lorem@ipsum.com
+                            <i class="fa fa-phone"></i> {{ vm.currentUser.kiosk.phone }} | <a href="javascript:;">http://o2o.jetxps.net/</a> | {{ vm.currentUser.email }}
+                            <br/>
+                            <div class="my-1">Delivered by <img src="build/images/logo-jet-red.png" style="height: 1.2em; margin-left: .3em;"/></div>
                         </div>
                     </div>
 

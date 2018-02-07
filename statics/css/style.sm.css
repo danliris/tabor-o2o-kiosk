@@ -8,6 +8,13 @@ header {
     /*height: 145px;*/
 }
 
+    header .logo {
+        display: block;
+        height: 3em;
+        background: url('../images/logo.png') no-repeat center;
+        background-size: contain;
+    }
+
     header .top-bar,
     header .content,
     header .bottom-bar {
@@ -300,10 +307,16 @@ header {
 }
 
 footer {
+    margin-top: 2em;
     padding: 1em 0em;
     color: #666;
     font-size: .85em;
 }
+
+    footer img.jet-logo {
+        margin-left: .5em;
+        height: 1.5em;
+    }
 
 #banners {
     width: 100%;
@@ -750,6 +763,12 @@ body.auth-page {
             align-items: center;
         }
 
+        .featured-products .item .name {
+            max-width: 220px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
         .featured-products .item .action-button-block {
             position: absolute;
             top: 0;
@@ -862,4 +881,9 @@ body.auth-page {
     align-items: center;
     justify-content: center;
     height: 100%;
+}
+
+.my-1 {
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
