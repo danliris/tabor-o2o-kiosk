@@ -14,8 +14,6 @@ function HomeController($state, HomeService, ProductService, AuthenticationState
 
     (function () {
         changeSliderType('BEST SELLER');
-
-
     })();
 
     function next(multiplier = 1) {
@@ -130,16 +128,22 @@ function HomeController($state, HomeService, ProductService, AuthenticationState
     var currIndex = 0;
     vm.currentActiveSlide = 0;
 
-    function addSlide() {
-        var newWidth = 600 + vm.slides.length + 1;
-        vm.slides.push({
-            image: 'https://picsum.photos/' + newWidth + '/160',
-            text: ['Nice image', 'Awesome photograph', 'That is so cool', 'I love that'][vm.slides.length % 4],
-            id: currIndex++
-        });
-    };
+    vm.slides.push({
+        image: `build/images/banners/banner-1.jpg`,
+        text: [],
+        id: currIndex++
+    });
 
-    for (var i = 0; i < 4; i++) {
-        addSlide();
-    }
+    // function addSlide() {
+    //     var newWidth = 600 + vm.slides.length + 1;
+    //     vm.slides.push({
+    //         image: 'https://picsum.photos/' + newWidth + '/160',
+    //         text: ['Nice image', 'Awesome photograph', 'That is so cool', 'I love that'][vm.slides.length % 4],
+    //         id: currIndex++
+    //     });
+    // };
+
+    // for (var i = 0; i < 4; i++) {`
+    //     addSlide();
+    // }
 }
