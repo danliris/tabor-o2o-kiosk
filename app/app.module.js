@@ -23,12 +23,6 @@ httpInterceptor.$inject = [
 function httpInterceptor($q, $rootScope, $localStorage) {
     return {
         request: function (config) {
-            // !@#$##@#$
-            // config.params = config.params || {};
-            // if ($localStorage.token) {
-            //     config.params.access_token = $localStorage.token;
-            // }
-
             if ($localStorage.token) {
                 config.headers.Authorization = $localStorage.token;
             }
